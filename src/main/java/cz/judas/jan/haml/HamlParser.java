@@ -1,5 +1,7 @@
 package cz.judas.jan.haml;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedHashMap;
@@ -36,7 +38,7 @@ public class HamlParser {
                 Map<String, String> attributes = new LinkedHashMap<>();
                 if(dotIndex != -1) {
                     tagName = tagDef.substring(0, dotIndex);
-                    attributes.put("class", tagDef.substring(dotIndex + 1));
+                    attributes.put("class", StringUtils.replace(tagDef.substring(dotIndex + 1), ".", " "));
                 } else {
                     tagName = tagDef;
                 }

@@ -43,4 +43,9 @@ public class HamlParserTest {
     public void classAttribute() throws Exception {
         assertThat(parser.process("span.bluh bra bh"), is("<span class=\"bluh\">bra bh</span>"));
     }
+
+    @Test
+    public void multipleClassAttribute() throws Exception {
+        assertThat(parser.process("span.bluh.lkj bra bh"), is("<span class=\"bluh lkj\">bra bh</span>"));
+    }
 }
