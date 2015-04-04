@@ -3,6 +3,7 @@ package cz.judas.jan.haml;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class HamlParser {
     public String process(String haml) {
@@ -20,27 +21,12 @@ public class HamlParser {
                     closeTag(stringBuilder, stack);
                 }
 
-                ParsedLine parsedLine = new ParsedLine();
+                ParsedLine parsedLine = new ParsedLine(strippedLine);
 
-                int spaceIndex = strippedLine.indexOf(' ');
-                if(spaceIndex == -1) {
-                    parsedLine.tagName = strippedLine;
-                } else {
-                    parsedLine.tagName = strippedLine.substring(0, spaceIndex);
-                    parsedLine.content = strippedLine.substring(spaceIndex + 1);
-                }
-                int dotIndex = parsedLine.tagName.indexOf('.');
-                if(dotIndex != -1) {
-                    String toBeSplit = parsedLine.tagName;
-                    parsedLine.tagName = toBeSplit.substring(0, dotIndex);
-                    parsedLine.addAttribute("class", StringUtils.replace(toBeSplit.substring(dotIndex + 1), ".", " "));
-                }
-                int hashIndex = parsedLine.tagName.indexOf('#');
-                if(hashIndex != -1) {
-                    String toBeSplit = parsedLine.tagName;
-                    parsedLine.tagName = toBeSplit.substring(0, hashIndex);
-                    parsedLine.addAttribute("id", toBeSplit.substring(hashIndex + 1));
-                }
+                parsedLine.updateOn(' ', parsedLine::setContent);
+                parsedLine.updateOn('.', s -> parsedLine.addAttribute("class", StringUtils.replace(s, ".", " ")));
+                parsedLine.updateOn('#', s -> parsedLine.addAttribute("id", s));
+
                 htmlTag(stringBuilder, parsedLine);
                 stack.push(parsedLine.tagName);
             }
@@ -78,6 +64,10 @@ public class HamlParser {
         private Map<String, String> attributes = null;
         private String content = "";
 
+        private ParsedLine(String tagName) {
+            this.tagName = tagName;
+        }
+
         public void addAttribute(String name, String value) {
             if(attributes == null) {
                 attributes = new LinkedHashMap<>();
@@ -85,11 +75,24 @@ public class HamlParser {
             attributes.put(name, value);
         }
 
-        private Map<String, String> getAttributes() {
+        public Map<String, String> getAttributes() {
             if(attributes == null) {
                 return Collections.emptyMap();
             } else {
                 return attributes;
+            }
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public void updateOn(char symbolToFind, Consumer<String> update) {
+            int symbolIndex = tagName.indexOf(symbolToFind);
+            if(symbolIndex != -1) {
+                String toBeSplit = tagName;
+                tagName = toBeSplit.substring(0, symbolIndex);
+                update.accept(toBeSplit.substring(symbolIndex + 1));
             }
         }
     }
