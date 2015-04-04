@@ -2,6 +2,8 @@ package cz.judas.jan.haml;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class HamlParser {
     public String process(String haml) {
@@ -20,16 +22,25 @@ public class HamlParser {
                 }
 
                 int spaceIndex = strippedLine.indexOf(' ');
-                String tagName;
+                String tagDef;
                 String content;
                 if(spaceIndex == -1) {
-                    tagName = strippedLine;
+                    tagDef = strippedLine;
                     content = "";
                 } else {
-                    tagName = strippedLine.substring(0, spaceIndex);
+                    tagDef = strippedLine.substring(0, spaceIndex);
                     content = strippedLine.substring(spaceIndex + 1);
                 }
-                stringBuilder.append('<').append(tagName).append(">").append(content);
+                int dotIndex = tagDef.indexOf('.');
+                String tagName;
+                Map<String, String> attributes = new LinkedHashMap<>();
+                if(dotIndex != -1) {
+                    tagName = tagDef.substring(0, dotIndex);
+                    attributes.put("class", tagDef.substring(dotIndex + 1));
+                } else {
+                    tagName = tagDef;
+                }
+                htmlTag(stringBuilder, content, tagName, attributes);
                 stack.push(tagName);
             }
         }
@@ -41,6 +52,14 @@ public class HamlParser {
         return stringBuilder.toString();
     }
 
+    private void htmlTag(StringBuilder stringBuilder, String content, String tagName, Map<String, String> attributes) {
+        stringBuilder.append('<').append(tagName);
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            stringBuilder.append(' ').append(entry.getKey()).append("=\"").append(entry.getValue()).append('"');
+        }
+        stringBuilder.append('>').append(content);
+    }
+
     private int leadingTabs(String line) {
         int numTabs = 0;
         while(line.charAt(numTabs) == '\t') {
@@ -50,6 +69,6 @@ public class HamlParser {
     }
 
     private void closeTag(StringBuilder stringBuilder, Deque<String> stack) {
-        stringBuilder.append("</").append(stack.pop()).append(">");
+        stringBuilder.append("</").append(stack.pop()).append('>');
     }
 }

@@ -38,4 +38,9 @@ public class HamlParserTest {
     public void implicitClosing() throws Exception {
         assertThat(parser.process("ul\n\tli blah\np bleh"), is("<ul><li>blah</li></ul><p>bleh</p>"));
     }
+
+    @Test
+    public void classAttribute() throws Exception {
+        assertThat(parser.process("span.bluh bra bh"), is("<span class=\"bluh\">bra bh</span>"));
+    }
 }
