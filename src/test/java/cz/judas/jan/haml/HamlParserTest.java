@@ -16,36 +16,40 @@ public class HamlParserTest {
 
     @Test
     public void processesRealSimpleHaml() throws Exception {
-        assertThat(parser.process("html"), is("<html></html>"));
+        assertParses("html", "<html></html>");
     }
 
     @Test
     public void processesNestedTag() throws Exception {
-        assertThat(parser.process("html\n\thead"), is("<html><head></head></html>"));
+        assertParses("html\n\thead", "<html><head></head></html>");
     }
 
     @Test
     public void doctype() throws Exception {
-        assertThat(parser.process("!!! 5"), is("<!DOCTYPE html>\n"));
+        assertParses("!!! 5", "<!DOCTYPE html>\n");
     }
 
     @Test
     public void tagsCanHaveTextContent() throws Exception {
-        assertThat(parser.process("html\n\thead\n\t\ttitle something"), is("<html><head><title>something</title></head></html>"));
+        assertParses("html\n\thead\n\t\ttitle something", "<html><head><title>something</title></head></html>");
     }
 
     @Test
     public void implicitClosing() throws Exception {
-        assertThat(parser.process("ul\n\tli blah\np bleh"), is("<ul><li>blah</li></ul><p>bleh</p>"));
+        assertParses("ul\n\tli blah\np bleh", "<ul><li>blah</li></ul><p>bleh</p>");
     }
 
     @Test
     public void classAttribute() throws Exception {
-        assertThat(parser.process("span.bluh bra bh"), is("<span class=\"bluh\">bra bh</span>"));
+        assertParses("span.bluh bra bh", "<span class=\"bluh\">bra bh</span>");
     }
 
     @Test
     public void multipleClassAttribute() throws Exception {
-        assertThat(parser.process("span.bluh.lkj bra bh"), is("<span class=\"bluh lkj\">bra bh</span>"));
+        assertParses("span.bluh.lkj bra bh", "<span class=\"bluh lkj\">bra bh</span>");
+    }
+
+    private void assertParses(String input, String output) {
+        assertThat(parser.process(input), is(output));
     }
 }
