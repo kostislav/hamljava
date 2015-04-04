@@ -65,7 +65,7 @@ public class HamlParser {
         private String content = "";
 
         private ParsedLine(String tagName) {
-            this.tagName = tagName;
+            this.tagName = tagName.substring(1);
         }
 
         public void addAttribute(String name, String value) {
