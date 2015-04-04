@@ -33,10 +33,7 @@ public class HamlParser {
                 }
 
                 if (strippedLine.startsWith("%")) {
-                    String tagName = null;
-                    Set<String> classes = null;
-                    Map<String, String> attributes = null;
-                    String content = "";
+                    ParsingResult parsingResult = new ParsingResult();
 
                     State state = State.START;
                     int tokenStart = 0;
@@ -54,7 +51,7 @@ public class HamlParser {
                                 if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
                                     continue;
                                 } else {
-                                    tagName = strippedLine.substring(tokenStart, currentPosition - 1);
+                                    parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition - 1));
                                     tokenStart = currentPosition;
 
                                     if (c == '.') {
@@ -72,16 +69,10 @@ public class HamlParser {
                                 if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_') {
                                     continue;
                                 } else if (c == '.') {
-                                    if (classes == null) {
-                                        classes = new LinkedHashSet<>();
-                                    }
-                                    classes.add(strippedLine.substring(tokenStart, currentPosition - 1));
+                                    parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
                                     tokenStart = currentPosition;
                                 } else {
-                                    if (classes == null) {
-                                        classes = new LinkedHashSet<>();
-                                    }
-                                    classes.add(strippedLine.substring(tokenStart, currentPosition - 1));
+                                    parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
 
                                     tokenStart = currentPosition;
                                     if (c == '#') {
@@ -99,10 +90,7 @@ public class HamlParser {
                                 } else if (c == '#') {
                                     throw new ParseException("Multiple IDs not supported");
                                 } else {
-                                    if(attributes == null) {
-                                        attributes = new LinkedHashMap<>();
-                                    }
-                                    attributes.put("id", strippedLine.substring(tokenStart, currentPosition - 1));
+                                    parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition - 1));
 
                                     tokenStart = currentPosition;
                                     if (c == '.') {
@@ -119,38 +107,23 @@ public class HamlParser {
 
                     switch (state) {
                         case TAG_NAME:
-                            tagName = strippedLine.substring(tokenStart, currentPosition);
+                            parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition));
                             break;
                         case CLASS:
-                            if (classes == null) {
-                                classes = new LinkedHashSet<>();
-                            }
-                            classes.add(strippedLine.substring(tokenStart, currentPosition));
+                            parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition));
                             break;
                         case ID:
-                            if(attributes == null) {
-                                attributes = new LinkedHashMap<>();
-                            }
-                            attributes.put("id", strippedLine.substring(tokenStart, currentPosition));
+                            parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition));
                             break;
                         case CONTENT:
-                            content = strippedLine.substring(tokenStart, currentPosition);
+                            parsingResult.setContent(strippedLine.substring(tokenStart, currentPosition));
                             break;
                         case START:
                             throw new ParseException("Could not parse line " + line);
                     }
-                    if(classes != null) {
-                        if(attributes == null) {
-                            attributes = new LinkedHashMap<>();
-                        }
-                        attributes.put("class", StringUtils.join(classes, ' '));
-                    }
-                    if(attributes == null) {
-                        attributes = Collections.emptyMap();
-                    }
 
-                    htmlTag(stringBuilder, tagName, attributes, content);
-                    stack.push(tagName);
+                    htmlTag(stringBuilder, parsingResult);
+                    stack.push(parsingResult.getTagName());
 
                 } else {
                     throw new ParseException("Could not parse line " + line);
@@ -165,12 +138,12 @@ public class HamlParser {
         return stringBuilder.toString();
     }
 
-    private void htmlTag(StringBuilder stringBuilder, String tagName, Map<String, String> attributes, String content) {
-        stringBuilder.append('<').append(tagName);
-        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+    private void htmlTag(StringBuilder stringBuilder, ParsingResult parsingResult) {
+        stringBuilder.append('<').append(parsingResult.getTagName());
+        for (Map.Entry<String, String> entry : parsingResult.getAttributes().entrySet()) {
             stringBuilder.append(' ').append(entry.getKey()).append("=\"").append(entry.getValue()).append('"');
         }
-        stringBuilder.append('>').append(content);
+        stringBuilder.append('>').append(parsingResult.getContent());
     }
 
     private int leadingTabs(String line) {
@@ -183,5 +156,60 @@ public class HamlParser {
 
     private void closeTag(StringBuilder stringBuilder, Deque<String> stack) {
         stringBuilder.append("</").append(stack.pop()).append('>');
+    }
+
+    private static class ParsingResult {
+        private String tagName = null;
+        private Map<String, String> attributes = null;
+        private Set<String> classes = null;
+        private String content = "";
+
+        private String getTagName() {
+            return tagName;
+        }
+
+        private void setTagName(String tagName) {
+            this.tagName = tagName;
+        }
+
+        private String getContent() {
+            return content;
+        }
+
+        private void setContent(String content) {
+            this.content = content;
+        }
+
+        public void addAttribute(String name, String value) {
+            if(attributes == null) {
+                attributes = new LinkedHashMap<>();
+            }
+            attributes.put(name, value);
+        }
+
+        public void addClass(String name) {
+            if(classes == null) {
+                classes = new LinkedHashSet<>();
+            }
+            classes.add(name);
+        }
+
+        public Map<String, String> getAttributes() {
+            if(attributes == null) {
+                if(classes == null) {
+                    return Collections.emptyMap();
+                } else {
+                    return Collections.singletonMap("class", StringUtils.join(classes, ' '));
+                }
+            } else {
+                if(classes == null) {
+                    return attributes;
+                } else {
+                    Map<String, String> copy = new LinkedHashMap<>(attributes);
+                    copy.put("class", StringUtils.join(classes, ' '));
+                    return copy;
+                }
+            }
+        }
     }
 }

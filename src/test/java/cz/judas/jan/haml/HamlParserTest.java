@@ -50,6 +50,11 @@ public class HamlParserTest {
     }
 
     @Test
+    public void classAttributeWithoutContent() throws Exception {
+        assertParses("%h1.bluh\n\t%span bra bh", "<h1 class=\"bluh\"><span>bra bh</span></h1>");
+    }
+
+    @Test
     public void multipleClassAttribute() throws Exception {
         assertParses("%span.bluh.lkj bra bh", "<span class=\"bluh lkj\">bra bh</span>");
     }
