@@ -21,13 +21,15 @@ public class HamlParser {
 
                 int spaceIndex = strippedLine.indexOf(' ');
                 String tagName;
+                String content;
                 if(spaceIndex == -1) {
                     tagName = strippedLine;
-                    stringBuilder.append('<').append(strippedLine).append(">");
+                    content = "";
                 } else {
                     tagName = strippedLine.substring(0, spaceIndex);
-                    stringBuilder.append('<').append(tagName).append(">").append(strippedLine.substring(spaceIndex + 1));
+                    content = strippedLine.substring(spaceIndex + 1);
                 }
+                stringBuilder.append('<').append(tagName).append(">").append(content);
                 stack.push(tagName);
             }
         }
