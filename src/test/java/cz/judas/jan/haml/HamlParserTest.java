@@ -7,7 +7,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class HamlParserTest {
-
     private HamlParser parser;
 
     @Before
@@ -33,5 +32,10 @@ public class HamlParserTest {
     @Test
     public void tagsCanHaveTextContent() throws Exception {
         assertThat(parser.process("html\n\thead\n\t\ttitle something"), is("<html><head><title>something</title></head></html>"));
+    }
+
+    @Test
+    public void implicitClosing() throws Exception {
+        assertThat(parser.process("ul\n\tli blah\np bleh"), is("<ul><li>blah</li></ul><p>bleh</p>"));
     }
 }

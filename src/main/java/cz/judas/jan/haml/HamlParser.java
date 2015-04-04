@@ -12,11 +12,12 @@ public class HamlParser {
             if(line.equals("!!! 5")) {
                 stringBuilder.append("<!DOCTYPE html>\n");
             } else {
-                int numTabs = 0;
-                while(line.charAt(numTabs) == '\t') {
-                    numTabs++;
-                }
+                int numTabs = leadingTabs(line);
                 String strippedLine = line.substring(numTabs);
+
+                while(numTabs < stack.size()) {
+                    closeTag(stringBuilder, stack);
+                }
 
                 int spaceIndex = strippedLine.indexOf(' ');
                 String tagName;
@@ -32,9 +33,21 @@ public class HamlParser {
         }
 
         while(!stack.isEmpty()) {
-            stringBuilder.append("</").append(stack.pop()).append(">");
+            closeTag(stringBuilder, stack);
         }
 
         return stringBuilder.toString();
+    }
+
+    private int leadingTabs(String line) {
+        int numTabs = 0;
+        while(line.charAt(numTabs) == '\t') {
+            numTabs++;
+        }
+        return numTabs;
+    }
+
+    private void closeTag(StringBuilder stringBuilder, Deque<String> stack) {
+        stringBuilder.append("</").append(stack.pop()).append(">");
     }
 }
