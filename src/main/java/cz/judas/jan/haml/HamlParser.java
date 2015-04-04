@@ -11,8 +11,12 @@ public class HamlParser {
         Deque<String> stack = new ArrayDeque<>();
 
         for (String line : haml.split("\n")) {
-            if(line.equals("!!! 5")) {
-                stringBuilder.append("<!DOCTYPE html>\n");
+            if(line.startsWith("!!!")) {
+                if(line.equals("!!! 5")) {
+                    stringBuilder.append("<!DOCTYPE html>\n");
+                } else {
+                    throw new IllegalArgumentException("Unsupported doctype " + line.substring(4));
+                }
             } else {
                 int numTabs = leadingTabs(line);
                 String strippedLine = line.substring(numTabs);

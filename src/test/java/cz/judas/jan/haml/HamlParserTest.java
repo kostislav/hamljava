@@ -25,8 +25,13 @@ public class HamlParserTest {
     }
 
     @Test
-    public void doctype() throws Exception {
+    public void html5Ddoctype() throws Exception {
         assertParses("!!! 5", "<!DOCTYPE html>\n");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void otherDoctypesAreUnsupported() throws Exception {
+        parser.process("!!! Strict");
     }
 
     @Test
