@@ -61,7 +61,7 @@ public class HamlParserTest {
 
     @Test
     public void idAndClassAttribute() throws Exception {
-        assertParses("%h2#hehe.dre njhg", "<h2 class=\"dre\" id=\"hehe\">njhg</h2>");
+        assertParses("%h2#hehe.dre njhg", "<h2 id=\"hehe\" class=\"dre\">njhg</h2>");
     }
 
     private void assertParses(String input, String output) throws Exception {
