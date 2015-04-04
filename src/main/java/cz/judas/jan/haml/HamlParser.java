@@ -2,10 +2,7 @@ package cz.judas.jan.haml;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class HamlParser {
     public String process(String haml) {
@@ -23,27 +20,23 @@ public class HamlParser {
                     closeTag(stringBuilder, stack);
                 }
 
+                ParsedLine parsedLine = new ParsedLine();
+
                 int spaceIndex = strippedLine.indexOf(' ');
-                String tagDef;
-                String content;
                 if(spaceIndex == -1) {
-                    tagDef = strippedLine;
-                    content = "";
+                    parsedLine.tagName = strippedLine;
                 } else {
-                    tagDef = strippedLine.substring(0, spaceIndex);
-                    content = strippedLine.substring(spaceIndex + 1);
+                    parsedLine.tagName = strippedLine.substring(0, spaceIndex);
+                    parsedLine.content = strippedLine.substring(spaceIndex + 1);
                 }
-                int dotIndex = tagDef.indexOf('.');
-                String tagName;
-                Map<String, String> attributes = new LinkedHashMap<>();
+                int dotIndex = parsedLine.tagName.indexOf('.');
                 if(dotIndex != -1) {
-                    tagName = tagDef.substring(0, dotIndex);
-                    attributes.put("class", StringUtils.replace(tagDef.substring(dotIndex + 1), ".", " "));
-                } else {
-                    tagName = tagDef;
+                    String toBeSplit = parsedLine.tagName;
+                    parsedLine.tagName = toBeSplit.substring(0, dotIndex);
+                    parsedLine.addAttribute("class", StringUtils.replace(toBeSplit.substring(dotIndex + 1), ".", " "));
                 }
-                htmlTag(stringBuilder, content, tagName, attributes);
-                stack.push(tagName);
+                htmlTag(stringBuilder, parsedLine);
+                stack.push(parsedLine.tagName);
             }
         }
 
@@ -54,12 +47,12 @@ public class HamlParser {
         return stringBuilder.toString();
     }
 
-    private void htmlTag(StringBuilder stringBuilder, String content, String tagName, Map<String, String> attributes) {
-        stringBuilder.append('<').append(tagName);
-        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+    private void htmlTag(StringBuilder stringBuilder, ParsedLine parsedLine) {
+        stringBuilder.append('<').append(parsedLine.tagName);
+        for (Map.Entry<String, String> entry : parsedLine.getAttributes().entrySet()) {
             stringBuilder.append(' ').append(entry.getKey()).append("=\"").append(entry.getValue()).append('"');
         }
-        stringBuilder.append('>').append(content);
+        stringBuilder.append('>').append(parsedLine.content);
     }
 
     private int leadingTabs(String line) {
@@ -72,5 +65,26 @@ public class HamlParser {
 
     private void closeTag(StringBuilder stringBuilder, Deque<String> stack) {
         stringBuilder.append("</").append(stack.pop()).append('>');
+    }
+
+    private static class ParsedLine {
+        private String tagName;
+        private Map<String, String> attributes = null;
+        private String content = "";
+
+        public void addAttribute(String name, String value) {
+            if(attributes == null) {
+                attributes = new LinkedHashMap<>();
+            }
+            attributes.put(name, value);
+        }
+
+        private Map<String, String> getAttributes() {
+            if(attributes == null) {
+                return Collections.emptyMap();
+            } else {
+                return attributes;
+            }
+        }
     }
 }
