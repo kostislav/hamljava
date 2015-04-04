@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class HamlParser {
-    public String process(String haml) {
+    public String process(String haml) throws ParseException {
         StringBuilder stringBuilder = new StringBuilder();
         Deque<String> stack = new ArrayDeque<>();
 
@@ -15,7 +15,7 @@ public class HamlParser {
                 if(line.equals("!!! 5")) {
                     stringBuilder.append("<!DOCTYPE html>\n");
                 } else {
-                    throw new IllegalArgumentException("Unsupported doctype " + line.substring(4));
+                    throw new ParseException("Unsupported doctype " + line.substring(4));
                 }
             } else {
                 int numTabs = leadingTabs(line);
@@ -25,14 +25,18 @@ public class HamlParser {
                     closeTag(stringBuilder, stack);
                 }
 
-                ParsedLine parsedLine = new ParsedLine(strippedLine);
+                if(strippedLine.startsWith("%")) {
+                    ParsedLine parsedLine = new ParsedLine(strippedLine.substring(1));
 
-                parsedLine.updateOn(' ', parsedLine::setContent);
-                parsedLine.updateOn('.', s -> parsedLine.addAttribute("class", StringUtils.replace(s, ".", " ")));
-                parsedLine.updateOn('#', s -> parsedLine.addAttribute("id", s));
+                    parsedLine.updateOn(' ', parsedLine::setContent);
+                    parsedLine.updateOn('.', s -> parsedLine.addAttribute("class", StringUtils.replace(s, ".", " ")));
+                    parsedLine.updateOn('#', s -> parsedLine.addAttribute("id", s));
 
-                htmlTag(stringBuilder, parsedLine);
-                stack.push(parsedLine.tagName);
+                    htmlTag(stringBuilder, parsedLine);
+                    stack.push(parsedLine.tagName);
+                } else {
+                    throw new ParseException("Could not parse line " + line);
+                }
             }
         }
 
@@ -69,7 +73,7 @@ public class HamlParser {
         private String content = "";
 
         private ParsedLine(String tagName) {
-            this.tagName = tagName.substring(1);
+            this.tagName = tagName;
         }
 
         public void addAttribute(String name, String value) {

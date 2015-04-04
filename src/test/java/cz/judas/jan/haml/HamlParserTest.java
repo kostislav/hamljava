@@ -29,7 +29,7 @@ public class HamlParserTest {
         assertParses("!!! 5", "<!DOCTYPE html>\n");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ParseException.class)
     public void otherDoctypesAreUnsupported() throws Exception {
         parser.process("!!! Strict");
     }
@@ -64,7 +64,7 @@ public class HamlParserTest {
         assertParses("%h2#hehe.dre njhg", "<h2 class=\"dre\" id=\"hehe\">njhg</h2>");
     }
 
-    private void assertParses(String input, String output) {
+    private void assertParses(String input, String output) throws Exception {
         assertThat(parser.process(input), is(output));
     }
 }
