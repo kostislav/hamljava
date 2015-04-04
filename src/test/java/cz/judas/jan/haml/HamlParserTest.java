@@ -49,6 +49,16 @@ public class HamlParserTest {
         assertParses("span.bluh.lkj bra bh", "<span class=\"bluh lkj\">bra bh</span>");
     }
 
+    @Test
+    public void idAttribute() throws Exception {
+        assertParses("h2#hehe njhg", "<h2 id=\"hehe\">njhg</h2>");
+    }
+
+    @Test
+    public void idAndClassAttribute() throws Exception {
+        assertParses("h2#hehe.dre njhg", "<h2 class=\"dre\" id=\"hehe\">njhg</h2>");
+    }
+
     private void assertParses(String input, String output) {
         assertThat(parser.process(input), is(output));
     }

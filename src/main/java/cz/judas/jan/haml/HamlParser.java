@@ -35,6 +35,12 @@ public class HamlParser {
                     parsedLine.tagName = toBeSplit.substring(0, dotIndex);
                     parsedLine.addAttribute("class", StringUtils.replace(toBeSplit.substring(dotIndex + 1), ".", " "));
                 }
+                int hashIndex = parsedLine.tagName.indexOf('#');
+                if(hashIndex != -1) {
+                    String toBeSplit = parsedLine.tagName;
+                    parsedLine.tagName = toBeSplit.substring(0, hashIndex);
+                    parsedLine.addAttribute("id", toBeSplit.substring(hashIndex + 1));
+                }
                 htmlTag(stringBuilder, parsedLine);
                 stack.push(parsedLine.tagName);
             }
