@@ -69,7 +69,7 @@ public class HamlParser {
                                 state = transition(state, currentPosition, c);
                                 break;
                             case TAG_NAME:
-                                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
+                                if (isTagNameChar(c)) {
                                     continue;
                                 } else {
                                     parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition - 1));
@@ -79,7 +79,7 @@ public class HamlParser {
                                 }
                                 break;
                             case CLASS:
-                                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_') {
+                                if (isIdOrClassChar(c)) {
                                     continue;
                                 } else {
                                     parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
@@ -89,7 +89,7 @@ public class HamlParser {
                                 }
                                 break;
                             case ID:
-                                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_') {
+                                if (isIdOrClassChar(c)) {
                                     continue;
                                 } else {
                                     parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition - 1));
@@ -135,6 +135,14 @@ public class HamlParser {
         stack.peekLast().appendTo(stringBuilder);
 
         return stringBuilder.toString();
+    }
+
+    private boolean isIdOrClassChar(char c) {
+        return Character.isLetterOrDigit(c) || c == '-' || c == '_';
+    }
+
+    private boolean isTagNameChar(char c) {
+        return Character.isLetterOrDigit(c);
     }
 
     private State transition(State state, int currentPosition, char c) throws ParseException {
