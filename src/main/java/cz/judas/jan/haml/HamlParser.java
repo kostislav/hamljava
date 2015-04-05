@@ -12,7 +12,8 @@ public class HamlParser {
         TAG_NAME,
         CLASS,
         ID,
-        CONTENT
+        CONTENT,
+        END
     }
 
     private final Map<State, ParsingState> states = ImmutableMap.<State, ParsingState>builder()
@@ -81,22 +82,16 @@ public class HamlParser {
                     ParsingResult parsingResult = new ParsingResult();
 
                     ParsingState state = states.get(State.START);
-                    int tokenStart = 0;
                     int currentPosition = 0;
-                    for (char c : strippedLine.toCharArray()) {
-                        currentPosition++;
-                        if(state.isValidChar(c)) {
-                            continue;
+                    while(true) {
+                        StateTransition stateTransition = state.eat(strippedLine, currentPosition, parsingResult);
+                        if(stateTransition.getNewState() == State.END) {
+                            break;
                         } else {
-                            state.endOfToken(parsingResult, strippedLine.substring(tokenStart, currentPosition - 1));
+                            state = states.get(stateTransition.getNewState());
+                            currentPosition = stateTransition.getNewPosition();
                         }
-
-                        tokenStart = currentPosition;
-
-                        state = states.get(state.transition(currentPosition, c));
                     }
-
-                    state.endOfToken(parsingResult, strippedLine.substring(tokenStart, currentPosition));
 
                     HtmlNode node = parsingResult.toHtmlNode();
                     stack.peekFirst().addChild(node);
@@ -140,15 +135,24 @@ public class HamlParser {
             this.transitions = transitions;
         }
 
-        public boolean isValidChar(char c) {
-            return validChars.test(c);
+        public StateTransition eat(String inputLine, int startPosition, ParsingResult parsingResult) throws ParseException {
+            int currentPosition = startPosition;
+            while(currentPosition < inputLine.length() && validChars.test(inputLine.charAt(currentPosition))) {
+                currentPosition++;
+            }
+            onEnd.accept(parsingResult, inputLine.substring(startPosition, currentPosition));
+
+            if(currentPosition == inputLine.length()) {
+                return new StateTransition(State.END, -1);
+            } else {
+                return new StateTransition(
+                        transition(currentPosition, inputLine.charAt(currentPosition)),
+                        currentPosition + 1
+                );
+            }
         }
 
-        public void endOfToken(ParsingResult parsingResult, String substring) {
-            onEnd.accept(parsingResult, substring);
-        }
-
-        public State transition(int currentPosition, char c) throws ParseException {
+        private State transition(int currentPosition, char c) throws ParseException {
             State newState = transitions.get(c);
             if (newState == null) {
                 throw new ParseException("Could not parse line at position " + currentPosition);
@@ -160,6 +164,24 @@ public class HamlParser {
 
     private interface CharPredicate {
         boolean test(char c);
+    }
+
+    private static class StateTransition {
+        private final State newState;
+        private final int newPosition;
+
+        private StateTransition(State newState, int newPosition) {
+            this.newState = newState;
+            this.newPosition = newPosition;
+        }
+
+        public State getNewState() {
+            return newState;
+        }
+
+        public int getNewPosition() {
+            return newPosition;
+        }
     }
 
     private static class ParsingResult {
