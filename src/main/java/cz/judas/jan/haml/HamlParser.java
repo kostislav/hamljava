@@ -15,12 +15,13 @@ public class HamlParser {
 
     public String process(String haml) throws ParseException {
         StringBuilder stringBuilder = new StringBuilder();
-        Deque<String> stack = new ArrayDeque<>();
+        Deque<Node> stack2 = new ArrayDeque<>();
+        stack2.push(new RootNode());
 
         for (String line : haml.split("\n")) {
             if (line.startsWith("!!!")) {
                 if (line.equals("!!! 5")) {
-                    stringBuilder.append("<!DOCTYPE html>\n");
+                    stack2.peekFirst().addChild(new Html5DoctypeNode());
                 } else {
                     throw new ParseException("Unsupported doctype " + line.substring(4));
                 }
@@ -28,8 +29,8 @@ public class HamlParser {
                 int numTabs = leadingTabs(line);
                 String strippedLine = line.substring(numTabs);
 
-                while (numTabs < stack.size()) {
-                    closeTag(stringBuilder, stack);
+                while (numTabs < stack2.size() - 1) {
+                    stack2.pop();
                 }
 
                 if (strippedLine.startsWith("%")) {
@@ -122,8 +123,13 @@ public class HamlParser {
                             throw new ParseException("Could not parse line " + line);
                     }
 
-                    htmlTag(stringBuilder, parsingResult);
-                    stack.push(parsingResult.getTagName());
+                    HtmlNode node = new HtmlNode(
+                            parsingResult.getTagName(),
+                            parsingResult.getAttributes(),
+                            parsingResult.getContent()
+                    );
+                    stack2.peekFirst().addChild(node);
+                    stack2.push(node);
 
                 } else {
                     throw new ParseException("Could not parse line " + line);
@@ -131,19 +137,9 @@ public class HamlParser {
             }
         }
 
-        while (!stack.isEmpty()) {
-            closeTag(stringBuilder, stack);
-        }
+        stack2.peekLast().toString(stringBuilder);
 
         return stringBuilder.toString();
-    }
-
-    private void htmlTag(StringBuilder stringBuilder, ParsingResult parsingResult) {
-        stringBuilder.append('<').append(parsingResult.getTagName());
-        for (Map.Entry<String, String> entry : parsingResult.getAttributes().entrySet()) {
-            stringBuilder.append(' ').append(entry.getKey()).append("=\"").append(entry.getValue()).append('"');
-        }
-        stringBuilder.append('>').append(parsingResult.getContent());
     }
 
     private int leadingTabs(String line) {
@@ -152,10 +148,6 @@ public class HamlParser {
             numTabs++;
         }
         return numTabs;
-    }
-
-    private void closeTag(StringBuilder stringBuilder, Deque<String> stack) {
-        stringBuilder.append("</").append(stack.pop()).append('>');
     }
 
     private static class ParsingResult {
