@@ -14,24 +14,24 @@ public class HamlParser {
         CONTENT
     }
 
-    private final Map<State, Map<Character, State>> transitions = ImmutableMap.<State, Map<Character, State>>of(
-            State.START, ImmutableMap.of(
+    private final Map<State, ParsingState> states = ImmutableMap.of(
+            State.START, new ParsingState(ImmutableMap.of(
             '%', State.TAG_NAME
-    ),
-            State.TAG_NAME, ImmutableMap.of(
+    )),
+            State.TAG_NAME, new ParsingState(ImmutableMap.of(
             '.', State.CLASS,
             '#', State.ID,
             ' ', State.CONTENT
-    ),
-            State.CLASS, ImmutableMap.of(
+    )),
+            State.CLASS, new ParsingState(ImmutableMap.of(
             '.', State.CLASS,
             '#', State.ID,
             ' ', State.CONTENT
-    ),
-            State.ID, ImmutableMap.of(
+    )),
+            State.ID, new ParsingState(ImmutableMap.of(
             '.', State.CLASS,
             ' ', State.CONTENT
-    )
+    ))
     );
 
     public String process(String haml) throws ParseException {
@@ -92,7 +92,7 @@ public class HamlParser {
 
                         tokenStart = currentPosition;
 
-                        state = transition(state, currentPosition, c);
+                        state = states.get(state).transition(currentPosition, c);
                     }
 
                     switch (state) {
@@ -139,22 +139,29 @@ public class HamlParser {
         return Character.isLetterOrDigit(c);
     }
 
-    private State transition(State state, int currentPosition, char c) throws ParseException {
-        State newState = transitions.get(state).get(c);
-        if(newState == null) {
-            throw new ParseException("Could not parse line at position " + currentPosition);
-        } else {
-            state = newState;
-        }
-        return state;
-    }
-
     private int leadingTabs(String line) {
         int numTabs = 0;
         while (line.charAt(numTabs) == '\t') {
             numTabs++;
         }
         return numTabs;
+    }
+
+    private static class ParsingState {
+        private final Map<Character, State> transitions;
+
+        private ParsingState(Map<Character, State> transitions) {
+            this.transitions = transitions;
+        }
+
+        public State transition(int currentPosition, char c) throws ParseException {
+            State newState = transitions.get(c);
+            if (newState == null) {
+                throw new ParseException("Could not parse line at position " + currentPosition);
+            } else {
+                return newState;
+            }
+        }
     }
 
     private static class ParsingResult {
