@@ -80,38 +80,23 @@ public class HamlParser {
                 if (strippedLine.startsWith("%")) {
                     ParsingResult parsingResult = new ParsingResult();
 
-                    State state = State.START;
+                    ParsingState state = states.get(State.START);
                     int tokenStart = 0;
                     int currentPosition = 0;
                     for (char c : strippedLine.toCharArray()) {
                         currentPosition++;
-                        if(states.get(state).isValidChar(c)) {
+                        if(state.isValidChar(c)) {
                             continue;
                         } else {
-                            states.get(state).endOfToken(parsingResult, strippedLine.substring(tokenStart, currentPosition - 1));
+                            state.endOfToken(parsingResult, strippedLine.substring(tokenStart, currentPosition - 1));
                         }
 
                         tokenStart = currentPosition;
 
-                        state = states.get(state).transition(currentPosition, c);
+                        state = states.get(state.transition(currentPosition, c));
                     }
 
-                    switch (state) {
-                        case TAG_NAME:
-                            parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition));
-                            break;
-                        case CLASS:
-                            parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition));
-                            break;
-                        case ID:
-                            parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition));
-                            break;
-                        case CONTENT:
-                            parsingResult.setContent(strippedLine.substring(tokenStart, currentPosition));
-                            break;
-                        case START:
-                            throw new ParseException("Could not parse line " + line);
-                    }
+                    state.endOfToken(parsingResult, strippedLine.substring(tokenStart, currentPosition));
 
                     HtmlNode node = new HtmlNode(
                             parsingResult.getTagName(),
