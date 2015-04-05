@@ -12,9 +12,9 @@ public class RootNode implements Node {
     }
 
     @Override
-    public void toString(StringBuilder stringBuilder) {
+    public void appendTo(StringBuilder stringBuilder) {
         for (Node child : children) {
-            child.toString(stringBuilder);
+            child.appendTo(stringBuilder);
         }
     }
 }

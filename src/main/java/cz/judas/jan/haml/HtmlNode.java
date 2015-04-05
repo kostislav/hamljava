@@ -22,7 +22,7 @@ public class HtmlNode implements Node {
     }
 
     @Override
-    public void toString(StringBuilder stringBuilder) {
+    public void appendTo(StringBuilder stringBuilder) {
         stringBuilder
                 .append('<').append(tagName);
 
@@ -32,7 +32,7 @@ public class HtmlNode implements Node {
         stringBuilder.append('>');
         stringBuilder.append(textContent);
         for (Node child : children) {
-            child.toString(stringBuilder);
+            child.appendTo(stringBuilder);
         }
         stringBuilder.append("</").append(tagName).append('>');
     }

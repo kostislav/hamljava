@@ -2,7 +2,7 @@ package cz.judas.jan.haml;
 
 public class Html5DoctypeNode implements Node {
     @Override
-    public void toString(StringBuilder stringBuilder) {
+    public void appendTo(StringBuilder stringBuilder) {
         stringBuilder.append("<!DOCTYPE html>\n");
     }
 

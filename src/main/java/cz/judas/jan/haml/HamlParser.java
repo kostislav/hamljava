@@ -15,13 +15,13 @@ public class HamlParser {
 
     public String process(String haml) throws ParseException {
         StringBuilder stringBuilder = new StringBuilder();
-        Deque<Node> stack2 = new ArrayDeque<>();
-        stack2.push(new RootNode());
+        Deque<Node> stack = new ArrayDeque<>();
+        stack.push(new RootNode());
 
         for (String line : haml.split("\n")) {
             if (line.startsWith("!!!")) {
                 if (line.equals("!!! 5")) {
-                    stack2.peekFirst().addChild(new Html5DoctypeNode());
+                    stack.peekFirst().addChild(new Html5DoctypeNode());
                 } else {
                     throw new ParseException("Unsupported doctype " + line.substring(4));
                 }
@@ -29,8 +29,8 @@ public class HamlParser {
                 int numTabs = leadingTabs(line);
                 String strippedLine = line.substring(numTabs);
 
-                while (numTabs < stack2.size() - 1) {
-                    stack2.pop();
+                while (numTabs < stack.size() - 1) {
+                    stack.pop();
                 }
 
                 if (strippedLine.startsWith("%")) {
@@ -128,8 +128,8 @@ public class HamlParser {
                             parsingResult.getAttributes(),
                             parsingResult.getContent()
                     );
-                    stack2.peekFirst().addChild(node);
-                    stack2.push(node);
+                    stack.peekFirst().addChild(node);
+                    stack.push(node);
 
                 } else {
                     throw new ParseException("Could not parse line " + line);
@@ -137,7 +137,7 @@ public class HamlParser {
             }
         }
 
-        stack2.peekLast().toString(stringBuilder);
+        stack.peekLast().appendTo(stringBuilder);
 
         return stringBuilder.toString();
     }
