@@ -64,18 +64,12 @@ public class HamlParser {
                         currentPosition++;
                         switch (state) {
                             case START:
-                                tokenStart = currentPosition;
-
-                                state = transition(state, currentPosition, c);
                                 break;
                             case TAG_NAME:
                                 if (isTagNameChar(c)) {
                                     continue;
                                 } else {
                                     parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition - 1));
-                                    tokenStart = currentPosition;
-
-                                    state = transition(state, currentPosition, c);
                                 }
                                 break;
                             case CLASS:
@@ -83,9 +77,6 @@ public class HamlParser {
                                     continue;
                                 } else {
                                     parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
-                                    tokenStart = currentPosition;
-
-                                    state = transition(state, currentPosition, c);
                                 }
                                 break;
                             case ID:
@@ -93,12 +84,15 @@ public class HamlParser {
                                     continue;
                                 } else {
                                     parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition - 1));
-                                    tokenStart = currentPosition;
-
-                                    state = transition(state, currentPosition, c);
                                 }
                                 break;
+                            case CONTENT:
+                                continue;
                         }
+
+                        tokenStart = currentPosition;
+
+                        state = transition(state, currentPosition, c);
                     }
 
                     switch (state) {
