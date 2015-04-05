@@ -1,48 +1,36 @@
 package cz.judas.jan.haml;
 
-import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class ParsingState {
     private final char leadingChar;
     private final CharPredicate validChars;
     private final BiConsumer<ParsingResult, String> onEnd;
-    private final Map<Character, State> transitions;
+    private final Set<State> followingStates;
 
-    public ParsingState(char leadingChar, CharPredicate validChars, BiConsumer<ParsingResult, String> onEnd, Map<Character, State> transitions) {
+    public ParsingState(char leadingChar, CharPredicate validChars, BiConsumer<ParsingResult, String> onEnd, Set<State> followingStates) {
         this.leadingChar = leadingChar;
         this.validChars = validChars;
         this.onEnd = onEnd;
-        this.transitions = transitions;
+        this.followingStates = followingStates;
     }
 
     public boolean startsWith(char c) {
         return c == leadingChar;
     }
 
-    public StateTransition eat(String inputLine, int startPosition, ParsingResult parsingResult) throws ParseException {
+    public int eat(String inputLine, int startPosition, ParsingResult parsingResult) throws ParseException {
         int currentPosition = startPosition + 1;
         while(currentPosition < inputLine.length() && validChars.test(inputLine.charAt(currentPosition))) {
             currentPosition++;
         }
         onEnd.accept(parsingResult, inputLine.substring(startPosition + 1, currentPosition));
 
-        if(currentPosition == inputLine.length()) {
-            return new StateTransition(State.END, -1);
-        } else {
-            return new StateTransition(
-                    transition(currentPosition, inputLine.charAt(currentPosition)),
-                    currentPosition
-            );
-        }
+        return currentPosition;
     }
 
-    private State transition(int currentPosition, char c) throws ParseException {
-        State newState = transitions.get(c);
-        if (newState == null) {
-            throw new ParseException("Could not parse line at position " + currentPosition);
-        } else {
-            return newState;
-        }
+    public Set<State> getFollowingStates() {
+        return followingStates;
     }
 }

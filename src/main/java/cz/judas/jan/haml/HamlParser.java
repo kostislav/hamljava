@@ -1,6 +1,7 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -13,36 +14,25 @@ public class HamlParser {
                     '%',
                     this::isTagNameChar,
                     ParsingResult::setTagName,
-                    ImmutableMap.of(
-                            '.', State.CLASS,
-                            '#', State.ID,
-                            ' ', State.CONTENT
-                    )
+                    ImmutableSet.of(State.CLASS, State.ID, State.CONTENT)
             ))
             .put(State.CLASS, new ParsingState(
                     '.',
                     this::isIdOrClassChar,
                     ParsingResult::addClass,
-                    ImmutableMap.of(
-                            '.', State.CLASS,
-                            '#', State.ID,
-                            ' ', State.CONTENT
-                    )
+                    ImmutableSet.of(State.CLASS, State.ID, State.CONTENT)
             ))
             .put(State.ID, new ParsingState(
                     '#',
                     this::isIdOrClassChar,
                     (parsingResult, substring) -> parsingResult.addAttribute("id", substring),
-                    ImmutableMap.of(
-                            '.', State.CLASS,
-                            ' ', State.CONTENT
-                    )
+                    ImmutableSet.of(State.CLASS, State.CONTENT)
             ))
             .put(State.CONTENT, new ParsingState(
                     ' ',
                     c -> true,
                     ParsingResult::setContent,
-                    Collections.emptyMap()
+                    Collections.emptySet()
             ))
             .build();
 
@@ -72,12 +62,12 @@ public class HamlParser {
 
                 int currentPosition = 0;
                 while (true) {
-                    StateTransition stateTransition = state.eat(strippedLine, currentPosition, parsingResult);
-                    if (stateTransition.getNewState() == State.END) {
+                    currentPosition = state.eat(strippedLine, currentPosition, parsingResult);
+                    if (currentPosition == strippedLine.length()) {
                         break;
                     } else {
-                        state = states.get(stateTransition.getNewState());
-                        currentPosition = stateTransition.getNewPosition();
+                        char currentChar = strippedLine.charAt(currentPosition);
+                        state = transition(state, currentChar);
                     }
                 }
 
@@ -90,6 +80,16 @@ public class HamlParser {
         stack.peekLast().appendTo(stringBuilder);
 
         return stringBuilder.toString();
+    }
+
+    private ParsingState transition(ParsingState state, char currentChar) throws ParseException {
+        for (State candidate : state.getFollowingStates()) {
+            ParsingState candidateState = states.get(candidate);
+            if(candidateState.startsWith(currentChar)) {
+                return candidateState;
+            }
+        }
+        throw new ParseException("Could not parse line");
     }
 
     private ParsingState initialState(String line, String strippedLine) throws ParseException {

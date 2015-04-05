@@ -4,6 +4,5 @@ public enum State {
     TAG_NAME,
     CLASS,
     ID,
-    CONTENT,
-    END
+    CONTENT
 }
