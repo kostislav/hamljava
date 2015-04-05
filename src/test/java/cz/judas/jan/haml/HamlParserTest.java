@@ -69,6 +69,11 @@ public class HamlParserTest {
         assertParses("%h2#hehe.dre njhg", "<h2 id=\"hehe\" class=\"dre\">njhg</h2>");
     }
 
+//    @Test
+//    public void genericAttributes() throws Exception {
+//        assertParses("%input{ name: 'blah', value: 'bleh'}", "<input name=\"blah\" value=\"bleh\"></input>");
+//    }
+
     private void assertParses(String input, String output) throws Exception {
         assertThat(parser.process(input), is(output));
     }

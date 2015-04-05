@@ -1,5 +1,6 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -12,6 +13,26 @@ public class HamlParser {
         ID,
         CONTENT
     }
+
+    private final Map<State, Map<Character, State>> transitions = ImmutableMap.<State, Map<Character, State>>of(
+            State.START, ImmutableMap.of(
+            '%', State.TAG_NAME
+    ),
+            State.TAG_NAME, ImmutableMap.of(
+            '.', State.CLASS,
+            '#', State.ID,
+            ' ', State.CONTENT
+    ),
+            State.CLASS, ImmutableMap.of(
+            '.', State.CLASS,
+            '#', State.ID,
+            ' ', State.CONTENT
+    ),
+            State.ID, ImmutableMap.of(
+            '.', State.CLASS,
+            ' ', State.CONTENT
+    )
+    );
 
     public String process(String haml) throws ParseException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -43,10 +64,9 @@ public class HamlParser {
                         currentPosition++;
                         switch (state) {
                             case START:
-                                if (c == '%') {
-                                    state = State.TAG_NAME;
-                                    tokenStart = currentPosition;
-                                }
+                                tokenStart = currentPosition;
+
+                                state = transition(state, currentPosition, c);
                                 break;
                             case TAG_NAME:
                                 if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
@@ -55,52 +75,27 @@ public class HamlParser {
                                     parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition - 1));
                                     tokenStart = currentPosition;
 
-                                    if (c == '.') {
-                                        state = State.CLASS;
-                                    } else if (c == '#') {
-                                        state = State.ID;
-                                    } else if (c == ' ') {
-                                        state = State.CONTENT;
-                                    } else {
-                                        throw new ParseException("Could not parse line at position " + currentPosition);
-                                    }
+                                    state = transition(state, currentPosition, c);
                                 }
                                 break;
                             case CLASS:
                                 if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_') {
                                     continue;
-                                } else if (c == '.') {
-                                    parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
-                                    tokenStart = currentPosition;
                                 } else {
                                     parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
-
                                     tokenStart = currentPosition;
-                                    if (c == '#') {
-                                        state = State.ID;
-                                    } else if (c == ' ') {
-                                        state = State.CONTENT;
-                                    } else {
-                                        throw new ParseException("Could not parse line at position " + currentPosition);
-                                    }
+
+                                    state = transition(state, currentPosition, c);
                                 }
                                 break;
                             case ID:
                                 if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_') {
                                     continue;
-                                } else if (c == '#') {
-                                    throw new ParseException("Multiple IDs not supported");
                                 } else {
                                     parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition - 1));
-
                                     tokenStart = currentPosition;
-                                    if (c == '.') {
-                                        state = State.CLASS;
-                                    } else if (c == ' ') {
-                                        state = State.CONTENT;
-                                    } else {
-                                        throw new ParseException("Could not parse line at position " + currentPosition);
-                                    }
+
+                                    state = transition(state, currentPosition, c);
                                 }
                                 break;
                         }
@@ -142,6 +137,16 @@ public class HamlParser {
         return stringBuilder.toString();
     }
 
+    private State transition(State state, int currentPosition, char c) throws ParseException {
+        State newState = transitions.get(state).get(c);
+        if(newState == null) {
+            throw new ParseException("Could not parse line at position " + currentPosition);
+        } else {
+            state = newState;
+        }
+        return state;
+    }
+
     private int leadingTabs(String line) {
         int numTabs = 0;
         while (line.charAt(numTabs) == '\t') {
@@ -173,28 +178,28 @@ public class HamlParser {
         }
 
         public void addAttribute(String name, String value) {
-            if(attributes == null) {
+            if (attributes == null) {
                 attributes = new LinkedHashMap<>();
             }
             attributes.put(name, value);
         }
 
         public void addClass(String name) {
-            if(classes == null) {
+            if (classes == null) {
                 classes = new LinkedHashSet<>();
             }
             classes.add(name);
         }
 
         public Map<String, String> getAttributes() {
-            if(attributes == null) {
-                if(classes == null) {
+            if (attributes == null) {
+                if (classes == null) {
                     return Collections.emptyMap();
                 } else {
                     return Collections.singletonMap("class", StringUtils.join(classes, ' '));
                 }
             } else {
-                if(classes == null) {
+                if (classes == null) {
                     return attributes;
                 } else {
                     Map<String, String> copy = new LinkedHashMap<>(attributes);
