@@ -98,11 +98,7 @@ public class HamlParser {
 
                     state.endOfToken(parsingResult, strippedLine.substring(tokenStart, currentPosition));
 
-                    HtmlNode node = new HtmlNode(
-                            parsingResult.getTagName(),
-                            parsingResult.getAttributes(),
-                            parsingResult.getContent()
-                    );
+                    HtmlNode node = parsingResult.toHtmlNode();
                     stack.peekFirst().addChild(node);
                     stack.push(node);
 
@@ -168,56 +164,42 @@ public class HamlParser {
 
     private static class ParsingResult {
         private String tagName = null;
-        private Map<String, String> attributes = null;
-        private Set<String> classes = null;
+        private Map<String, String> attributes = new LinkedHashMap<>();
+        private Set<String> classes = new LinkedHashSet<>();
         private String content = "";
 
-        private String getTagName() {
-            return tagName;
-        }
-
-        private void setTagName(String tagName) {
+        public void setTagName(String tagName) {
             this.tagName = tagName;
         }
 
-        private String getContent() {
-            return content;
-        }
-
-        private void setContent(String content) {
+        public void setContent(String content) {
             this.content = content;
         }
 
         public void addAttribute(String name, String value) {
-            if (attributes == null) {
-                attributes = new LinkedHashMap<>();
-            }
             attributes.put(name, value);
         }
 
         public void addClass(String name) {
-            if (classes == null) {
-                classes = new LinkedHashSet<>();
-            }
             classes.add(name);
         }
 
-        public Map<String, String> getAttributes() {
-            if (attributes == null) {
-                if (classes == null) {
-                    return Collections.emptyMap();
-                } else {
-                    return Collections.singletonMap("class", StringUtils.join(classes, ' '));
-                }
+        private Map<String, String> getAttributes() {
+            if (classes.isEmpty()) {
+                return attributes;
             } else {
-                if (classes == null) {
-                    return attributes;
-                } else {
-                    Map<String, String> copy = new LinkedHashMap<>(attributes);
-                    copy.put("class", StringUtils.join(classes, ' '));
-                    return copy;
-                }
+                Map<String, String> copy = new LinkedHashMap<>(attributes);
+                copy.put("class", StringUtils.join(classes, ' '));
+                return copy;
             }
+        }
+
+        public HtmlNode toHtmlNode() {
+            return new HtmlNode(
+                    tagName,
+                    getAttributes(),
+                    content
+            );
         }
     }
 }
