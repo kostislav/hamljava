@@ -14,25 +14,41 @@ public class HamlParser {
         CONTENT
     }
 
-    private final Map<State, ParsingState> states = ImmutableMap.of(
-            State.START, new ParsingState(ImmutableMap.of(
-            '%', State.TAG_NAME
-    )),
-            State.TAG_NAME, new ParsingState(ImmutableMap.of(
-            '.', State.CLASS,
-            '#', State.ID,
-            ' ', State.CONTENT
-    )),
-            State.CLASS, new ParsingState(ImmutableMap.of(
-            '.', State.CLASS,
-            '#', State.ID,
-            ' ', State.CONTENT
-    )),
-            State.ID, new ParsingState(ImmutableMap.of(
-            '.', State.CLASS,
-            ' ', State.CONTENT
-    ))
-    );
+    private final Map<State, ParsingState> states = ImmutableMap.<State, ParsingState>builder()
+            .put(State.START, new ParsingState(
+                    c -> false,
+                    ImmutableMap.of(
+                            '%', State.TAG_NAME
+                    )
+            ))
+            .put(State.TAG_NAME, new ParsingState(
+                    this::isTagNameChar,
+                    ImmutableMap.of(
+                            '.', State.CLASS,
+                            '#', State.ID,
+                            ' ', State.CONTENT
+                    )
+            ))
+            .put(State.CLASS, new ParsingState(
+                    this::isIdOrClassChar,
+                    ImmutableMap.of(
+                            '.', State.CLASS,
+                            '#', State.ID,
+                            ' ', State.CONTENT
+                    )
+            ))
+            .put(State.ID, new ParsingState(
+                    this::isIdOrClassChar,
+                    ImmutableMap.of(
+                            '.', State.CLASS,
+                            ' ', State.CONTENT
+                    )
+            ))
+            .put(State.CONTENT, new ParsingState(
+                    c -> true,
+                    Collections.emptyMap()
+            ))
+            .build();
 
     public String process(String haml) throws ParseException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -64,30 +80,39 @@ public class HamlParser {
                         currentPosition++;
                         switch (state) {
                             case START:
+                                if(states.get(state).isValidChar(c)) {
+                                    continue;
+                                } else {
+
+                                }
                                 break;
                             case TAG_NAME:
-                                if (isTagNameChar(c)) {
+                                if(states.get(state).isValidChar(c)) {
                                     continue;
                                 } else {
                                     parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition - 1));
                                 }
                                 break;
                             case CLASS:
-                                if (isIdOrClassChar(c)) {
+                                if(states.get(state).isValidChar(c)) {
                                     continue;
                                 } else {
                                     parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
                                 }
                                 break;
                             case ID:
-                                if (isIdOrClassChar(c)) {
+                                if(states.get(state).isValidChar(c)) {
                                     continue;
                                 } else {
                                     parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition - 1));
                                 }
                                 break;
                             case CONTENT:
-                                continue;
+                                if(states.get(state).isValidChar(c)) {
+                                    continue;
+                                } else {
+
+                                }
                         }
 
                         tokenStart = currentPosition;
@@ -148,10 +173,16 @@ public class HamlParser {
     }
 
     private static class ParsingState {
+        private final CharPredicate validChars;
         private final Map<Character, State> transitions;
 
-        private ParsingState(Map<Character, State> transitions) {
+        private ParsingState(CharPredicate validChars, Map<Character, State> transitions) {
+            this.validChars = validChars;
             this.transitions = transitions;
+        }
+
+        public boolean isValidChar(char c) {
+            return validChars.test(c);
         }
 
         public State transition(int currentPosition, char c) throws ParseException {
@@ -162,6 +193,10 @@ public class HamlParser {
                 return newState;
             }
         }
+    }
+
+    private interface CharPredicate {
+        boolean test(char c);
     }
 
     private static class ParsingResult {
