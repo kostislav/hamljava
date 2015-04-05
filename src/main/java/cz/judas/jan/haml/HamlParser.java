@@ -9,15 +9,8 @@ import java.util.Map;
 
 public class HamlParser {
     private final Map<State, ParsingState> states = ImmutableMap.<State, ParsingState>builder()
-            .put(State.START, new ParsingState(
-                    c -> false,
-                    (parsingResult, substring) -> {
-                    },
-                    ImmutableMap.of(
-                            '%', State.TAG_NAME
-                    )
-            ))
             .put(State.TAG_NAME, new ParsingState(
+                    '%',
                     this::isTagNameChar,
                     ParsingResult::setTagName,
                     ImmutableMap.of(
@@ -27,6 +20,7 @@ public class HamlParser {
                     )
             ))
             .put(State.CLASS, new ParsingState(
+                    '.',
                     this::isIdOrClassChar,
                     ParsingResult::addClass,
                     ImmutableMap.of(
@@ -36,6 +30,7 @@ public class HamlParser {
                     )
             ))
             .put(State.ID, new ParsingState(
+                    '#',
                     this::isIdOrClassChar,
                     (parsingResult, substring) -> parsingResult.addAttribute("id", substring),
                     ImmutableMap.of(
@@ -44,6 +39,7 @@ public class HamlParser {
                     )
             ))
             .put(State.CONTENT, new ParsingState(
+                    ' ',
                     c -> true,
                     ParsingResult::setContent,
                     Collections.emptyMap()
@@ -70,34 +66,39 @@ public class HamlParser {
                     stack.pop();
                 }
 
-                if (strippedLine.startsWith("%")) {
-                    ParsingResult parsingResult = new ParsingResult();
+                ParsingState state = initialState(line, strippedLine);
 
-                    ParsingState state = states.get(State.START);
-                    int currentPosition = 0;
-                    while (true) {
-                        StateTransition stateTransition = state.eat(strippedLine, currentPosition, parsingResult);
-                        if (stateTransition.getNewState() == State.END) {
-                            break;
-                        } else {
-                            state = states.get(stateTransition.getNewState());
-                            currentPosition = stateTransition.getNewPosition();
-                        }
+                ParsingResult parsingResult = new ParsingResult();
+
+                int currentPosition = 0;
+                while (true) {
+                    StateTransition stateTransition = state.eat(strippedLine, currentPosition, parsingResult);
+                    if (stateTransition.getNewState() == State.END) {
+                        break;
+                    } else {
+                        state = states.get(stateTransition.getNewState());
+                        currentPosition = stateTransition.getNewPosition();
                     }
-
-                    HtmlNode node = parsingResult.toHtmlNode();
-                    stack.peekFirst().addChild(node);
-                    stack.push(node);
-
-                } else {
-                    throw new ParseException("Could not parse line " + line);
                 }
+
+                HtmlNode node = parsingResult.toHtmlNode();
+                stack.peekFirst().addChild(node);
+                stack.push(node);
             }
         }
 
         stack.peekLast().appendTo(stringBuilder);
 
         return stringBuilder.toString();
+    }
+
+    private ParsingState initialState(String line, String strippedLine) throws ParseException {
+        for (ParsingState candidate : states.values()) {
+            if(candidate.startsWith(strippedLine.charAt(0))) {
+                return candidate;
+            }
+        }
+        throw new ParseException("Could not parse line " + line);
     }
 
     private boolean isIdOrClassChar(char c) {
