@@ -1,21 +1,13 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.*;
-import java.util.function.BiConsumer;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.Map;
 
 public class HamlParser {
-    private enum State {
-        START,
-        TAG_NAME,
-        CLASS,
-        ID,
-        CONTENT,
-        END
-    }
-
     private final Map<State, ParsingState> states = ImmutableMap.<State, ParsingState>builder()
             .put(State.START, new ParsingState(
                     c -> false,
@@ -83,9 +75,9 @@ public class HamlParser {
 
                     ParsingState state = states.get(State.START);
                     int currentPosition = 0;
-                    while(true) {
+                    while (true) {
                         StateTransition stateTransition = state.eat(strippedLine, currentPosition, parsingResult);
-                        if(stateTransition.getNewState() == State.END) {
+                        if (stateTransition.getNewState() == State.END) {
                             break;
                         } else {
                             state = states.get(stateTransition.getNewState());
@@ -122,106 +114,5 @@ public class HamlParser {
             numTabs++;
         }
         return numTabs;
-    }
-
-    private static class ParsingState {
-        private final CharPredicate validChars;
-        private final BiConsumer<ParsingResult, String> onEnd;
-        private final Map<Character, State> transitions;
-
-        private ParsingState(CharPredicate validChars, BiConsumer<ParsingResult, String> onEnd, Map<Character, State> transitions) {
-            this.validChars = validChars;
-            this.onEnd = onEnd;
-            this.transitions = transitions;
-        }
-
-        public StateTransition eat(String inputLine, int startPosition, ParsingResult parsingResult) throws ParseException {
-            int currentPosition = startPosition;
-            while(currentPosition < inputLine.length() && validChars.test(inputLine.charAt(currentPosition))) {
-                currentPosition++;
-            }
-            onEnd.accept(parsingResult, inputLine.substring(startPosition, currentPosition));
-
-            if(currentPosition == inputLine.length()) {
-                return new StateTransition(State.END, -1);
-            } else {
-                return new StateTransition(
-                        transition(currentPosition, inputLine.charAt(currentPosition)),
-                        currentPosition + 1
-                );
-            }
-        }
-
-        private State transition(int currentPosition, char c) throws ParseException {
-            State newState = transitions.get(c);
-            if (newState == null) {
-                throw new ParseException("Could not parse line at position " + currentPosition);
-            } else {
-                return newState;
-            }
-        }
-    }
-
-    private interface CharPredicate {
-        boolean test(char c);
-    }
-
-    private static class StateTransition {
-        private final State newState;
-        private final int newPosition;
-
-        private StateTransition(State newState, int newPosition) {
-            this.newState = newState;
-            this.newPosition = newPosition;
-        }
-
-        public State getNewState() {
-            return newState;
-        }
-
-        public int getNewPosition() {
-            return newPosition;
-        }
-    }
-
-    private static class ParsingResult {
-        private String tagName = null;
-        private Map<String, String> attributes = new LinkedHashMap<>();
-        private Set<String> classes = new LinkedHashSet<>();
-        private String content = "";
-
-        public void setTagName(String tagName) {
-            this.tagName = tagName;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public void addAttribute(String name, String value) {
-            attributes.put(name, value);
-        }
-
-        public void addClass(String name) {
-            classes.add(name);
-        }
-
-        private Map<String, String> getAttributes() {
-            if (classes.isEmpty()) {
-                return attributes;
-            } else {
-                Map<String, String> copy = new LinkedHashMap<>(attributes);
-                copy.put("class", StringUtils.join(classes, ' '));
-                return copy;
-            }
-        }
-
-        public HtmlNode toHtmlNode() {
-            return new HtmlNode(
-                    tagName,
-                    getAttributes(),
-                    content
-            );
-        }
     }
 }
