@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ParsingResult {
-    private String tagName = null;
+    private String tagName = "div";
     private Map<String, String> attributes = new LinkedHashMap<>();
     private Set<String> classes = new LinkedHashSet<>();
     private String content = "";

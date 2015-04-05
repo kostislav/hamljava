@@ -69,7 +69,12 @@ public class HamlParserTest {
         assertParses("%h2#hehe.dre njhg", "<h2 id=\"hehe\" class=\"dre\">njhg</h2>");
     }
 
-//    @Test
+    @Test
+    public void defaultTagIsDiv() throws Exception {
+        assertParses("#going-to-hell blah", "<div id=\"going-to-hell\">blah</div>");
+    }
+
+    //    @Test
 //    public void genericAttributes() throws Exception {
 //        assertParses("%input{ name: 'blah', value: 'bleh'}", "<input name=\"blah\" value=\"bleh\"></input>");
 //    }
