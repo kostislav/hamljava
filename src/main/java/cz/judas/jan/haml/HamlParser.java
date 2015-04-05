@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class HamlParser {
     private enum State {
@@ -17,12 +18,15 @@ public class HamlParser {
     private final Map<State, ParsingState> states = ImmutableMap.<State, ParsingState>builder()
             .put(State.START, new ParsingState(
                     c -> false,
+                    (parsingResult, substring) -> {
+                    },
                     ImmutableMap.of(
                             '%', State.TAG_NAME
                     )
             ))
             .put(State.TAG_NAME, new ParsingState(
                     this::isTagNameChar,
+                    ParsingResult::setTagName,
                     ImmutableMap.of(
                             '.', State.CLASS,
                             '#', State.ID,
@@ -31,6 +35,7 @@ public class HamlParser {
             ))
             .put(State.CLASS, new ParsingState(
                     this::isIdOrClassChar,
+                    ParsingResult::addClass,
                     ImmutableMap.of(
                             '.', State.CLASS,
                             '#', State.ID,
@@ -39,6 +44,7 @@ public class HamlParser {
             ))
             .put(State.ID, new ParsingState(
                     this::isIdOrClassChar,
+                    (parsingResult, substring) -> parsingResult.addAttribute("id", substring),
                     ImmutableMap.of(
                             '.', State.CLASS,
                             ' ', State.CONTENT
@@ -46,6 +52,7 @@ public class HamlParser {
             ))
             .put(State.CONTENT, new ParsingState(
                     c -> true,
+                    ParsingResult::setContent,
                     Collections.emptyMap()
             ))
             .build();
@@ -78,41 +85,10 @@ public class HamlParser {
                     int currentPosition = 0;
                     for (char c : strippedLine.toCharArray()) {
                         currentPosition++;
-                        switch (state) {
-                            case START:
-                                if(states.get(state).isValidChar(c)) {
-                                    continue;
-                                } else {
-
-                                }
-                                break;
-                            case TAG_NAME:
-                                if(states.get(state).isValidChar(c)) {
-                                    continue;
-                                } else {
-                                    parsingResult.setTagName(strippedLine.substring(tokenStart, currentPosition - 1));
-                                }
-                                break;
-                            case CLASS:
-                                if(states.get(state).isValidChar(c)) {
-                                    continue;
-                                } else {
-                                    parsingResult.addClass(strippedLine.substring(tokenStart, currentPosition - 1));
-                                }
-                                break;
-                            case ID:
-                                if(states.get(state).isValidChar(c)) {
-                                    continue;
-                                } else {
-                                    parsingResult.addAttribute("id", strippedLine.substring(tokenStart, currentPosition - 1));
-                                }
-                                break;
-                            case CONTENT:
-                                if(states.get(state).isValidChar(c)) {
-                                    continue;
-                                } else {
-
-                                }
+                        if(states.get(state).isValidChar(c)) {
+                            continue;
+                        } else {
+                            states.get(state).endOfToken(parsingResult, strippedLine.substring(tokenStart, currentPosition - 1));
                         }
 
                         tokenStart = currentPosition;
@@ -174,15 +150,21 @@ public class HamlParser {
 
     private static class ParsingState {
         private final CharPredicate validChars;
+        private final BiConsumer<ParsingResult, String> onEnd;
         private final Map<Character, State> transitions;
 
-        private ParsingState(CharPredicate validChars, Map<Character, State> transitions) {
+        private ParsingState(CharPredicate validChars, BiConsumer<ParsingResult, String> onEnd, Map<Character, State> transitions) {
             this.validChars = validChars;
+            this.onEnd = onEnd;
             this.transitions = transitions;
         }
 
         public boolean isValidChar(char c) {
             return validChars.test(c);
+        }
+
+        public void endOfToken(ParsingResult parsingResult, String substring) {
+            onEnd.accept(parsingResult, substring);
         }
 
         public State transition(int currentPosition, char c) throws ParseException {
