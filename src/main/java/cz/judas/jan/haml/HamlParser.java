@@ -56,9 +56,9 @@ public class HamlParser {
                     stack.pop();
                 }
 
-                ParsingState state = initialState(line, strippedLine);
-
                 ParsingResult parsingResult = new ParsingResult();
+
+                ParsingState state = initialState(line, strippedLine);
 
                 int currentPosition = 0;
                 while (true) {
@@ -66,8 +66,7 @@ public class HamlParser {
                     if (currentPosition == strippedLine.length()) {
                         break;
                     } else {
-                        char currentChar = strippedLine.charAt(currentPosition);
-                        state = transition(state, currentChar);
+                        state = transition(state, strippedLine, currentPosition);
                     }
                 }
 
@@ -82,10 +81,10 @@ public class HamlParser {
         return stringBuilder.toString();
     }
 
-    private ParsingState transition(ParsingState state, char currentChar) throws ParseException {
+    private ParsingState transition(ParsingState state, String line, int position) throws ParseException {
         for (State candidate : state.getFollowingStates()) {
             ParsingState candidateState = states.get(candidate);
-            if(candidateState.startsWith(currentChar)) {
+            if(candidateState.canParse(line, position)) {
                 return candidateState;
             }
         }
@@ -94,7 +93,7 @@ public class HamlParser {
 
     private ParsingState initialState(String line, String strippedLine) throws ParseException {
         for (ParsingState candidate : states.values()) {
-            if(candidate.startsWith(strippedLine.charAt(0))) {
+            if(candidate.canParse(strippedLine, 0)) {
                 return candidate;
             }
         }

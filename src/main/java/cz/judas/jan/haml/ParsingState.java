@@ -16,8 +16,8 @@ public class ParsingState {
         this.followingStates = followingStates;
     }
 
-    public boolean startsWith(char c) {
-        return c == leadingChar;
+    public boolean canParse(String line, int position) {
+        return line.charAt(position) == leadingChar;
     }
 
     public int eat(String inputLine, int startPosition, ParsingResult parsingResult) throws ParseException {
