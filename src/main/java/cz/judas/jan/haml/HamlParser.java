@@ -58,14 +58,11 @@ public class HamlParser {
                 Set<State> allowedStates = ImmutableSet.copyOf(State.values());
                 ParsingState state;
 
-                while (true) {
+                while (currentPosition != line.length()) {
                     state = newState(allowedStates, line, currentPosition);
                     allowedStates = state.getFollowingStates();
 
                     currentPosition = state.eat(line, currentPosition, parsingResult);
-                    if (currentPosition == line.length()) {
-                        break;
-                    }
                 }
 
                 HtmlNode node = parsingResult.toHtmlNode();
