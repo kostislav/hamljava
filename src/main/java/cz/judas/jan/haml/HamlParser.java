@@ -3,10 +3,7 @@ package cz.judas.jan.haml;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.Map;
+import java.util.*;
 
 public class HamlParser {
     private final Map<State, ParsingState> states = ImmutableMap.<State, ParsingState>builder()
@@ -58,7 +55,11 @@ public class HamlParser {
 
                 ParsingResult parsingResult = new ParsingResult();
 
-                ParsingState state = initialState(line, strippedLine);
+                ParsingState state = transition(
+                        ImmutableSet.copyOf(State.values()),
+                        strippedLine,
+                        0
+                );
 
                 int currentPosition = 0;
                 while (true) {
@@ -66,7 +67,11 @@ public class HamlParser {
                     if (currentPosition == strippedLine.length()) {
                         break;
                     } else {
-                        state = transition(state, strippedLine, currentPosition);
+                        state = transition(
+                                state.getFollowingStates(),
+                                strippedLine,
+                                currentPosition
+                        );
                     }
                 }
 
@@ -81,23 +86,14 @@ public class HamlParser {
         return stringBuilder.toString();
     }
 
-    private ParsingState transition(ParsingState state, String line, int position) throws ParseException {
-        for (State candidate : state.getFollowingStates()) {
+    private ParsingState transition(Set<State> candidates, String line, int position) throws ParseException {
+        for (State candidate : candidates) {
             ParsingState candidateState = states.get(candidate);
             if(candidateState.canParse(line, position)) {
                 return candidateState;
             }
         }
         throw new ParseException("Could not parse line");
-    }
-
-    private ParsingState initialState(String line, String strippedLine) throws ParseException {
-        for (ParsingState candidate : states.values()) {
-            if(candidate.canParse(strippedLine, 0)) {
-                return candidate;
-            }
-        }
-        throw new ParseException("Could not parse line " + line);
     }
 
     private boolean isIdOrClassChar(char c) {
