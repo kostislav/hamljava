@@ -47,7 +47,6 @@ public class HamlParser {
                 }
             } else {
                 int numTabs = leadingTabs(line);
-                String strippedLine = line.substring(numTabs);
 
                 while (numTabs < stack.size() - 1) {
                     stack.pop();
@@ -57,19 +56,19 @@ public class HamlParser {
 
                 ParsingState state = transition(
                         ImmutableSet.copyOf(State.values()),
-                        strippedLine,
-                        0
+                        line,
+                        numTabs
                 );
 
-                int currentPosition = 0;
+                int currentPosition = numTabs;
                 while (true) {
-                    currentPosition = state.eat(strippedLine, currentPosition, parsingResult);
-                    if (currentPosition == strippedLine.length()) {
+                    currentPosition = state.eat(line, currentPosition, parsingResult);
+                    if (currentPosition == line.length()) {
                         break;
                     } else {
                         state = transition(
                                 state.getFollowingStates(),
-                                strippedLine,
+                                line,
                                 currentPosition
                         );
                     }
