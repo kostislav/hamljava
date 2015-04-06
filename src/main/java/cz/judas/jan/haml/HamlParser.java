@@ -54,23 +54,17 @@ public class HamlParser {
 
                 ParsingResult parsingResult = new ParsingResult();
 
-                ParsingState state = transition(
-                        ImmutableSet.copyOf(State.values()),
-                        line,
-                        numTabs
-                );
-
                 int currentPosition = numTabs;
+                Set<State> allowedStates = ImmutableSet.copyOf(State.values());
+                ParsingState state;
+
                 while (true) {
+                    state = newState(allowedStates, line, currentPosition);
+                    allowedStates = state.getFollowingStates();
+
                     currentPosition = state.eat(line, currentPosition, parsingResult);
                     if (currentPosition == line.length()) {
                         break;
-                    } else {
-                        state = transition(
-                                state.getFollowingStates(),
-                                line,
-                                currentPosition
-                        );
                     }
                 }
 
@@ -85,10 +79,10 @@ public class HamlParser {
         return stringBuilder.toString();
     }
 
-    private ParsingState transition(Set<State> candidates, String line, int position) throws ParseException {
+    private ParsingState newState(Set<State> candidates, String line, int position) throws ParseException {
         for (State candidate : candidates) {
             ParsingState candidateState = states.get(candidate);
-            if(candidateState.canParse(line, position)) {
+            if (candidateState.canParse(line, position)) {
                 return candidateState;
             }
         }
