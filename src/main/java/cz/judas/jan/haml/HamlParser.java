@@ -4,30 +4,31 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 
 public class HamlParser {
-    private final List<Token> tokens = ImmutableList.<Token>of(
-            new LeadingCharToken(
-                    '%',
-                    this::isTagNameChar,
-                    ParsingResult::setTagName
-            ),
-            new LeadingCharToken(
-                    '.',
-                    this::isIdOrClassChar,
-                    ParsingResult::addClass
-            ),
-            new LeadingCharToken(
-                    '#',
-                    this::isIdOrClassChar,
-                    ParsingResult::setId
-            ),
-            new LeadingCharToken(
-                    ' ',
-                    c -> true,
-                    ParsingResult::setContent
-            )
+    private final Token bigBadToken = new AnyNumberOfToken(
+            new AnyOfToken(ImmutableList.<Token>of(
+                    new LeadingCharToken(
+                            '%',
+                            this::isTagNameChar,
+                            ParsingResult::setTagName
+                    ),
+                    new LeadingCharToken(
+                            '.',
+                            this::isIdOrClassChar,
+                            ParsingResult::addClass
+                    ),
+                    new LeadingCharToken(
+                            '#',
+                            this::isIdOrClassChar,
+                            ParsingResult::setId
+                    ),
+                    new LeadingCharToken(
+                            ' ',
+                            c -> true,
+                            ParsingResult::setContent
+                    )
+            ))
     );
 
     public String process(String haml) throws ParseException {
@@ -51,23 +52,7 @@ public class HamlParser {
 
                 ParsingResult parsingResult = new ParsingResult();
 
-                int currentPosition = numTabs;
-
-                while (currentPosition != line.length()) {
-                    boolean found = false;
-                    for (Token candidateState : tokens) {
-                        int newPosition = candidateState.tryEat(line, currentPosition, parsingResult);
-                        if(newPosition != -1) {
-                            currentPosition = newPosition;
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if(!found) {
-                        throw new ParseException("Could not parse line");
-                    }
-                }
+                bigBadToken.tryEat(line, numTabs, parsingResult);
 
                 HtmlNode node = parsingResult.toHtmlNode();
                 stack.peekFirst().addChild(node);
