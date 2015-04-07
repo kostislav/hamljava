@@ -1,37 +1,34 @@
 package cz.judas.jan.haml;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
 
 public class HamlParser {
-    private final Map<State, ParsingState> states = ImmutableMap.<State, ParsingState>builder()
-            .put(State.TAG_NAME, new ParsingState(
+    private final List<ParsingState> tokens = ImmutableList.of(
+            new ParsingState(
                     '%',
                     this::isTagNameChar,
-                    ParsingResult::setTagName,
-                    ImmutableSet.of(State.CLASS, State.ID, State.CONTENT)
-            ))
-            .put(State.CLASS, new ParsingState(
+                    ParsingResult::setTagName
+            ),
+            new ParsingState(
                     '.',
                     this::isIdOrClassChar,
-                    ParsingResult::addClass,
-                    ImmutableSet.of(State.CLASS, State.ID, State.CONTENT)
-            ))
-            .put(State.ID, new ParsingState(
+                    ParsingResult::addClass
+            ),
+            new ParsingState(
                     '#',
                     this::isIdOrClassChar,
-                    (parsingResult, substring) -> parsingResult.addAttribute("id", substring),
-                    ImmutableSet.of(State.CLASS, State.CONTENT)
-            ))
-            .put(State.CONTENT, new ParsingState(
+                    (parsingResult, substring) -> parsingResult.addAttribute("id", substring)
+            ),
+            new ParsingState(
                     ' ',
                     c -> true,
-                    ParsingResult::setContent,
-                    Collections.emptySet()
-            ))
-            .build();
+                    ParsingResult::setContent
+            )
+    );
 
     public String process(String haml) throws ParseException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -55,15 +52,12 @@ public class HamlParser {
                 ParsingResult parsingResult = new ParsingResult();
 
                 int currentPosition = numTabs;
-                Set<State> allowedStates = ImmutableSet.copyOf(State.values());
 
                 while (currentPosition != line.length()) {
                     boolean found = false;
-                    for (State candidate : allowedStates) {
-                        ParsingState candidateState = states.get(candidate);
+                    for (ParsingState candidateState : tokens) {
                         int newPosition = candidateState.tryEat(line, currentPosition, parsingResult);
                         if(newPosition != -1) {
-                            allowedStates = candidateState.getFollowingStates();
                             currentPosition = newPosition;
                             found = true;
                             break;
