@@ -1,5 +1,7 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -13,19 +15,19 @@ public class ParsingState {
         this.leadingChar = leadingChar;
         this.validChars = validChars;
         this.onEnd = onEnd;
-        this.followingStates = followingStates;
+        this.followingStates = ImmutableSet.copyOf(followingStates);
     }
 
-    public boolean canParse(String line, int position) {
-        return line.charAt(position) == leadingChar;
-    }
+    public int tryEat(String line, int position, ParsingResult parsingResult) throws ParseException {
+        if(line.charAt(position) != leadingChar) {
+            return -1;
+        }
 
-    public int eat(String inputLine, int startPosition, ParsingResult parsingResult) throws ParseException {
-        int currentPosition = startPosition + 1;
-        while(currentPosition < inputLine.length() && validChars.test(inputLine.charAt(currentPosition))) {
+        int currentPosition = position + 1;
+        while(currentPosition < line.length() && validChars.test(line.charAt(currentPosition))) {
             currentPosition++;
         }
-        onEnd.accept(parsingResult, inputLine.substring(startPosition + 1, currentPosition));
+        onEnd.accept(parsingResult, line.substring(position + 1, currentPosition));
 
         return currentPosition;
     }

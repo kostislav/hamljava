@@ -56,13 +56,23 @@ public class HamlParser {
 
                 int currentPosition = numTabs;
                 Set<State> allowedStates = ImmutableSet.copyOf(State.values());
-                ParsingState state;
 
                 while (currentPosition != line.length()) {
-                    state = newState(allowedStates, line, currentPosition);
-                    allowedStates = state.getFollowingStates();
+                    boolean found = false;
+                    for (State candidate : allowedStates) {
+                        ParsingState candidateState = states.get(candidate);
+                        int newPosition = candidateState.tryEat(line, currentPosition, parsingResult);
+                        if(newPosition != -1) {
+                            allowedStates = candidateState.getFollowingStates();
+                            currentPosition = newPosition;
+                            found = true;
+                            break;
+                        }
+                    }
 
-                    currentPosition = state.eat(line, currentPosition, parsingResult);
+                    if(!found) {
+                        throw new ParseException("Could not parse line");
+                    }
                 }
 
                 HtmlNode node = parsingResult.toHtmlNode();
@@ -74,16 +84,6 @@ public class HamlParser {
         stack.peekLast().appendTo(stringBuilder);
 
         return stringBuilder.toString();
-    }
-
-    private ParsingState newState(Set<State> candidates, String line, int position) throws ParseException {
-        for (State candidate : candidates) {
-            ParsingState candidateState = states.get(candidate);
-            if (candidateState.canParse(line, position)) {
-                return candidateState;
-            }
-        }
-        throw new ParseException("Could not parse line");
     }
 
     private boolean isIdOrClassChar(char c) {
