@@ -22,4 +22,8 @@ public class AnyOfToken implements Token {
 
         return -1;
     }
+
+    public static AnyOfToken anyOf(Iterable<Token> alternatives) {
+        return new AnyOfToken(alternatives);
+    }
 }

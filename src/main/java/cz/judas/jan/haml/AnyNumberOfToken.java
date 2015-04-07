@@ -22,4 +22,8 @@ public class AnyNumberOfToken implements Token {
         }
         return globalNewPosition;
     }
+
+    public static AnyNumberOfToken anyNumberOf(Token inner) {
+        return new AnyNumberOfToken(inner);
+    }
 }
