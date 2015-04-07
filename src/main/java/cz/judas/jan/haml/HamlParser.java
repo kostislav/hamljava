@@ -7,23 +7,23 @@ import java.util.Deque;
 import java.util.List;
 
 public class HamlParser {
-    private final List<ParsingState> tokens = ImmutableList.of(
-            new ParsingState(
+    private final List<Token> tokens = ImmutableList.<Token>of(
+            new LeadingCharToken(
                     '%',
                     this::isTagNameChar,
                     ParsingResult::setTagName
             ),
-            new ParsingState(
+            new LeadingCharToken(
                     '.',
                     this::isIdOrClassChar,
                     ParsingResult::addClass
             ),
-            new ParsingState(
+            new LeadingCharToken(
                     '#',
                     this::isIdOrClassChar,
                     ParsingResult::setId
             ),
-            new ParsingState(
+            new LeadingCharToken(
                     ' ',
                     c -> true,
                     ParsingResult::setContent
@@ -55,7 +55,7 @@ public class HamlParser {
 
                 while (currentPosition != line.length()) {
                     boolean found = false;
-                    for (ParsingState candidateState : tokens) {
+                    for (Token candidateState : tokens) {
                         int newPosition = candidateState.tryEat(line, currentPosition, parsingResult);
                         if(newPosition != -1) {
                             currentPosition = newPosition;

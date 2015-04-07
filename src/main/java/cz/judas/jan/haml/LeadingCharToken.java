@@ -2,17 +2,18 @@ package cz.judas.jan.haml;
 
 import java.util.function.BiConsumer;
 
-public class ParsingState {
+public class LeadingCharToken implements Token {
     private final char leadingChar;
     private final CharPredicate validChars;
     private final BiConsumer<ParsingResult, String> onEnd;
 
-    public ParsingState(char leadingChar, CharPredicate validChars, BiConsumer<ParsingResult, String> onEnd) {
+    public LeadingCharToken(char leadingChar, CharPredicate validChars, BiConsumer<ParsingResult, String> onEnd) {
         this.leadingChar = leadingChar;
         this.validChars = validChars;
         this.onEnd = onEnd;
     }
 
+    @Override
     public int tryEat(String line, int position, ParsingResult parsingResult) throws ParseException {
         if(line.charAt(position) != leadingChar) {
             return -1;
