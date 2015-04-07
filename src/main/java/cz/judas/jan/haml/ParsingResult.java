@@ -9,8 +9,9 @@ import java.util.Set;
 
 public class ParsingResult {
     private String tagName = "div";
-    private Map<String, String> attributes = new LinkedHashMap<>();
-    private Set<String> classes = new LinkedHashSet<>();
+    private final Map<String, String> attributes = new LinkedHashMap<>();
+    private final Set<String> classes = new LinkedHashSet<>();
+    private String id = null;
     private String content = "";
 
     public void setTagName(String tagName) {
@@ -29,12 +30,21 @@ public class ParsingResult {
         classes.add(name);
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     private Map<String, String> getAttributes() {
-        if (classes.isEmpty()) {
+        if (classes.isEmpty() && id == null) {
             return attributes;
         } else {
             Map<String, String> copy = new LinkedHashMap<>(attributes);
-            copy.put("class", StringUtils.join(classes, ' '));
+            if(id != null) {
+                copy.put("id", id);
+            }
+            if(!classes.isEmpty()) {
+                copy.put("class", StringUtils.join(classes, ' '));
+            }
             return copy;
         }
     }

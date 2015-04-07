@@ -21,7 +21,7 @@ public class HamlParser {
             new ParsingState(
                     '#',
                     this::isIdOrClassChar,
-                    (parsingResult, substring) -> parsingResult.addAttribute("id", substring)
+                    ParsingResult::setId
             ),
             new ParsingState(
                     ' ',
