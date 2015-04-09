@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.mutabletree;
 
 import com.google.common.collect.Iterables;
-import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
 
 import java.util.*;
@@ -36,7 +35,7 @@ public class MutableRootNode implements MutableNode {
     }
 
     @Override
-    public Node toNode() {
+    public RootNode toNode() {
         return new RootNode(Optional.ofNullable(doctype), Iterables.transform(children, MutableNode::toNode));
     }
 }

@@ -22,4 +22,10 @@ public class RootNode implements Node {
             child.appendTo(stringBuilder);
         }
     }
+
+    public String toHtmlString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        appendTo(stringBuilder);
+        return stringBuilder.toString();
+    }
 }
