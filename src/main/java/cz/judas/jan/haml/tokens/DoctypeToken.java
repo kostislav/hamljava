@@ -7,9 +7,9 @@ public class DoctypeToken implements Token<MutableRootNode> {
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
         if(line.startsWith("!!!")) {
-            if(line.equals("!!! 5")) {
+            if(line.startsWith("!!! 5")) {
                 parsingResult.setDoctype("<!DOCTYPE html>");
-                return line.length();
+                return 5;
             } else {
                 throw new ParseException("Unsupported doctype " + line.substring(4));
             }

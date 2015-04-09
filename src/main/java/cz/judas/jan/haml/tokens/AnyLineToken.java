@@ -5,9 +5,12 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 
 public class AnyLineToken implements Token<MutableRootNode> {
-    private final Token<MutableRootNode> options = new AnyOfToken<>(ImmutableList.of(
-            new DoctypeToken(),
-            new LineToken()
+    private final Token<MutableRootNode> options = new SequenceOfTokens<>(ImmutableList.of(
+            new AnyOfToken<>(ImmutableList.of(
+                    new DoctypeToken(),
+                    new LineToken()
+            )),
+            new NewLineToken<MutableRootNode>()
     ));
 
     @Override

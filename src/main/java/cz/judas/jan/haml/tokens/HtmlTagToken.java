@@ -28,7 +28,7 @@ public class HtmlTagToken implements Token<MutableRootNode> {
                     ),
                     new LeadingCharToken(
                             ' ',
-                            c -> true,
+                            c -> c != '\n',
                             MutableHtmlNode::setContent
                     )
             ))
