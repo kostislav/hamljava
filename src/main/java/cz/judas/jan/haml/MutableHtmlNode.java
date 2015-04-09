@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ParsingResult {
+public class MutableHtmlNode {
     private String tagName = "div";
     private final Map<String, String> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();

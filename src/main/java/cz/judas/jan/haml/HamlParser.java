@@ -9,27 +9,27 @@ import static cz.judas.jan.haml.AnyNumberOfToken.anyNumberOf;
 import static cz.judas.jan.haml.AnyOfToken.anyOf;
 
 public class HamlParser {
-    private final Token<ParsingResult> tagToken = anyNumberOf(
+    private final Token<MutableHtmlNode> tagToken = anyNumberOf(
             anyOf(ImmutableList.of(
                     new LeadingCharToken(
                             '%',
                             this::isTagNameChar,
-                            ParsingResult::setTagName
+                            MutableHtmlNode::setTagName
                     ),
                     new LeadingCharToken(
                             '.',
                             this::isIdOrClassChar,
-                            ParsingResult::addClass
+                            MutableHtmlNode::addClass
                     ),
                     new LeadingCharToken(
                             '#',
                             this::isIdOrClassChar,
-                            ParsingResult::setId
+                            MutableHtmlNode::setId
                     ),
                     new LeadingCharToken(
                             ' ',
                             c -> true,
-                            ParsingResult::setContent
+                            MutableHtmlNode::setContent
                     )
             ))
     );
@@ -53,11 +53,11 @@ public class HamlParser {
                     stack.pop();
                 }
 
-                ParsingResult parsingResult = new ParsingResult();
+                MutableHtmlNode mutableHtmlNode = new MutableHtmlNode();
 
-                tagToken.tryEat(line, numTabs, parsingResult);
+                tagToken.tryEat(line, numTabs, mutableHtmlNode);
 
-                HtmlNode node = parsingResult.toHtmlNode();
+                HtmlNode node = mutableHtmlNode.toHtmlNode();
                 stack.peekFirst().addChild(node);
                 stack.push(node);
             }
