@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
+import cz.judas.jan.haml.tokens.DoctypeToken;
 import cz.judas.jan.haml.tokens.LeadingCharToken;
 import cz.judas.jan.haml.tokens.Token;
-import cz.judas.jan.haml.tree.Html5DoctypeNode;
 import cz.judas.jan.haml.tree.Node;
 
 import java.util.ArrayDeque;
@@ -16,6 +16,7 @@ import static cz.judas.jan.haml.tokens.AnyNumberOfToken.anyNumberOf;
 import static cz.judas.jan.haml.tokens.AnyOfToken.anyOf;
 
 public class HamlParser {
+    private final Token<MutableNode> doctypeToken = new DoctypeToken();
     private final Token<MutableHtmlNode> tagToken = anyNumberOf(
             anyOf(ImmutableList.of(
                     new LeadingCharToken(
@@ -47,13 +48,7 @@ public class HamlParser {
         stack.push(new MutableRootNode());
 
         for (String line : haml.split("\n")) {
-            if (line.startsWith("!!!")) {
-                if (line.equals("!!! 5")) {
-                    stack.peekFirst().addChild(new Html5DoctypeNode());
-                } else {
-                    throw new ParseException("Unsupported doctype " + line.substring(4));
-                }
-            } else {
+            if(doctypeToken.tryEat(line, 0, stack.peekFirst()) == -1) {
                 int numTabs = leadingTabs(line);
 
                 while (numTabs < stack.size() - 1) {
