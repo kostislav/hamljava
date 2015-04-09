@@ -1,43 +1,15 @@
 package cz.judas.jan.haml;
 
-import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import cz.judas.jan.haml.tokens.DoctypeToken;
-import cz.judas.jan.haml.tokens.LeadingCharToken;
+import cz.judas.jan.haml.tokens.HtmlTagToken;
 import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tree.Node;
 
-import static cz.judas.jan.haml.tokens.AnyNumberOfToken.anyNumberOf;
-import static cz.judas.jan.haml.tokens.AnyOfToken.anyOf;
-
 public class HamlParser {
     private final Token<MutableNode> doctypeToken = new DoctypeToken();
-    private final Token<MutableHtmlNode> tagToken = anyNumberOf(
-            anyOf(ImmutableList.of(
-                    new LeadingCharToken(
-                            '%',
-                            this::isTagNameChar,
-                            MutableHtmlNode::setTagName
-                    ),
-                    new LeadingCharToken(
-                            '.',
-                            this::isIdOrClassChar,
-                            MutableHtmlNode::addClass
-                    ),
-                    new LeadingCharToken(
-                            '#',
-                            this::isIdOrClassChar,
-                            MutableHtmlNode::setId
-                    ),
-                    new LeadingCharToken(
-                            ' ',
-                            c -> true,
-                            MutableHtmlNode::setContent
-                    )
-            ))
-    );
+    private final Token<MutableRootNode> tagToken = new HtmlTagToken();
 
     public String process(String haml) throws ParseException {
         MutableRootNode rootNode = new MutableRootNode();
@@ -50,11 +22,7 @@ public class HamlParser {
                     rootNode.levelUp();
                 }
 
-                MutableHtmlNode mutableHtmlNode = new MutableHtmlNode();
-
-                tagToken.tryEat(line, numTabs, mutableHtmlNode);
-
-                rootNode.addNode(mutableHtmlNode);
+                tagToken.tryEat(line, numTabs, rootNode);
             }
         }
 
@@ -63,14 +31,6 @@ public class HamlParser {
         finalNode.appendTo(stringBuilder);
 
         return stringBuilder.toString();
-    }
-
-    private boolean isIdOrClassChar(char c) {
-        return Character.isLetterOrDigit(c) || c == '-' || c == '_';
-    }
-
-    private boolean isTagNameChar(char c) {
-        return Character.isLetterOrDigit(c);
     }
 
     private int leadingTabs(String line) {
