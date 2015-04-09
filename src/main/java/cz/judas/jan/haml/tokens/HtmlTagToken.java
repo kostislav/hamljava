@@ -5,8 +5,8 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 
-import static cz.judas.jan.haml.tokens.AnyNumberOfToken.anyNumberOf;
-import static cz.judas.jan.haml.tokens.AnyOfToken.anyOf;
+import static cz.judas.jan.haml.tokens.generic.AnyNumberOfToken.anyNumberOf;
+import static cz.judas.jan.haml.tokens.generic.AnyOfToken.anyOf;
 
 public class HtmlTagToken implements Token<MutableRootNode> {
     private final Token<MutableHtmlNode> innerTokens = anyNumberOf(

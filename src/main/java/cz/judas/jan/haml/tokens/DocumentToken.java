@@ -2,6 +2,7 @@ package cz.judas.jan.haml.tokens;
 
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
+import cz.judas.jan.haml.tokens.generic.AnyNumberOfToken;
 
 public class DocumentToken implements Token<MutableRootNode> {
     private final Token<MutableRootNode> lines = new AnyNumberOfToken<>(
