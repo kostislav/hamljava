@@ -11,7 +11,7 @@ public class HamlParser {
     public String process(String haml) throws ParseException {
         MutableRootNode mutableRootNode = new MutableRootNode();
 
-        hyperToken.tryEat(haml + "\n", 0, mutableRootNode); //TODO remove string creation
+        hyperToken.tryEat(haml, 0, mutableRootNode);
 
         RootNode rootNode = mutableRootNode.toNode();
         return rootNode.toHtmlString();

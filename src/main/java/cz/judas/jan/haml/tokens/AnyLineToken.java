@@ -10,7 +10,9 @@ public class AnyLineToken implements Token<MutableRootNode> {
                     new DoctypeToken(),
                     new LineToken()
             )),
-            new NewLineToken<MutableRootNode>()
+            new AtMostOneToken<>(
+                new NewLineToken<MutableRootNode>()
+            )
     ));
 
     @Override
