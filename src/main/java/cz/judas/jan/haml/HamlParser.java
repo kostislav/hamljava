@@ -9,9 +9,6 @@ import cz.judas.jan.haml.tokens.LeadingCharToken;
 import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tree.Node;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import static cz.judas.jan.haml.tokens.AnyNumberOfToken.anyNumberOf;
 import static cz.judas.jan.haml.tokens.AnyOfToken.anyOf;
 
@@ -43,29 +40,27 @@ public class HamlParser {
     );
 
     public String process(String haml) throws ParseException {
-        StringBuilder stringBuilder = new StringBuilder();
-        Deque<MutableNode> stack = new ArrayDeque<>();
-        stack.push(new MutableRootNode());
+        MutableRootNode rootNode = new MutableRootNode();
 
         for (String line : haml.split("\n")) {
-            if(doctypeToken.tryEat(line, 0, stack.peekFirst()) == -1) {
+            if(doctypeToken.tryEat(line, 0, rootNode) == -1) {
                 int numTabs = leadingTabs(line);
 
-                while (numTabs < stack.size() - 1) {
-                    stack.pop();
+                while (numTabs < rootNode.nestingLevel()) {
+                    rootNode.levelUp();
                 }
 
                 MutableHtmlNode mutableHtmlNode = new MutableHtmlNode();
 
                 tagToken.tryEat(line, numTabs, mutableHtmlNode);
 
-                stack.peekFirst().addChild(mutableHtmlNode);
-                stack.push(mutableHtmlNode);
+                rootNode.addNode(mutableHtmlNode);
             }
         }
 
-        Node rootNode = stack.peekLast().toNode();
-        rootNode.appendTo(stringBuilder);
+        Node finalNode = rootNode.toNode();
+        StringBuilder stringBuilder = new StringBuilder();
+        finalNode.appendTo(stringBuilder);
 
         return stringBuilder.toString();
     }
