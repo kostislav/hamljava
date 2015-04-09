@@ -9,32 +9,16 @@ import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 public class HtmlTagToken implements Token<MutableRootNode> {
     private final Token<MutableHtmlNode> innerTokens = sequence(
             atMostOne(
-                    new LeadingCharToken(
-                            '%',
-                            this::isTagNameChar,
-                            MutableHtmlNode::setTagName
-                    )
+                    new LeadingCharToken('%', this::isTagNameChar, MutableHtmlNode::setTagName)
             ),
             anyNumberOf(
                     anyOf(
-                            new LeadingCharToken(
-                                    '.',
-                                    this::isIdOrClassChar,
-                                    MutableHtmlNode::addClass
-                            ),
-                            new LeadingCharToken(
-                                    '#',
-                                    this::isIdOrClassChar,
-                                    MutableHtmlNode::setId
-                            )
+                            new LeadingCharToken('.', this::isIdOrClassChar, MutableHtmlNode::addClass),
+                            new LeadingCharToken('#', this::isIdOrClassChar, MutableHtmlNode::setId)
                     )
             ),
             atMostOne(
-                    new LeadingCharToken(
-                            ' ',
-                            c -> c != '\n',
-                            MutableHtmlNode::setContent
-                    )
+                    new LeadingCharToken(' ', c -> c != '\n', MutableHtmlNode::setContent)
             )
     );
 
@@ -42,7 +26,7 @@ public class HtmlTagToken implements Token<MutableRootNode> {
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
         MutableHtmlNode mutableHtmlNode = new MutableHtmlNode();
         int newPosition = innerTokens.tryEat(line, position, mutableHtmlNode);
-        if(newPosition != -1) {
+        if (newPosition != -1) {
             parsingResult.addNode(mutableHtmlNode);
         }
         return newPosition;
