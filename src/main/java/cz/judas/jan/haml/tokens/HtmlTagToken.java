@@ -19,7 +19,7 @@ public class HtmlTagToken implements Token<MutableRootNode> {
                             )
                     ),
                     anyNumberOf(
-                            new InsignificantWhitespaceCharToken<MutableHtmlNode>()
+                            new SingleCharToken<MutableHtmlNode>(' ')
                     ),
                     atMostOne(
                             new TextToken()

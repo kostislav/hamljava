@@ -17,7 +17,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                                     )
                             ),
                             atMostOne(
-                                    new NewLineToken<MutableRootNode>()
+                                    new SingleCharToken<MutableRootNode>('\n')
                             )
                     )
             );
