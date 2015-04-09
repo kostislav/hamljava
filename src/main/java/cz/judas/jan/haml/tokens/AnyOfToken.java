@@ -1,6 +1,7 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.tokens;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.ParseException;
 
 import java.util.List;
 

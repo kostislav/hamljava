@@ -1,4 +1,8 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.tokens;
+
+import cz.judas.jan.haml.CharPredicate;
+import cz.judas.jan.haml.ParseException;
+import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 
 import java.util.function.BiConsumer;
 

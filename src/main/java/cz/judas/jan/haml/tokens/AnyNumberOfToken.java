@@ -1,4 +1,6 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.tokens;
+
+import cz.judas.jan.haml.ParseException;
 
 public class AnyNumberOfToken<T> implements Token<T> {
     private final Token<T> inner;

@@ -1,6 +1,7 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.mutabletree;
 
 import com.google.common.collect.Iterables;
+import cz.judas.jan.haml.tree.HtmlNode;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;

@@ -1,12 +1,19 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
+import cz.judas.jan.haml.mutabletree.MutableNode;
+import cz.judas.jan.haml.mutabletree.MutableRootNode;
+import cz.judas.jan.haml.tokens.LeadingCharToken;
+import cz.judas.jan.haml.tokens.Token;
+import cz.judas.jan.haml.tree.Html5DoctypeNode;
+import cz.judas.jan.haml.tree.Node;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import static cz.judas.jan.haml.AnyNumberOfToken.anyNumberOf;
-import static cz.judas.jan.haml.AnyOfToken.anyOf;
+import static cz.judas.jan.haml.tokens.AnyNumberOfToken.anyNumberOf;
+import static cz.judas.jan.haml.tokens.AnyOfToken.anyOf;
 
 public class HamlParser {
     private final Token<MutableHtmlNode> tagToken = anyNumberOf(

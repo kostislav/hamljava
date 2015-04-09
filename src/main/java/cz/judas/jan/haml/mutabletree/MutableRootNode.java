@@ -1,6 +1,8 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.mutabletree;
 
 import com.google.common.collect.Iterables;
+import cz.judas.jan.haml.tree.Node;
+import cz.judas.jan.haml.tree.RootNode;
 
 import java.util.ArrayList;
 import java.util.List;

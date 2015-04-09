@@ -1,4 +1,6 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.tree;
+
+import cz.judas.jan.haml.mutabletree.MutableNode;
 
 public class Html5DoctypeNode implements Node, MutableNode {
     @Override
