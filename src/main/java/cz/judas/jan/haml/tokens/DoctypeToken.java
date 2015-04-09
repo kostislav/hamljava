@@ -11,7 +11,7 @@ public class DoctypeToken implements Token<MutableRootNode> {
                 parsingResult.setDoctype("<!DOCTYPE html>");
                 return 5;
             } else {
-                throw new ParseException("Unsupported doctype " + line.substring(4));
+                throw new ParseException(line, 4);
             }
         } else {
             return -1;

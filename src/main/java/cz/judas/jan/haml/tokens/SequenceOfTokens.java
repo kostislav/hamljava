@@ -18,7 +18,7 @@ public class SequenceOfTokens<T> implements Token<T> {
         for (Token<T> token : sequence) {
             currentPosition = token.tryEat(line, currentPosition, parsingResult);
             if(currentPosition == -1) {
-                throw new ParseException("Could not parse line " + line);
+                throw new ParseException(line, position);
             }
         }
         return currentPosition;
