@@ -23,8 +23,4 @@ public class AnyNumberOfToken<T> implements Token<T> {
         }
         return currentPosition;
     }
-
-    public static <T> AnyNumberOfToken<T> anyNumberOf(Token<T> inner) {
-        return new AnyNumberOfToken<>(inner);
-    }
 }

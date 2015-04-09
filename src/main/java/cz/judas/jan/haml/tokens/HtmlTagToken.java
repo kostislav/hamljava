@@ -4,41 +4,39 @@ import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
-import cz.judas.jan.haml.tokens.generic.AnyNumberOfToken;
-import cz.judas.jan.haml.tokens.generic.AnyOfToken;
-import cz.judas.jan.haml.tokens.generic.AtMostOneToken;
-import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
+
+import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
 public class HtmlTagToken implements Token<MutableRootNode> {
-    private final Token<MutableHtmlNode> innerTokens = new SequenceOfTokens<>(ImmutableList.of(
-            new AtMostOneToken<>(
+    private final Token<MutableHtmlNode> innerTokens = sequence(ImmutableList.of(
+            atMostOne(
                     new LeadingCharToken(
                             '%',
                             this::isTagNameChar,
                             MutableHtmlNode::setTagName
                     )
             ),
-            new AnyNumberOfToken<>(
-                    new AnyOfToken<>(ImmutableList.of(
-                        new LeadingCharToken(
-                                '.',
-                                this::isIdOrClassChar,
-                                MutableHtmlNode::addClass
-                        ),
-                        new LeadingCharToken(
-                                '#',
-                                this::isIdOrClassChar,
-                                MutableHtmlNode::setId
-                        )
+            anyNumberOf(
+                    anyOf(ImmutableList.of(
+                            new LeadingCharToken(
+                                    '.',
+                                    this::isIdOrClassChar,
+                                    MutableHtmlNode::addClass
+                            ),
+                            new LeadingCharToken(
+                                    '#',
+                                    this::isIdOrClassChar,
+                                    MutableHtmlNode::setId
+                            )
                     ))
             ),
-            new AtMostOneToken<>(
-                new LeadingCharToken(
-                                ' ',
-                                c -> c != '\n',
-                                MutableHtmlNode::setContent
-                        )
-                )
+            atMostOne(
+                    new LeadingCharToken(
+                            ' ',
+                            c -> c != '\n',
+                            MutableHtmlNode::setContent
+                    )
+            )
     ));
 
     @Override

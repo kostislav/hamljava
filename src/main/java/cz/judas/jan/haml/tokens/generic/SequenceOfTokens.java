@@ -24,8 +24,4 @@ public class SequenceOfTokens<T> implements Token<T> {
         }
         return currentPosition;
     }
-
-    public static <T> SequenceOfTokens<T> sequence(Iterable<? extends Token<T>> tokens) {
-        return new SequenceOfTokens<>(tokens);
-    }
 }

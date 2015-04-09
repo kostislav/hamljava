@@ -24,8 +24,4 @@ public class AnyOfToken<T> implements Token<T> {
 
         return -1;
     }
-
-    public static <T> AnyOfToken<T> anyOf(Iterable<? extends Token<T>> alternatives) {
-        return new AnyOfToken<>(alternatives);
-    }
 }
