@@ -8,15 +8,10 @@ public class SignificantWhitespaceToken implements Token<MutableRootNode> {
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
         int numTabs = leadingTabs(line, position);
 
-        while (numTabs < parsingResult.nestingLevel()) {
+        while (numTabs < parsingResult.nestingLevel()) { // TODO move
             parsingResult.levelUp();
         }
-
-        if(numTabs == 0) {
-            return -1;
-        } else {
-            return position + numTabs;
-        }
+        return position + numTabs;
     }
 
     private int leadingTabs(String line, int startPos) {
