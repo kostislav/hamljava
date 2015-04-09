@@ -7,20 +7,21 @@ import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
 public class HtmlTagToken implements Token<MutableRootNode> {
-    private final Token<MutableHtmlNode> innerTokens = sequence(
-            atMostOne(
-                    new LeadingCharToken('%', this::isTagNameChar, MutableHtmlNode::setTagName)
-            ),
-            anyNumberOf(
-                    anyOf(
-                            new LeadingCharToken('.', this::isIdOrClassChar, MutableHtmlNode::addClass),
-                            new LeadingCharToken('#', this::isIdOrClassChar, MutableHtmlNode::setId)
+    private final Token<MutableHtmlNode> innerTokens =
+            sequence(
+                    atMostOne(
+                            new LeadingCharToken('%', this::isTagNameChar, MutableHtmlNode::setTagName)
+                    ),
+                    anyNumberOf(
+                            anyOf(
+                                    new LeadingCharToken('.', this::isIdOrClassChar, MutableHtmlNode::addClass),
+                                    new LeadingCharToken('#', this::isIdOrClassChar, MutableHtmlNode::setId)
+                            )
+                    ),
+                    atMostOne(
+                            new LeadingCharToken(' ', c -> c != '\n', MutableHtmlNode::setContent)
                     )
-            ),
-            atMostOne(
-                    new LeadingCharToken(' ', c -> c != '\n', MutableHtmlNode::setContent)
-            )
-    );
+            );
 
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {

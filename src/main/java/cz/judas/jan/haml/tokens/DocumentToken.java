@@ -1,28 +1,26 @@
 package cz.judas.jan.haml.tokens;
 
-import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
-import cz.judas.jan.haml.tokens.generic.AnyNumberOfToken;
-import cz.judas.jan.haml.tokens.generic.AnyOfToken;
-import cz.judas.jan.haml.tokens.generic.AtMostOneToken;
-import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
+
+import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
 public class DocumentToken implements Token<MutableRootNode> {
-    private final Token<MutableRootNode> lines = new AnyNumberOfToken<>(
-            new SequenceOfTokens<>(ImmutableList.of(
-                    new AnyOfToken<>(ImmutableList.of(
-                            new DoctypeToken(),
-                            new SequenceOfTokens<>(ImmutableList.of(
-                                    new SignificantWhitespaceToken(),
-                                    new HtmlTagToken()
-                            ))
-                    )),
-                    new AtMostOneToken<>(
-                            new NewLineToken<MutableRootNode>()
+    private final Token<MutableRootNode> lines =
+            anyNumberOf(
+                    sequence(
+                            anyOf(
+                                    new DoctypeToken(),
+                                    sequence(
+                                            new SignificantWhitespaceToken(),
+                                            new HtmlTagToken()
+                                    )
+                            ),
+                            atMostOne(
+                                    new NewLineToken<MutableRootNode>()
+                            )
                     )
-            ))
-    );
+            );
 
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
