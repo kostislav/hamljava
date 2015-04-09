@@ -1,6 +1,5 @@
 package cz.judas.jan.haml;
 
-import cz.judas.jan.haml.mutabletree.MutableNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import cz.judas.jan.haml.tokens.DoctypeToken;
 import cz.judas.jan.haml.tokens.HtmlTagToken;
@@ -8,7 +7,7 @@ import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tree.Node;
 
 public class HamlParser {
-    private final Token<MutableNode> doctypeToken = new DoctypeToken();
+    private final Token<MutableRootNode> doctypeToken = new DoctypeToken();
     private final Token<MutableRootNode> tagToken = new HtmlTagToken();
 
     public String process(String haml) throws ParseException {

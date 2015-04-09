@@ -4,17 +4,19 @@ import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class MutableRootNode implements MutableNode {
     private final List<MutableNode> children = new ArrayList<>();
     private final Deque<MutableNode> stack = new ArrayDeque<>();
+    private String doctype = null;
 
     public MutableRootNode() {
         stack.push(this);
+    }
+
+    public void setDoctype(String doctype) {
+        this.doctype = doctype;
     }
 
     @Override
@@ -37,6 +39,6 @@ public class MutableRootNode implements MutableNode {
 
     @Override
     public Node toNode() {
-        return new RootNode(Iterables.transform(children, MutableNode::toNode));
+        return new RootNode(Optional.ofNullable(doctype), Iterables.transform(children, MutableNode::toNode));
     }
 }
