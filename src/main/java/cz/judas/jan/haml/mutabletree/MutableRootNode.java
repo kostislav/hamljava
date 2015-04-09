@@ -29,12 +29,10 @@ public class MutableRootNode implements MutableNode {
         stack.push(node);
     }
 
-    public int nestingLevel() {
-        return stack.size() - 1;
-    }
-
-    public void levelUp() {
-        stack.pop();
+    public void levelUp(int newLevel) {
+        while (newLevel < stack.size() - 1) {
+            stack.pop();
+        }
     }
 
     @Override
