@@ -18,10 +18,14 @@ public class HtmlTagToken implements Token<MutableRootNode> {
                                     new LeadingCharToken('#', this::isIdOrClassChar, MutableHtmlNode::setId)
                             )
                     ),
+                    anyNumberOf(
+                            new InsignificantWhitespaceCharToken<MutableHtmlNode>()
+                    ),
                     atMostOne(
-                            new LeadingCharToken(' ', c -> c != '\n', MutableHtmlNode::setContent)
+                            new TextToken()
                     )
             );
+
 
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
