@@ -4,16 +4,16 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-public class AnyOfToken implements Token {
-    private final List<Token> alternatives;
+public class AnyOfToken<T> implements Token<T> {
+    private final List<Token<T>> alternatives;
 
-    public AnyOfToken(Iterable<Token> alternatives) {
+    public AnyOfToken(Iterable<? extends Token<T>> alternatives) {
         this.alternatives = ImmutableList.copyOf(alternatives);
     }
 
     @Override
-    public int tryEat(String line, int position, ParsingResult parsingResult) throws ParseException {
-        for (Token alternative : alternatives) {
+    public int tryEat(String line, int position, T parsingResult) throws ParseException {
+        for (Token<T> alternative : alternatives) {
             int newPosition = alternative.tryEat(line, position, parsingResult);
             if(newPosition != -1) {
                 return newPosition;
@@ -23,7 +23,7 @@ public class AnyOfToken implements Token {
         return -1;
     }
 
-    public static AnyOfToken anyOf(Iterable<Token> alternatives) {
-        return new AnyOfToken(alternatives);
+    public static <T> AnyOfToken<T> anyOf(Iterable<? extends Token<T>> alternatives) {
+        return new AnyOfToken<>(alternatives);
     }
 }

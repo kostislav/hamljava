@@ -9,8 +9,8 @@ import static cz.judas.jan.haml.AnyNumberOfToken.anyNumberOf;
 import static cz.judas.jan.haml.AnyOfToken.anyOf;
 
 public class HamlParser {
-    private final Token tagToken = anyNumberOf(
-            anyOf(ImmutableList.<Token>of(
+    private final Token<ParsingResult> tagToken = anyNumberOf(
+            anyOf(ImmutableList.of(
                     new LeadingCharToken(
                             '%',
                             this::isTagNameChar,

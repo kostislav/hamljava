@@ -1,14 +1,14 @@
 package cz.judas.jan.haml;
 
-public class AnyNumberOfToken implements Token {
-    private final Token inner;
+public class AnyNumberOfToken<T> implements Token<T> {
+    private final Token<T> inner;
 
-    public AnyNumberOfToken(Token inner) {
+    public AnyNumberOfToken(Token<T> inner) {
         this.inner = inner;
     }
 
     @Override
-    public int tryEat(String line, int position, ParsingResult parsingResult) throws ParseException {
+    public int tryEat(String line, int position, T parsingResult) throws ParseException {
         int globalNewPosition = -1;
         int currentPosition = position;
         while(currentPosition < line.length()) {
@@ -23,7 +23,7 @@ public class AnyNumberOfToken implements Token {
         return globalNewPosition;
     }
 
-    public static AnyNumberOfToken anyNumberOf(Token inner) {
-        return new AnyNumberOfToken(inner);
+    public static <T> AnyNumberOfToken<T> anyNumberOf(Token<T> inner) {
+        return new AnyNumberOfToken<>(inner);
     }
 }

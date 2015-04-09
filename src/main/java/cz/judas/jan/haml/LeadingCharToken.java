@@ -2,7 +2,7 @@ package cz.judas.jan.haml;
 
 import java.util.function.BiConsumer;
 
-public class LeadingCharToken implements Token {
+public class LeadingCharToken implements Token<ParsingResult> {
     private final char leadingChar;
     private final CharPredicate validChars;
     private final BiConsumer<ParsingResult, String> onEnd;
