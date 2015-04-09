@@ -36,8 +36,8 @@ public class HamlParser {
 
     public String process(String haml) throws ParseException {
         StringBuilder stringBuilder = new StringBuilder();
-        Deque<Node> stack = new ArrayDeque<>();
-        stack.push(new RootNode());
+        Deque<MutableNode> stack = new ArrayDeque<>();
+        stack.push(new MutableRootNode());
 
         for (String line : haml.split("\n")) {
             if (line.startsWith("!!!")) {
@@ -57,13 +57,13 @@ public class HamlParser {
 
                 tagToken.tryEat(line, numTabs, mutableHtmlNode);
 
-                HtmlNode node = mutableHtmlNode.toHtmlNode();
-                stack.peekFirst().addChild(node);
-                stack.push(node);
+                stack.peekFirst().addChild(mutableHtmlNode);
+                stack.push(mutableHtmlNode);
             }
         }
 
-        stack.peekLast().appendTo(stringBuilder);
+        Node rootNode = stack.peekLast().toNode();
+        rootNode.appendTo(stringBuilder);
 
         return stringBuilder.toString();
     }

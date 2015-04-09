@@ -1,18 +1,18 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.Iterables;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class MutableHtmlNode {
+public class MutableHtmlNode implements MutableNode {
     private String tagName = "div";
     private final Map<String, String> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();
     private String id = null;
     private String content = "";
+
+    private final List<MutableNode> children = new ArrayList<>();
 
     public void setTagName(String tagName) {
         this.tagName = tagName;
@@ -34,6 +34,21 @@ public class MutableHtmlNode {
         this.id = id;
     }
 
+    @Override
+    public void addChild(MutableNode child) {
+        children.add(child);
+    }
+
+    @Override
+    public HtmlNode toNode() {
+        return new HtmlNode(
+                tagName,
+                getAttributes(),
+                content,
+                Iterables.transform(children, MutableNode::toNode)
+        );
+    }
+
     private Map<String, String> getAttributes() {
         if (classes.isEmpty() && id == null) {
             return attributes;
@@ -47,13 +62,5 @@ public class MutableHtmlNode {
             }
             return copy;
         }
-    }
-
-    public HtmlNode toHtmlNode() {
-        return new HtmlNode(
-                tagName,
-                getAttributes(),
-                content
-        );
     }
 }

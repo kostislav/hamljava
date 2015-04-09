@@ -1,24 +1,22 @@
 package cz.judas.jan.haml;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import java.util.List;
 import java.util.Map;
 
 public class HtmlNode implements Node {
-    private String tagName;
-    private Map<String, String> attributes;
-    private String textContent;
-    private List<Node> children = new ArrayList<>();
+    private final String tagName;
+    private final Map<String, String> attributes;
+    private final String textContent;
+    private final List<Node> children;
 
-    public HtmlNode(String tagName, Map<String, String> attributes, String textContent) {
+    public HtmlNode(String tagName, Map<String, String> attributes, String textContent, Iterable<? extends Node> children) {
         this.tagName = tagName;
-        this.attributes = attributes;
+        this.attributes = ImmutableMap.copyOf(attributes);
         this.textContent = textContent;
-    }
-
-    @Override
-    public void addChild(Node child) {
-        children.add(child);
+        this.children = ImmutableList.copyOf(children);
     }
 
     @Override
@@ -39,8 +37,12 @@ public class HtmlNode implements Node {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         HtmlNode htmlNode = (HtmlNode) o;
 

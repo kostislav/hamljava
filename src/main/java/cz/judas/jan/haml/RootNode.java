@@ -1,14 +1,14 @@
 package cz.judas.jan.haml;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 
 public class RootNode implements Node {
-    private final List<Node> children = new ArrayList<>();
+    private final List<Node> children;
 
-    @Override
-    public void addChild(Node child) {
-        children.add(child);
+    public RootNode(Iterable<? extends Node> children) {
+        this.children = ImmutableList.copyOf(children);
     }
 
     @Override
