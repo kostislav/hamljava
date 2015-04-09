@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.tokens;
 
-import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
@@ -8,7 +7,7 @@ import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
 public class HtmlTagToken implements Token<MutableRootNode> {
-    private final Token<MutableHtmlNode> innerTokens = sequence(ImmutableList.of(
+    private final Token<MutableHtmlNode> innerTokens = sequence(
             atMostOne(
                     new LeadingCharToken(
                             '%',
@@ -17,7 +16,7 @@ public class HtmlTagToken implements Token<MutableRootNode> {
                     )
             ),
             anyNumberOf(
-                    anyOf(ImmutableList.of(
+                    anyOf(
                             new LeadingCharToken(
                                     '.',
                                     this::isIdOrClassChar,
@@ -28,7 +27,7 @@ public class HtmlTagToken implements Token<MutableRootNode> {
                                     this::isIdOrClassChar,
                                     MutableHtmlNode::setId
                             )
-                    ))
+                    )
             ),
             atMostOne(
                     new LeadingCharToken(
@@ -37,7 +36,7 @@ public class HtmlTagToken implements Token<MutableRootNode> {
                             MutableHtmlNode::setContent
                     )
             )
-    ));
+    );
 
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {

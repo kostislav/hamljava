@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.tokens.generic;
 
+import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.tokens.Token;
 
 @SuppressWarnings("UtilityClass")
@@ -8,12 +9,14 @@ public class GenericTokens {
         return new AnyNumberOfToken<>(inner);
     }
 
-    public static <T> AnyOfToken<T> anyOf(Iterable<? extends Token<T>> alternatives) {
-        return new AnyOfToken<>(alternatives);
+    @SafeVarargs
+    public static <T> AnyOfToken<T> anyOf(Token<T>... alternatives) {
+        return new AnyOfToken<>(ImmutableList.copyOf(alternatives));
     }
 
-    public static <T> SequenceOfTokens<T> sequence(Iterable<? extends Token<T>> tokens) {
-        return new SequenceOfTokens<>(tokens);
+    @SafeVarargs
+    public static <T> SequenceOfTokens<T> sequence(Token<T>... tokens) {
+        return new SequenceOfTokens<>(ImmutableList.copyOf(tokens));
     }
 
     public static <T> AtMostOneToken<T> atMostOne(Token<T> token) {
