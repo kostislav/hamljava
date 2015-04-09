@@ -19,7 +19,7 @@ public class LeadingCharToken implements Token<MutableHtmlNode> {
 
     @Override
     public int tryEat(String line, int position, MutableHtmlNode mutableHtmlNode) throws ParseException {
-        if(line.charAt(position) != leadingChar) {
+        if(line.length() == position || line.charAt(position) != leadingChar) {
             return -1;
         }
 

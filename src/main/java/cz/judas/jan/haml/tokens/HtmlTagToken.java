@@ -4,35 +4,42 @@ import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
-
-import static cz.judas.jan.haml.tokens.generic.AnyNumberOfToken.anyNumberOf;
-import static cz.judas.jan.haml.tokens.generic.AnyOfToken.anyOf;
+import cz.judas.jan.haml.tokens.generic.AnyNumberOfToken;
+import cz.judas.jan.haml.tokens.generic.AnyOfToken;
+import cz.judas.jan.haml.tokens.generic.AtMostOneToken;
+import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 
 public class HtmlTagToken implements Token<MutableRootNode> {
-    private final Token<MutableHtmlNode> innerTokens = anyNumberOf(
-            anyOf(ImmutableList.of(
+    private final Token<MutableHtmlNode> innerTokens = new SequenceOfTokens<>(ImmutableList.of(
+            new AtMostOneToken<>(
                     new LeadingCharToken(
                             '%',
                             this::isTagNameChar,
                             MutableHtmlNode::setTagName
-                    ),
-                    new LeadingCharToken(
-                            '.',
-                            this::isIdOrClassChar,
-                            MutableHtmlNode::addClass
-                    ),
-                    new LeadingCharToken(
-                            '#',
-                            this::isIdOrClassChar,
-                            MutableHtmlNode::setId
-                    ),
-                    new LeadingCharToken(
-                            ' ',
-                            c -> c != '\n',
-                            MutableHtmlNode::setContent
                     )
-            ))
-    );
+            ),
+            new AnyNumberOfToken<>(
+                    new AnyOfToken<>(ImmutableList.of(
+                        new LeadingCharToken(
+                                '.',
+                                this::isIdOrClassChar,
+                                MutableHtmlNode::addClass
+                        ),
+                        new LeadingCharToken(
+                                '#',
+                                this::isIdOrClassChar,
+                                MutableHtmlNode::setId
+                        )
+                    ))
+            ),
+            new AtMostOneToken<>(
+                new LeadingCharToken(
+                                ' ',
+                                c -> c != '\n',
+                                MutableHtmlNode::setContent
+                        )
+                )
+    ));
 
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
