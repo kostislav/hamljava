@@ -3,7 +3,7 @@ package cz.judas.jan.haml.tokens;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
-import cz.judas.jan.haml.tokens.generic.ContextSwitchToken;
+import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
 
@@ -17,7 +17,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                                     new DoctypeToken(),
                                     sequence(
                                             new SignificantWhitespaceToken(),
-                                            new ContextSwitchToken<MutableRootNode, MutableHtmlNode>(
+                                            GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
                                                     MutableHtmlNode::new,
                                                     sequence(
                                                             atMostOne(

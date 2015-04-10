@@ -3,6 +3,9 @@ package cz.judas.jan.haml.tokens.generic;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.tokens.Token;
 
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
 @SuppressWarnings("UtilityClass")
 public class GenericTokens {
     public static <T> AnyNumberOfToken<T> anyNumberOf(Token<T> inner) {
@@ -21,5 +24,9 @@ public class GenericTokens {
 
     public static <T> AtMostOneToken<T> atMostOne(Token<T> token) {
         return new AtMostOneToken<>(token);
+    }
+
+    public static <I, O> ContextSwitchToken<I, O> contextSwitch(Supplier<O> contextSupplier, Token<O> inner, BiConsumer<I, O> onSuccess) {
+        return new ContextSwitchToken<>(contextSupplier, inner, onSuccess);
     }
 }
