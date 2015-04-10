@@ -3,11 +3,13 @@ package cz.judas.jan.haml.tokens;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
+import cz.judas.jan.haml.tokens.generic.ContextSwitchToken;
 
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
 public class HtmlTagToken implements Token<MutableRootNode> {
-    private final Token<MutableHtmlNode> innerTokens =
+    private final Token<MutableRootNode> innerTokens = new ContextSwitchToken<>(
+            MutableHtmlNode::new,
             sequence(
                     atMostOne(
                             new LeadingCharToken('%', this::isTagNameChar, MutableHtmlNode::setTagName)
@@ -24,17 +26,13 @@ public class HtmlTagToken implements Token<MutableRootNode> {
                     atMostOne(
                             new TextToken()
                     )
-            );
-
+            ),
+            MutableRootNode::addNode
+    );
 
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
-        MutableHtmlNode mutableHtmlNode = new MutableHtmlNode();
-        int newPosition = innerTokens.tryEat(line, position, mutableHtmlNode);
-        if (newPosition != -1) {
-            parsingResult.addNode(mutableHtmlNode);
-        }
-        return newPosition;
+        return innerTokens.tryEat(line, position, parsingResult);
     }
 
     private boolean isIdOrClassChar(char c) {
