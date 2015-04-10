@@ -4,6 +4,8 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import cz.judas.jan.haml.tokens.generic.ContextSwitchToken;
+import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
+import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
 
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
@@ -12,12 +14,12 @@ public class HtmlTagToken implements Token<MutableRootNode> {
             MutableHtmlNode::new,
             sequence(
                     atMostOne(
-                            new LeadingCharToken('%', this::isTagNameChar, MutableHtmlNode::setTagName)
+                            new LeadingCharToken('%', new IsTagNameChar(), MutableHtmlNode::setTagName)
                     ),
                     anyNumberOf(
                             anyOf(
-                                    new LeadingCharToken('.', this::isIdOrClassChar, MutableHtmlNode::addClass),
-                                    new LeadingCharToken('#', this::isIdOrClassChar, MutableHtmlNode::setId)
+                                    new LeadingCharToken('.', new IsIdOrClassChar(), MutableHtmlNode::addClass),
+                                    new LeadingCharToken('#', new IsIdOrClassChar(), MutableHtmlNode::setId)
                             )
                     ),
                     anyNumberOf(
@@ -33,13 +35,5 @@ public class HtmlTagToken implements Token<MutableRootNode> {
     @Override
     public int tryEat(String line, int position, MutableRootNode parsingResult) throws ParseException {
         return innerTokens.tryEat(line, position, parsingResult);
-    }
-
-    private boolean isIdOrClassChar(char c) {
-        return Character.isLetterOrDigit(c) || c == '-' || c == '_';
-    }
-
-    private boolean isTagNameChar(char c) {
-        return Character.isLetterOrDigit(c);
     }
 }
