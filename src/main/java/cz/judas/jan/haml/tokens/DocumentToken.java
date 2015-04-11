@@ -5,7 +5,7 @@ import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SingleCharToken;
-import cz.judas.jan.haml.tokens.generic.WhitespaceToken;
+import cz.judas.jan.haml.tokens.generic.Terminals;
 import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
 
@@ -23,16 +23,16 @@ public class DocumentToken implements Token<MutableRootNode> {
                                                     MutableHtmlNode::new,
                                                     relaxedSequence(
                                                             atMostOne(
-                                                                    new LeadingCharToken<MutableHtmlNode>('%', new IsTagNameChar(), MutableHtmlNode::setTagName)
+                                                                    Terminals.<MutableHtmlNode>leadingChar('%', new IsTagNameChar(), MutableHtmlNode::setTagName)
                                                             ),
                                                             anyNumberOf(
                                                                     anyOf(
-                                                                            new LeadingCharToken<MutableHtmlNode>('.', new IsIdOrClassChar(), MutableHtmlNode::addClass),
-                                                                            new LeadingCharToken<MutableHtmlNode>('#', new IsIdOrClassChar(), MutableHtmlNode::setId),
-                                                                            atLeastOne(new SingleCharToken<MutableHtmlNode>(c -> c == ' ' || c == '\t'))
+                                                                            Terminals.<MutableHtmlNode>strictWhitespace(),
+                                                                            Terminals.<MutableHtmlNode>leadingChar('.', new IsIdOrClassChar(), MutableHtmlNode::addClass),
+                                                                            Terminals.<MutableHtmlNode>leadingChar('#', new IsIdOrClassChar(), MutableHtmlNode::setId)
                                                                     )
                                                             ),
-                                                            new WhitespaceToken<MutableHtmlNode>(),
+                                                            Terminals.<MutableHtmlNode>whitespace(),
                                                             atMostOne(
                                                                     new TextToken()
                                                             )
@@ -42,7 +42,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                                     )
                             ),
                             atMostOne(
-                                    new SingleCharToken<MutableRootNode>('\n')
+                                    Terminals.<MutableRootNode>singleChar('\n')
                             )
                     )
             );

@@ -16,7 +16,7 @@ public class WhitespaceAllowingSequenceToken<T> implements Token<T> {
             builder.add(iterator.next());
         }
         while(iterator.hasNext()) {
-            builder.add(new WhitespaceToken<T>()).add(iterator.next());
+            builder.add(Terminals.<T>whitespace()).add(iterator.next());
         }
         this.tokens = new SequenceOfTokens<>(builder.build());
     }
