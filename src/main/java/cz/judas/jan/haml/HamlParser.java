@@ -1,19 +1,12 @@
 package cz.judas.jan.haml;
 
-import cz.judas.jan.haml.mutabletree.MutableRootNode;
-import cz.judas.jan.haml.tokens.DocumentToken;
-import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tree.RootNode;
 
 public class HamlParser {
-    private final Token<MutableRootNode> hyperToken = new DocumentToken();
+    private final HamlTreeBuilder treeBuilder = new HamlTreeBuilder();
 
     public String process(String haml) throws ParseException {
-        MutableRootNode mutableRootNode = new MutableRootNode();
-
-        hyperToken.tryEat(haml, 0, mutableRootNode);
-
-        RootNode rootNode = mutableRootNode.toNode();
+        RootNode rootNode = treeBuilder.buildTreeFrom(haml);
         return rootNode.toHtmlString();
     }
 }

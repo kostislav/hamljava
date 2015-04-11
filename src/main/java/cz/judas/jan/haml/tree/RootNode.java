@@ -28,4 +28,26 @@ public class RootNode implements Node {
         appendTo(stringBuilder);
         return stringBuilder.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RootNode rootNode = (RootNode) o;
+
+        return children.equals(rootNode.children)
+                && doctype.equals(rootNode.doctype);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = doctype.hashCode();
+        result = 31 * result + children.hashCode();
+        return result;
+    }
 }
