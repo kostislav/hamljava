@@ -1,15 +1,14 @@
 package cz.judas.jan.haml.tokens;
 
 import cz.judas.jan.haml.ParseException;
-import cz.judas.jan.haml.tree.mutable.MutableAttribute;
-import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
-import cz.judas.jan.haml.tree.mutable.MutableRootNode;
-import cz.judas.jan.haml.tokens.terminal.ExactTextToken;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
 import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
+import cz.judas.jan.haml.tree.mutable.MutableAttribute;
+import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
+import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.tokens.terminal.Terminals.*;
@@ -18,18 +17,14 @@ public class DocumentToken implements Token<MutableRootNode> {
     private final WhitespaceAllowingSequenceToken<MutableAttribute> genericAttribute = relaxedSequence(
             whitespace(),
             GenericTokens.<MutableAttribute>onMatch(
-                    atLeastOne(
-                            singleChar(new IsTagNameChar())
-                    ),
+                    atLeastOne(singleChar(new IsTagNameChar())),
                     MutableAttribute::setName
             ),
             singleChar(':'),
             whitespace(),
             singleChar('\''),
             GenericTokens.<MutableAttribute>onMatch(
-                    atLeastOne(
-                            singleChar(new IsTagNameChar())
-                    ),
+                    atLeastOne(singleChar(new IsTagNameChar())),
                     MutableAttribute::setValue
             ),
             singleChar('\''),
@@ -61,7 +56,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                     relaxedSequence(
                             anyOf(
                                     sequence(
-                                            new ExactTextToken("!!!"),
+                                            exactText("!!!"),
                                             whitespace(),
                                             GenericTokens.<MutableRootNode>onMatch(
                                                     atLeastOne(singleChar(new IsTagNameChar())),
@@ -73,9 +68,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                                             GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
                                                     MutableHtmlNode::new,
                                                     relaxedSequence(
-                                                            atMostOne(
-                                                                    tagName
-                                                            ),
+                                                            atMostOne(tagName),
                                                             anyNumberOf(
                                                                     GenericTokens.<MutableHtmlNode>anyOf(
                                                                             strictWhitespace(),
@@ -85,17 +78,13 @@ public class DocumentToken implements Token<MutableRootNode> {
                                                                     )
                                                             ),
                                                             whitespace(),
-                                                            atMostOne(
-                                                                    new TextToken()
-                                                            )
+                                                            atMostOne(new TextToken())
                                                     ),
                                                     MutableRootNode::addNode
                                             )
                                     )
                             ),
-                            atMostOne(
-                                    singleChar('\n')
-                            )
+                            atMostOne(singleChar('\n'))
                     )
             );
 
