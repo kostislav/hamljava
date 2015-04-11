@@ -1,6 +1,6 @@
-package cz.judas.jan.haml.tokens;
+package cz.judas.jan.haml;
 
-import cz.judas.jan.haml.ParseException;
+import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
