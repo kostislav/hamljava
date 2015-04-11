@@ -9,7 +9,7 @@ import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
 @SuppressWarnings({"UtilityClass", "unchecked"})
 public class Terminals {
-    private static final CharPredicate WHITESPACE_PREDICATE = c -> c == ' ' || c == '\t';
+    private static final CharPredicate WHITESPACE_PREDICATE = c -> c != '\n' && Character.isWhitespace(c);
 
     private static final SingleCharToken SINGLE_WHITESPACE_TOKEN = new SingleCharToken(WHITESPACE_PREDICATE);
 
