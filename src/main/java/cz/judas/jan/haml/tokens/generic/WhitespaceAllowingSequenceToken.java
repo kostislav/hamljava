@@ -2,6 +2,7 @@ package cz.judas.jan.haml.tokens.generic;
 
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.Token;
+import cz.judas.jan.haml.tokens.terminal.Terminals;
 import cz.judas.jan.haml.util.InterleavedIterable;
 
 public class WhitespaceAllowingSequenceToken<T> implements Token<T> {

@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 

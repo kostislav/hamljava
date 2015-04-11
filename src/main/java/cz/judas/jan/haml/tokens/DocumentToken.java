@@ -4,7 +4,7 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tree.mutable.MutableAttribute;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
-import cz.judas.jan.haml.tokens.generic.ExactTextToken;
+import cz.judas.jan.haml.tokens.terminal.ExactTextToken;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
@@ -12,7 +12,7 @@ import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
 
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
-import static cz.judas.jan.haml.tokens.generic.Terminals.*;
+import static cz.judas.jan.haml.tokens.terminal.Terminals.*;
 
 public class DocumentToken implements Token<MutableRootNode> {
     private final WhitespaceAllowingSequenceToken<MutableAttribute> genericAttribute = relaxedSequence(

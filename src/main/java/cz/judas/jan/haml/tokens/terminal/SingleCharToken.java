@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tokens.generic;
+package cz.judas.jan.haml.tokens.terminal;
 
 import cz.judas.jan.haml.CharPredicate;
 import cz.judas.jan.haml.ParseException;
