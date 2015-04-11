@@ -21,12 +21,12 @@ public class DocumentToken implements Token<MutableRootNode> {
                                                     MutableHtmlNode::new,
                                                     sequence(
                                                             atMostOne(
-                                                                    new LeadingCharToken('%', new IsTagNameChar(), MutableHtmlNode::setTagName)
+                                                                    new LeadingCharToken<MutableHtmlNode>('%', new IsTagNameChar(), MutableHtmlNode::setTagName)
                                                             ),
                                                             anyNumberOf(
                                                                     anyOf(
-                                                                            new LeadingCharToken('.', new IsIdOrClassChar(), MutableHtmlNode::addClass),
-                                                                            new LeadingCharToken('#', new IsIdOrClassChar(), MutableHtmlNode::setId)
+                                                                            new LeadingCharToken<MutableHtmlNode>('.', new IsIdOrClassChar(), MutableHtmlNode::addClass),
+                                                                            new LeadingCharToken<MutableHtmlNode>('#', new IsIdOrClassChar(), MutableHtmlNode::setId)
                                                                     )
                                                             ),
                                                             anyNumberOf(

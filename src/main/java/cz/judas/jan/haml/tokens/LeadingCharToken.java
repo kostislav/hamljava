@@ -2,33 +2,32 @@ package cz.judas.jan.haml.tokens;
 
 import cz.judas.jan.haml.CharPredicate;
 import cz.judas.jan.haml.ParseException;
-import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
+import cz.judas.jan.haml.tokens.generic.AtLeastOneToken;
+import cz.judas.jan.haml.tokens.generic.OnMatchToken;
 
 import java.util.function.BiConsumer;
 
-public class LeadingCharToken implements Token<MutableHtmlNode> {
-    private final char leadingChar;
-    private final CharPredicate validChars;
-    private final BiConsumer<MutableHtmlNode, String> onEnd;
+import static cz.judas.jan.haml.tokens.generic.GenericTokens.sequence;
 
-    public LeadingCharToken(char leadingChar, CharPredicate validChars, BiConsumer<MutableHtmlNode, String> onEnd) {
-        this.leadingChar = leadingChar;
-        this.validChars = validChars;
-        this.onEnd = onEnd;
+public class LeadingCharToken<T> implements Token<T> {
+    private final Token<T> token;
+
+    public LeadingCharToken(char leadingChar, CharPredicate validChars, BiConsumer<T, String> onEnd) {
+        token = sequence(
+                new SingleCharToken<T>(leadingChar),
+                new OnMatchToken<>(
+                        new AtLeastOneToken<>(
+                                new SingleCharToken<T>(
+                                        validChars
+                                )
+                        ),
+                        onEnd
+                )
+        );
     }
 
     @Override
-    public int tryEat(String line, int position, MutableHtmlNode mutableHtmlNode) throws ParseException {
-        if(line.length() == position || line.charAt(position) != leadingChar) {
-            return -1;
-        }
-
-        int currentPosition = position + 1;
-        while(currentPosition < line.length() && validChars.test(line.charAt(currentPosition))) {
-            currentPosition++;
-        }
-        onEnd.accept(mutableHtmlNode, line.substring(position + 1, currentPosition));
-
-        return currentPosition;
+    public int tryEat(String line, int position, T mutableHtmlNode) throws ParseException {
+        return token.tryEat(line, position, mutableHtmlNode);
     }
 }

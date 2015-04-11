@@ -29,4 +29,18 @@ public class SingleCharTokenTest {
     public void failsOnEndOfString() throws Exception {
         assertThat(token.tryEat("yyye", 4, 0), is(-1));
     }
+
+    @Test
+    public void predicateVersionEatsOneCharFromPredicate() throws Exception {
+        token = new SingleCharToken<>(c -> c == 'a' || c == 'b');
+
+        assertThat(token.tryEat("rhbae", 2, 0), is(3));
+    }
+
+    @Test
+    public void predicateVersionFailsOnAnotherChar() throws Exception {
+        token = new SingleCharToken<>(c -> c == 'a' || c == 'b');
+
+        assertThat(token.tryEat("rhxae", 2, 0), is(-1));
+    }
 }
