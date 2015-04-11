@@ -8,14 +8,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class WhitespaceAllowingSequenceTokenTest {
-    private WhitespaceAllowingSequenceToken<Integer> token;
+    private WhitespaceAllowingSequenceToken<Object> token;
 
     @Before
     public void setUp() throws Exception {
         token = new WhitespaceAllowingSequenceToken<>(ImmutableList.of(
-                new SingleCharToken<Integer>('a'),
-                new SingleCharToken<Integer>('b'),
-                new SingleCharToken<Integer>('c')
+                new SingleCharToken<>('a'),
+                new SingleCharToken<>('b'),
+                new SingleCharToken<>('c')
         ));
     }
 

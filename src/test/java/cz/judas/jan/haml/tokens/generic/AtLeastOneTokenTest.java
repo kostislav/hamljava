@@ -7,12 +7,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class AtLeastOneTokenTest {
-
-    private AtLeastOneToken<Integer> token;
+    private AtLeastOneToken<Object> token;
 
     @Before
     public void setUp() throws Exception {
-        token = new AtLeastOneToken<>(new SingleCharToken<Integer>('b'));
+        token = new AtLeastOneToken<>(new SingleCharToken<>('b'));
     }
 
     @Test
