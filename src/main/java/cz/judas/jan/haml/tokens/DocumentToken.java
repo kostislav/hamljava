@@ -16,17 +16,11 @@ import static cz.judas.jan.haml.tokens.terminal.Terminals.*;
 public class DocumentToken implements Token<MutableRootNode> {
     private final WhitespaceAllowingSequenceToken<MutableAttribute> genericAttribute = relaxedSequence(
             whitespace(),
-            GenericTokens.<MutableAttribute>onMatch(
-                    atLeastOne(singleChar(new IsTagNameChar())),
-                    MutableAttribute::setName
-            ),
+            match(atLeastOne(singleChar(new IsTagNameChar())), MutableAttribute.class).to(MutableAttribute::setName),
             singleChar(':'),
             whitespace(),
             singleChar('\''),
-            GenericTokens.<MutableAttribute>onMatch(
-                    atLeastOne(singleChar(new IsTagNameChar())),
-                    MutableAttribute::setValue
-            ),
+            match(atLeastOne(singleChar(new IsTagNameChar())), MutableAttribute.class).to(MutableAttribute::setValue),
             singleChar('\''),
             whitespace(),
             atMostOne(singleChar(','))
@@ -58,10 +52,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                                     sequence(
                                             exactText("!!!"),
                                             whitespace(),
-                                            GenericTokens.<MutableRootNode>onMatch(
-                                                    atLeastOne(singleChar(new IsTagNameChar())),
-                                                    MutableRootNode::setDoctype
-                                            )
+                                            match(atLeastOne(singleChar(new IsTagNameChar())), MutableRootNode.class).to(MutableRootNode::setDoctype)
                                     ),
                                     sequence(
                                             new SignificantWhitespaceToken(),

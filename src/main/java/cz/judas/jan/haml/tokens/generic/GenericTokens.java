@@ -42,4 +42,22 @@ public class GenericTokens {
     public static <T> Token<T> onMatch(Token<? super T> token, BiConsumer<? super T, String> onMatch) {
         return new OnMatchToken<>(token, onMatch);
     }
+
+    @SuppressWarnings("UnusedParameters") // class argument is for type inference only
+    public static <T> MatchHelper<T> match(Token<? super T> token, Class<? extends T> clazz) {
+        return new MatchHelper<>(token);
+    }
+
+
+    public static class MatchHelper<T> {
+        private final Token<? super T> token;
+
+        public MatchHelper(Token<? super T> token) {
+            this.token = token;
+        }
+
+        public Token<T> to(BiConsumer<? super T, String> onMatch) {
+            return new OnMatchToken<>(token, onMatch);
+        }
+    }
 }
