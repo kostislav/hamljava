@@ -15,16 +15,26 @@ import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.tokens.terminal.Terminals.*;
 
 public class DocumentToken implements Token<MutableRootNode> {
-    private final WhitespaceAllowingSequenceToken<MutableAttribute> genericAttribute = relaxedSequence(
-            whitespace(),
+    private final SequenceOfTokens<MutableAttribute> value = sequence(
+            singleChar('\''),
+            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setValue),
+            singleChar('\'')
+    );
+
+    private final WhitespaceAllowingSequenceToken<MutableAttribute> newStyleHashEntry = relaxedSequence(
             match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setName),
             singleChar(':'),
             whitespace(),
-            singleChar('\''),
-            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setValue),
-            singleChar('\''),
+            value
+    );
+
+    private final WhitespaceAllowingSequenceToken<MutableAttribute> oldStyleHashEntry = relaxedSequence(
+            singleChar(':'),
+            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setName),
             whitespace(),
-            atMostOne(',')
+            exactText("=>"),
+            whitespace(),
+            value
     );
 
     private final Token<MutableHtmlNode> idAttribute = leadingChar('.', new IsIdOrClassChar(), MutableHtmlNode::addClass);
@@ -36,10 +46,17 @@ public class DocumentToken implements Token<MutableRootNode> {
             GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
                     MutableHash::new,
                     atLeastOne(
-                            GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
-                                    MutableAttribute::new,
-                                    genericAttribute,
-                                    MutableHash::addKeyValuePair
+                            relaxedSequence(
+                                    whitespace(),
+                                    GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
+                                            MutableAttribute::new,
+                                            anyOf(
+                                                    newStyleHashEntry,
+                                                    oldStyleHashEntry
+                                            ),
+                                            MutableHash::addKeyValuePair
+                                    ),
+                                    atMostOne(',')
                             )
                     ),
                     MutableHtmlNode::addAttributes
