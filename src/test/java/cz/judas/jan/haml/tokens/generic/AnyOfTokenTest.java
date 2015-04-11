@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.tokens.generic;
 
 import com.google.common.collect.ImmutableSet;
-import cz.judas.jan.haml.tokens.Token;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,14 +8,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class AnyOfTokenTest {
-
     private AnyOfToken<Integer> token;
 
     @Before
     public void setUp() throws Exception {
-        token = new AnyOfToken<>(ImmutableSet.<Token<Integer>>of(
-                new SingleCharToken<>('a'),
-                new SingleCharToken<>('b')
+        token = new AnyOfToken<>(ImmutableSet.of(
+                new SingleCharToken('a'),
+                new SingleCharToken('b')
         ));
     }
 

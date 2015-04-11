@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.tokens.Token;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,9 +13,9 @@ public class SequenceOfTokensTest {
 
     @Before
     public void setUp() throws Exception {
-        token = new SequenceOfTokens<>(ImmutableList.<Token<Integer>>of(
-                new SingleCharToken<>('a'),
-                new SingleCharToken<>('b')
+        token = new SequenceOfTokens<>(ImmutableList.of(
+                new SingleCharToken('a'),
+                new SingleCharToken('b')
         ));
     }
 

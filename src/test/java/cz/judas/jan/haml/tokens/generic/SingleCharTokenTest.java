@@ -8,11 +8,11 @@ import static org.hamcrest.Matchers.is;
 
 public class SingleCharTokenTest {
 
-    private SingleCharToken<Integer> token;
+    private SingleCharToken token;
 
     @Before
     public void setUp() throws Exception {
-        token = new SingleCharToken<>('x');
+        token = new SingleCharToken('x');
     }
 
     @Test
@@ -32,14 +32,14 @@ public class SingleCharTokenTest {
 
     @Test
     public void predicateVersionEatsOneCharFromPredicate() throws Exception {
-        token = new SingleCharToken<>(c -> c == 'a' || c == 'b');
+        token = new SingleCharToken(c -> c == 'a' || c == 'b');
 
         assertThat(token.tryEat("rhbae", 2, 0), is(3));
     }
 
     @Test
     public void predicateVersionFailsOnAnotherChar() throws Exception {
-        token = new SingleCharToken<>(c -> c == 'a' || c == 'b');
+        token = new SingleCharToken(c -> c == 'a' || c == 'b');
 
         assertThat(token.tryEat("rhxae", 2, 0), is(-1));
     }

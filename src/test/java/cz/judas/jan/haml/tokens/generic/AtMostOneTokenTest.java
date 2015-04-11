@@ -11,7 +11,7 @@ public class AtMostOneTokenTest {
 
     @Before
     public void setUp() throws Exception {
-        token = new AtMostOneToken<>(new SingleCharToken<>('o'));
+        token = new AtMostOneToken<>(new SingleCharToken('o'));
     }
 
     @Test

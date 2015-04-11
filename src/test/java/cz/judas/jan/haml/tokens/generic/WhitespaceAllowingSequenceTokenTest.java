@@ -13,9 +13,9 @@ public class WhitespaceAllowingSequenceTokenTest {
     @Before
     public void setUp() throws Exception {
         token = new WhitespaceAllowingSequenceToken<>(ImmutableList.of(
-                new SingleCharToken<>('a'),
-                new SingleCharToken<>('b'),
-                new SingleCharToken<>('c')
+                new SingleCharToken('a'),
+                new SingleCharToken('b'),
+                new SingleCharToken('c')
         ));
     }
 

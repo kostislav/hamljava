@@ -11,7 +11,7 @@ import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 public class Terminals {
     private static final CharPredicate WHITESPACE_PREDICATE = c -> c == ' ' || c == '\t';
 
-    private static final SingleCharToken<Object> SINGLE_WHITESPACE_TOKEN = new SingleCharToken<>(WHITESPACE_PREDICATE);
+    private static final SingleCharToken SINGLE_WHITESPACE_TOKEN = new SingleCharToken(WHITESPACE_PREDICATE);
 
     private static final Token<Object> RELAXED_WHITESPACE_TOKEN = anyNumberOf(SINGLE_WHITESPACE_TOKEN);
 
@@ -38,10 +38,10 @@ public class Terminals {
     }
 
     public static Token<Object> singleChar(char c) {
-        return new SingleCharToken<>(c);
+        return new SingleCharToken(c);
     }
 
     public static Token<Object> singleChar(CharPredicate predicate) {
-        return new SingleCharToken<>(predicate);
+        return new SingleCharToken(predicate);
     }
 }

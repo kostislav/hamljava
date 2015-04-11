@@ -4,7 +4,7 @@ import cz.judas.jan.haml.CharPredicate;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.Token;
 
-public class SingleCharToken<T> implements Token<T> {
+public class SingleCharToken implements Token<Object> {
     private final CharPredicate predicate;
 
     public SingleCharToken(char c) {
@@ -16,7 +16,7 @@ public class SingleCharToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) throws ParseException {
+    public int tryEat(String line, int position, Object parsingResult) throws ParseException {
         if (line.length() == position || !predicate.test(line.charAt(position))) {
             return -1;
         } else {

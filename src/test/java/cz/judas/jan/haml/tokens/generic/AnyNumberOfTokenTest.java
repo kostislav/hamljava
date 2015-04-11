@@ -11,7 +11,7 @@ public class AnyNumberOfTokenTest {
 
     @Before
     public void setUp() throws Exception {
-        token = new AnyNumberOfToken<>(new SingleCharToken<>('p'));
+        token = new AnyNumberOfToken<>(new SingleCharToken('p'));
     }
 
     @Test
