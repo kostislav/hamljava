@@ -17,31 +17,31 @@ public class Terminals {
 
     private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOne(SINGLE_WHITESPACE_TOKEN);
 
-    public static <T> Token<T> whitespace() {
-        return (Token<T>) RELAXED_WHITESPACE_TOKEN;
+    public static Token<Object> whitespace() {
+        return RELAXED_WHITESPACE_TOKEN;
     }
 
-    public static <T> Token<T> strictWhitespace() {
-        return (Token<T>) STRICT_WHITESPACE_TOKEN;
+    public static Token<Object> strictWhitespace() {
+        return STRICT_WHITESPACE_TOKEN;
     }
 
-    public static <T> Token<T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<T, String> onEnd) {
+    public static <T> Token<T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super T, String> onEnd) {
         return sequence(
-                new SingleCharToken<T>(leadingChar),
+                singleChar(leadingChar),
                 onMatch(
-                        new AtLeastOneToken<>(
-                                Terminals.<T>singleChar(validChars)
+                        atLeastOne(
+                                singleChar(validChars)
                         ),
                         onEnd
                 )
         );
     }
 
-    public static <T> Token<T> singleChar(char c) {
+    public static Token<Object> singleChar(char c) {
         return new SingleCharToken<>(c);
     }
 
-    public static <T> Token<T> singleChar(CharPredicate predicate) {
+    public static Token<Object> singleChar(CharPredicate predicate) {
         return new SingleCharToken<>(predicate);
     }
 }
