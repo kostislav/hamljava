@@ -3,6 +3,7 @@ package cz.judas.jan.haml;
 import cz.judas.jan.haml.tree.HtmlNode;
 import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.tree.TextNode;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,5 +54,9 @@ public class Nodes {
                 content,
                 Collections.emptyList()
         );
+    }
+
+    public static TextNode textNode(String content) {
+        return new TextNode(content);
     }
 }

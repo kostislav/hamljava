@@ -57,4 +57,14 @@ public class HtmlNode implements Node {
         result = 31 * result + children.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "HtmlNode{" +
+                "tagName='" + tagName + '\'' +
+                ", attributes=" + attributes +
+                ", textContent='" + textContent + '\'' +
+                ", children=" + children +
+                '}';
+    }
 }

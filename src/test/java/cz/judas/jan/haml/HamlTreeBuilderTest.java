@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static cz.judas.jan.haml.Nodes.node;
 import static cz.judas.jan.haml.Nodes.root;
+import static cz.judas.jan.haml.Nodes.textNode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -91,6 +92,11 @@ public class HamlTreeBuilderTest {
     @Test
     public void multipleGenericAttributes() throws Exception {
         assertParses("%input{ name: 'blah', value: 'bleh'}", root(node("input", ImmutableMap.of("name", "blah", "value", "bleh"))));
+    }
+
+    @Test
+    public void textLines() throws Exception {
+        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode("Wow this is cool!")))));
     }
 
     private void assertParses(String input, RootNode tree) throws Exception {

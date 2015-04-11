@@ -1,13 +1,16 @@
 package cz.judas.jan.haml.mutabletree;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.HtmlNode;
+import cz.judas.jan.haml.tree.Node;
+import cz.judas.jan.haml.tree.TextNode;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
 public class MutableHtmlNode implements MutableNode {
-    private String tagName = "div";
+    private String tagName = null;
     private final Map<String, String> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();
     private String id = null;
@@ -41,13 +44,17 @@ public class MutableHtmlNode implements MutableNode {
     }
 
     @Override
-    public HtmlNode toNode() {
-        return new HtmlNode(
-                tagName,
-                getAttributes(),
-                content,
-                Iterables.transform(children, MutableNode::toNode)
-        );
+    public Node toNode() {
+        if(tagName == null && attributes.isEmpty() && classes.isEmpty() && id == null) {
+            return new TextNode(content);
+        } else {
+            return new HtmlNode(
+                    MoreObjects.firstNonNull(tagName, "div"),
+                    getAttributes(),
+                    content,
+                    Iterables.transform(children, MutableNode::toNode)
+            );
+        }
     }
 
     private Map<String, String> getAttributes() {

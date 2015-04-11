@@ -50,4 +50,12 @@ public class RootNode implements Node {
         result = 31 * result + children.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RootNode{" +
+                "doctype=" + doctype +
+                ", children=" + children +
+                '}';
+    }
 }
