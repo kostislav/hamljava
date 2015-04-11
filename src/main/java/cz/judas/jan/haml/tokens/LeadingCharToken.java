@@ -4,6 +4,7 @@ import cz.judas.jan.haml.CharPredicate;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.generic.AtLeastOneToken;
 import cz.judas.jan.haml.tokens.generic.OnMatchToken;
+import cz.judas.jan.haml.tokens.generic.SingleCharToken;
 
 import java.util.function.BiConsumer;
 

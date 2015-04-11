@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tokens;
+package cz.judas.jan.haml.tokens.generic;
 
 import org.junit.Before;
 import org.junit.Test;

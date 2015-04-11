@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.tokens.generic;
 
-import cz.judas.jan.haml.tokens.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 

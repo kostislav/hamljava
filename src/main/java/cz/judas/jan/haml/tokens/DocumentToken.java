@@ -4,6 +4,7 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
+import cz.judas.jan.haml.tokens.generic.SingleCharToken;
 import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
 

@@ -1,7 +1,8 @@
-package cz.judas.jan.haml.tokens;
+package cz.judas.jan.haml.tokens.generic;
 
 import cz.judas.jan.haml.CharPredicate;
 import cz.judas.jan.haml.ParseException;
+import cz.judas.jan.haml.tokens.Token;
 
 public class SingleCharToken<T> implements Token<T> {
     private final CharPredicate predicate;
