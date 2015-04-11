@@ -4,9 +4,9 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.Token;
 
 public class AtMostOneToken<T> implements Token<T> {
-    private final Token<T> token;
+    private final Token<? super T> token;
 
-    public AtMostOneToken(Token<T> token) {
+    public AtMostOneToken(Token<? super T> token) {
         this.token = token;
     }
 

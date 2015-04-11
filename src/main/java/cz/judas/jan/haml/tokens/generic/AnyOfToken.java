@@ -7,15 +7,15 @@ import cz.judas.jan.haml.tokens.Token;
 import java.util.List;
 
 public class AnyOfToken<T> implements Token<T> {
-    private final List<Token<T>> alternatives;
+    private final List<Token<? super T>> alternatives;
 
-    public AnyOfToken(Iterable<? extends Token<T>> alternatives) {
+    public AnyOfToken(Iterable<? extends Token<? super T>> alternatives) {
         this.alternatives = ImmutableList.copyOf(alternatives);
     }
 
     @Override
     public int tryEat(String line, int position, T parsingResult) throws ParseException {
-        for (Token<T> alternative : alternatives) {
+        for (Token<? super T> alternative : alternatives) {
             int newPosition = alternative.tryEat(line, position, parsingResult);
             if(newPosition != -1) {
                 return newPosition;

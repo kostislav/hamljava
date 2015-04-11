@@ -4,9 +4,9 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.Token;
 
 public class AnyNumberOfToken<T> implements Token<T> {
-    private final Token<T> inner;
+    private final Token<? super T> inner;
 
-    public AnyNumberOfToken(Token<T> inner) {
+    public AnyNumberOfToken(Token<? super T> inner) {
         this.inner = inner;
     }
 

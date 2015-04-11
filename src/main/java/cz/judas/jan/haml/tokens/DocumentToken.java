@@ -6,35 +6,34 @@ import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
-import cz.judas.jan.haml.tokens.generic.Terminals;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
 import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
 
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
-import static cz.judas.jan.haml.tokens.generic.Terminals.leadingChar;
+import static cz.judas.jan.haml.tokens.generic.Terminals.*;
 
 public class DocumentToken implements Token<MutableRootNode> {
     private final WhitespaceAllowingSequenceToken<MutableAttribute> genericAttribute = relaxedSequence(
-            Terminals.<MutableAttribute>whitespace(),
+            whitespace(),
             GenericTokens.<MutableAttribute>onMatch(
                     atLeastOne(
-                            Terminals.singleChar(new IsTagNameChar())
+                            singleChar(new IsTagNameChar())
                     ),
                     MutableAttribute::setName
             ),
-            Terminals.<MutableAttribute>singleChar(':'),
-            Terminals.<MutableAttribute>whitespace(),
-            Terminals.<MutableAttribute>singleChar('\''),
+            singleChar(':'),
+            whitespace(),
+            singleChar('\''),
             GenericTokens.<MutableAttribute>onMatch(
                     atLeastOne(
-                            Terminals.singleChar(new IsTagNameChar())
+                            singleChar(new IsTagNameChar())
                     ),
                     MutableAttribute::setValue
             ),
-            Terminals.<MutableAttribute>singleChar('\''),
-            Terminals.<MutableAttribute>whitespace(),
-            atMostOne(Terminals.<MutableAttribute>singleChar(','))
+            singleChar('\''),
+            whitespace(),
+            atMostOne(singleChar(','))
     );
 
     private final Token<MutableHtmlNode> idAttribute = leadingChar('.', new IsIdOrClassChar(), MutableHtmlNode::addClass);
@@ -42,7 +41,7 @@ public class DocumentToken implements Token<MutableRootNode> {
     private final Token<MutableHtmlNode> classAttribute = leadingChar('#', new IsIdOrClassChar(), MutableHtmlNode::setId);
 
     private final SequenceOfTokens<MutableHtmlNode> attributeHash = sequence(
-            Terminals.<MutableHtmlNode>singleChar('{'),
+            singleChar('{'),
             atLeastOne(
                     GenericTokens.<MutableHtmlNode, MutableAttribute>contextSwitch(
                             MutableAttribute::new,
@@ -50,8 +49,8 @@ public class DocumentToken implements Token<MutableRootNode> {
                             MutableHtmlNode::addAttribute
                     )
             ),
-            Terminals.<MutableHtmlNode>whitespace(),
-            Terminals.<MutableHtmlNode>singleChar('}')
+            whitespace(),
+            singleChar('}')
     );
 
     private final Token<MutableHtmlNode> tagName = leadingChar('%', new IsTagNameChar(), MutableHtmlNode::setTagName);
@@ -70,14 +69,14 @@ public class DocumentToken implements Token<MutableRootNode> {
                                                                     tagName
                                                             ),
                                                             anyNumberOf(
-                                                                    anyOf(
-                                                                            Terminals.<MutableHtmlNode>strictWhitespace(),
+                                                                    GenericTokens.<MutableHtmlNode>anyOf(
+                                                                            strictWhitespace(),
                                                                             idAttribute,
                                                                             classAttribute,
                                                                             attributeHash
                                                                     )
                                                             ),
-                                                            Terminals.<MutableHtmlNode>whitespace(),
+                                                            whitespace(),
                                                             atMostOne(
                                                                     new TextToken()
                                                             )
@@ -87,7 +86,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                                     )
                             ),
                             atMostOne(
-                                    Terminals.<MutableRootNode>singleChar('\n')
+                                    singleChar('\n')
                             )
                     )
             );

@@ -7,11 +7,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class ContextSwitchToken<I, O> implements Token<I> {
-    private final Supplier<O> contextSupplier;
-    private final Token<O> inner;
-    private final BiConsumer<I, O> onSuccess;
+    private final Supplier<? extends O> contextSupplier;
+    private final Token<? super O> inner;
+    private final BiConsumer<? super I, ? super O> onSuccess;
 
-    public ContextSwitchToken(Supplier<O> contextSupplier, Token<O> inner, BiConsumer<I, O> onSuccess) {
+    public ContextSwitchToken(Supplier<? extends O> contextSupplier, Token<? super O> inner, BiConsumer<? super I, ? super O> onSuccess) {
         this.contextSupplier = contextSupplier;
         this.inner = inner;
         this.onSuccess = onSuccess;

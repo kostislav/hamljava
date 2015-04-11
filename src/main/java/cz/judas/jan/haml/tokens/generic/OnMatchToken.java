@@ -6,10 +6,10 @@ import cz.judas.jan.haml.tokens.Token;
 import java.util.function.BiConsumer;
 
 public class OnMatchToken<T> implements Token<T> {
-    private final Token<T> token;
-    private final BiConsumer<T, String> onMatch;
+    private final Token<? super T> token;
+    private final BiConsumer<? super T, String> onMatch;
 
-    public OnMatchToken(Token<T> token, BiConsumer<T, String> onMatch) {
+    public OnMatchToken(Token<? super T> token, BiConsumer<? super T, String> onMatch) {
         this.token = token;
         this.onMatch = onMatch;
     }

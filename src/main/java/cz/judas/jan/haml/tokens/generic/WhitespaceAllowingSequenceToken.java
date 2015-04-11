@@ -5,9 +5,9 @@ import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.util.InterleavedIterable;
 
 public class WhitespaceAllowingSequenceToken<T> implements Token<T> {
-    private final Token<T> tokens;
+    private final Token<? super T> tokens;
 
-    public WhitespaceAllowingSequenceToken(Iterable<? extends Token<T>> tokens) {
+    public WhitespaceAllowingSequenceToken(Iterable<? extends Token<? super T>> tokens) {
         this.tokens = new SequenceOfTokens<>(new InterleavedIterable<>(tokens, Terminals.<T>whitespace()));
     }
 
