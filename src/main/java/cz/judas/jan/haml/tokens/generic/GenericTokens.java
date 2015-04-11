@@ -26,7 +26,16 @@ public class GenericTokens {
         return new AtMostOneToken<>(token);
     }
 
+    public static <T> AtLeastOneToken<T> atLeastOne(Token<T> token) {
+        return new AtLeastOneToken<>(token);
+    }
+
     public static <I, O> ContextSwitchToken<I, O> contextSwitch(Supplier<O> contextSupplier, Token<O> inner, BiConsumer<I, O> onSuccess) {
         return new ContextSwitchToken<>(contextSupplier, inner, onSuccess);
+    }
+
+    @SafeVarargs
+    public static <T> WhitespaceAllowingSequenceToken<T> relaxedSequence(Token<T>... tokens) {
+        return new WhitespaceAllowingSequenceToken<>(ImmutableList.copyOf(tokens));
     }
 }

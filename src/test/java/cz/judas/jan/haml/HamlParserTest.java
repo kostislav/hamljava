@@ -74,6 +74,11 @@ public class HamlParserTest {
         assertParses("#going-to-hell blah", "<div id=\"going-to-hell\">blah</div>");
     }
 
+    @Test
+    public void partsCanBeSeparatedByWhitespace() throws Exception {
+        assertParses("%span .bluh .lkj bra bh", "<span class=\"bluh lkj\">bra bh</span>");
+    }
+
     //    @Test
 //    public void genericAttributes() throws Exception {
 //        assertParses("%input{ name: 'blah', value: 'bleh'}", "<input name=\"blah\" value=\"bleh\"></input>");
