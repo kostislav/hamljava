@@ -23,8 +23,8 @@ public class MutableHtmlNode implements MutableNode {
         this.content = content;
     }
 
-    public void addAttribute(String name, String value) {
-        attributes.put(name, value);
+    public void addAttribute(MutableAttribute attribute) {
+        attributes.put(attribute.getName(), attribute.getValue());
     }
 
     public void addClass(String name) {

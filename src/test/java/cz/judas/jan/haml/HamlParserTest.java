@@ -79,8 +79,13 @@ public class HamlParserTest {
         assertParses("%span .bluh .lkj bra bh", "<span class=\"bluh lkj\">bra bh</span>");
     }
 
-    //    @Test
-//    public void genericAttributes() throws Exception {
+    @Test
+    public void oneGenericAttribute() throws Exception {
+        assertParses("%input{ name: 'blah' }", "<input name=\"blah\"></input>");
+    }
+
+//    @Test
+//    public void multipleGenericAttributes() throws Exception {
 //        assertParses("%input{ name: 'blah', value: 'bleh'}", "<input name=\"blah\" value=\"bleh\"></input>");
 //    }
 

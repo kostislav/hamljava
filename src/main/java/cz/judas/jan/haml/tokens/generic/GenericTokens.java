@@ -38,4 +38,8 @@ public class GenericTokens {
     public static <T> WhitespaceAllowingSequenceToken<T> relaxedSequence(Token<T>... tokens) {
         return new WhitespaceAllowingSequenceToken<>(ImmutableList.copyOf(tokens));
     }
+
+    public static <T> Token<T> onMatch(Token<T> token, BiConsumer<T, String> onMatch) {
+        return new OnMatchToken<>(token, onMatch);
+    }
 }

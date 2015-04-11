@@ -5,9 +5,7 @@ import cz.judas.jan.haml.tokens.Token;
 
 import java.util.function.BiConsumer;
 
-import static cz.judas.jan.haml.tokens.generic.GenericTokens.anyNumberOf;
-import static cz.judas.jan.haml.tokens.generic.GenericTokens.atLeastOne;
-import static cz.judas.jan.haml.tokens.generic.GenericTokens.sequence;
+import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
 
 @SuppressWarnings({"UtilityClass", "unchecked"})
 public class Terminals {
@@ -30,7 +28,7 @@ public class Terminals {
     public static <T> Token<T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<T, String> onEnd) {
         return sequence(
                 new SingleCharToken<T>(leadingChar),
-                new OnMatchToken<>(
+                onMatch(
                         new AtLeastOneToken<>(
                                 Terminals.<T>singleChar(validChars)
                         ),
