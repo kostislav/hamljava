@@ -61,7 +61,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                     relaxedSequence(
                             anyOf(
                                     sequence(
-                                            new ExactTextToken<MutableRootNode>("!!!"),
+                                            new ExactTextToken("!!!"),
                                             whitespace(),
                                             GenericTokens.<MutableRootNode>onMatch(
                                                     atLeastOne(singleChar(new IsTagNameChar())),

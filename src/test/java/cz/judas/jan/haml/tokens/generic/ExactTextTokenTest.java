@@ -7,11 +7,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class ExactTextTokenTest {
-    private ExactTextToken<Object> token;
+    private ExactTextToken token;
 
     @Before
     public void setUp() throws Exception {
-        token = new ExactTextToken<>("aaa");
+        token = new ExactTextToken("aaa");
     }
 
     @Test

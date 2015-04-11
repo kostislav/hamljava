@@ -3,7 +3,7 @@ package cz.judas.jan.haml.tokens.generic;
 import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.Token;
 
-public class ExactTextToken<T> implements Token<T> {
+public class ExactTextToken implements Token<Object> {
     private final String content;
 
     public ExactTextToken(String content) {
@@ -11,7 +11,7 @@ public class ExactTextToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) throws ParseException {
+    public int tryEat(String line, int position, Object parsingResult) throws ParseException {
         int length = content.length();
         for (int i = 0; i < length; i++) {
             int linePosition = position + i;
