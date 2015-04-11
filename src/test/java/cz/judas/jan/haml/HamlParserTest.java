@@ -84,10 +84,10 @@ public class HamlParserTest {
         assertParses("%input{ name: 'blah' }", "<input name=\"blah\"></input>");
     }
 
-//    @Test
-//    public void multipleGenericAttributes() throws Exception {
-//        assertParses("%input{ name: 'blah', value: 'bleh'}", "<input name=\"blah\" value=\"bleh\"></input>");
-//    }
+    @Test
+    public void multipleGenericAttributes() throws Exception {
+        assertParses("%input{ name: 'blah', value: 'bleh'}", "<input name=\"blah\" value=\"bleh\"></input>");
+    }
 
     private void assertParses(String input, String output) throws Exception {
         assertThat(parser.process(input), is(output));
