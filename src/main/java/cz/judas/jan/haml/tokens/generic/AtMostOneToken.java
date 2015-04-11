@@ -14,7 +14,7 @@ public class AtMostOneToken<T> implements Token<T> {
     public int tryEat(String line, int position, T parsingResult) throws ParseException {
         int newPosition = token.tryEat(line, position, parsingResult);
         if(newPosition != -1 && token.tryEat(line, newPosition, parsingResult) != -1) {
-            throw new ParseException(line, position);
+            return -1;
         }
         if(newPosition == -1) {
             return position;

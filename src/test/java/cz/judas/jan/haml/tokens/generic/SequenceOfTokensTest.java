@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.SingleCharToken;
 import cz.judas.jan.haml.tokens.Token;
 import org.junit.Before;
@@ -27,13 +26,13 @@ public class SequenceOfTokensTest {
         assertThat(token.tryEat("svrabec", 3, 99), is(5));
     }
 
-    @Test(expected = ParseException.class)
+    @Test
     public void failsIfNoneMatch() throws Exception {
-        token.tryEat("svrfg", 3, 99); // TODO should just fail?
+        assertThat(token.tryEat("svrfg", 3, 99), is(-1));
     }
 
-    @Test(expected = ParseException.class)
+    @Test
     public void failsIfOnlySomeMatch() throws Exception {
-        token.tryEat("svratka", 3, 99); // TODO should just fail?
+        assertThat(token.tryEat("svratka", 3, 99), is(-1));
     }
 }

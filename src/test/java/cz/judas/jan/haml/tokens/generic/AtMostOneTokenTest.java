@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.tokens.generic;
 
-import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.tokens.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +26,8 @@ public class AtMostOneTokenTest {
         assertThat(token.tryEat("aorta", 1, 6), is(2));
     }
 
-    @Test(expected = ParseException.class)
+    @Test
     public void failsIfMoreThanOneInstanceEncountered() throws Exception {
-        token.tryEat("ooo.o", 0, 6); // TODO should just fail?
+        assertThat(token.tryEat("ooo.o", 0, 6), is(-1));
     }
 }
