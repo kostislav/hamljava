@@ -28,8 +28,8 @@ public class MutableRootNode implements MutableNode {
         stack.push(node);
     }
 
-    public void levelUp(int newLevel) {
-        while (newLevel < stack.size() - 1) {
+    public void levelUp(String newPrefix) {
+        while (newPrefix.length() < stack.size() - 1) {
             stack.pop();
         }
     }

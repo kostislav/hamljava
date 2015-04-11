@@ -52,10 +52,10 @@ public class DocumentToken implements Token<MutableRootNode> {
                                     sequence(
                                             exactText("!!!"),
                                             whitespace(),
-                                            match(atLeastOne(singleChar(new IsTagNameChar())), MutableRootNode.class).to(MutableRootNode::setDoctype)
+                                            match(atLeastOne(singleChar(Character::isLetterOrDigit)), MutableRootNode.class).to(MutableRootNode::setDoctype)
                                     ),
                                     sequence(
-                                            new SignificantWhitespaceToken(),
+                                            match(anyNumberOf(singleChar('\t')), MutableRootNode.class).to(MutableRootNode::levelUp),
                                             GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
                                                     MutableHtmlNode::new,
                                                     relaxedSequence(
@@ -69,7 +69,7 @@ public class DocumentToken implements Token<MutableRootNode> {
                                                                     )
                                                             ),
                                                             whitespace(),
-                                                            atMostOne(new TextToken())
+                                                            match(anyNumberOf(singleChar(c -> c != '\n')), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
                                                     ),
                                                     MutableRootNode::addNode
                                             )
