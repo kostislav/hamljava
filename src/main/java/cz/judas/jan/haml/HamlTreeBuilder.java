@@ -1,11 +1,12 @@
 package cz.judas.jan.haml;
 
+import cz.judas.jan.haml.grammar.HamlGrammar;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tree.RootNode;
 
 public class HamlTreeBuilder {
-    private final Token<MutableRootNode> hyperToken = new DocumentToken();
+    private final Token<MutableRootNode> hyperToken = HamlGrammar.hamlDocument();
 
     public RootNode buildTreeFrom(String input) throws ParseException {
         MutableRootNode mutableRootNode = new MutableRootNode();
