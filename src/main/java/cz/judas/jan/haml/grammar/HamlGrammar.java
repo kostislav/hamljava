@@ -24,40 +24,52 @@ public class HamlGrammar {
         return anyNumberOf(
                 relaxedSequence(
                         anyOf(
-                                sequence(
-                                        exactText("!!!"),
-                                        whitespace(),
-                                        match(atLeastOne(Character::isLetterOrDigit), MutableRootNode.class).to(MutableRootNode::setDoctype)
-                                ),
-                                sequence(
-                                        match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
-                                        GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
-                                                MutableHtmlNode::new,
-                                                anyOf(
-                                                        sequence(
-                                                                singleChar('\\'),
-                                                                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
-                                                        ),
-                                                        relaxedSequence(
-                                                                atMostOne(tagName()),
-                                                                anyNumberOf(
-                                                                        GenericTokens.<MutableHtmlNode>anyOf(
-                                                                                strictWhitespace(),
-                                                                                idAttribute(),
-                                                                                classAttribute(),
-                                                                                attributeHash()
-                                                                        )
-                                                                ),
-                                                                whitespace(),
-                                                                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
-                                                        )
-                                                ),
-                                                MutableRootNode::addNode
-                                        )
-                                )
+                                doctype(),
+                                regularLine()
                         ),
                         atMostOne('\n')
                 )
+        );
+    }
+
+    private static SequenceOfTokens<MutableRootNode> doctype() {
+        return sequence(
+                exactText("!!!"),
+                whitespace(),
+                match(atLeastOne(Character::isLetterOrDigit), MutableRootNode.class).to(MutableRootNode::setDoctype)
+        );
+    }
+
+    private static SequenceOfTokens<MutableRootNode> regularLine() {
+        return sequence(
+                match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
+                GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
+                        MutableHtmlNode::new,
+                        anyOf(
+                                escapedLine(),
+                                relaxedSequence(
+                                        atMostOne(tagName()),
+                                        anyNumberOf(
+                                                GenericTokens.<MutableHtmlNode>anyOf(
+                                                        strictWhitespace(),
+                                                        idAttribute(),
+                                                        classAttribute(),
+                                                        attributeHash()
+                                                )
+                                        ),
+                                        whitespace(),
+                                        match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
+                                )
+                        ),
+                        MutableRootNode::addNode
+                )
+        );
+    }
+
+    private static SequenceOfTokens<MutableHtmlNode> escapedLine() {
+        return sequence(
+                singleChar('\\'),
+                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
         );
     }
 
@@ -71,6 +83,32 @@ public class HamlGrammar {
 
     private static Token<MutableHtmlNode> classAttribute() {
         return leadingChar('#', new IsIdOrClassChar(), MutableHtmlNode::setId);
+    }
+
+    private static SequenceOfTokens<MutableHtmlNode> attributeHash() {
+        return sequence(
+                singleChar('{'),
+                GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
+                        MutableHash::new,
+                        atLeastOne(
+                                relaxedSequence(
+                                        whitespace(),
+                                        GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
+                                                MutableAttribute::new,
+                                                anyOf(
+                                                        newStyleHashEntry(),
+                                                        oldStyleHashEntry()
+                                                ),
+                                                MutableHash::addKeyValuePair
+                                        ),
+                                        atMostOne(',')
+                                )
+                        ),
+                        MutableHtmlNode::addAttributes
+                ),
+                whitespace(),
+                singleChar('}')
+        );
     }
 
     private static WhitespaceAllowingSequenceToken<MutableAttribute> newStyleHashEntry() {
@@ -98,32 +136,6 @@ public class HamlGrammar {
                 singleChar('\''),
                 match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setValue),
                 singleChar('\'')
-        );
-    }
-
-    private static SequenceOfTokens<MutableHtmlNode> attributeHash() {
-        return sequence(
-                singleChar('{'),
-                GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
-                        MutableHash::new,
-                        atLeastOne(
-                                relaxedSequence(
-                                        whitespace(),
-                                        GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
-                                                MutableAttribute::new,
-                                                anyOf(
-                                                        newStyleHashEntry(),
-                                                        oldStyleHashEntry()
-                                                ),
-                                                MutableHash::addKeyValuePair
-                                        ),
-                                        atMostOne(',')
-                                )
-                        ),
-                        MutableHtmlNode::addAttributes
-                ),
-                whitespace(),
-                singleChar('}')
         );
     }
 }
