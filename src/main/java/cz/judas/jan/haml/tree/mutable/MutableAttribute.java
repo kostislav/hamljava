@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.mutabletree;
+package cz.judas.jan.haml.tree.mutable;
 
 public class MutableAttribute {
     private String name;

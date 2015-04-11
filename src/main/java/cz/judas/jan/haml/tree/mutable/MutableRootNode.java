@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.mutabletree;
+package cz.judas.jan.haml.tree.mutable;
 
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.RootNode;

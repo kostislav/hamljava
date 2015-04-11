@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.tokens;
 
 import cz.judas.jan.haml.ParseException;
-import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
+import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 
 public class TextToken implements Token<MutableHtmlNode> {
     @Override

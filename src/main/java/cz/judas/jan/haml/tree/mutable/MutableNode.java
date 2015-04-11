@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.mutabletree;
+package cz.judas.jan.haml.tree.mutable;
 
 import cz.judas.jan.haml.tree.Node;
 

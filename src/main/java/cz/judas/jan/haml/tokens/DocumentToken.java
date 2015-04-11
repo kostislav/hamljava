@@ -1,9 +1,9 @@
 package cz.judas.jan.haml.tokens;
 
 import cz.judas.jan.haml.ParseException;
-import cz.judas.jan.haml.mutabletree.MutableAttribute;
-import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
-import cz.judas.jan.haml.mutabletree.MutableRootNode;
+import cz.judas.jan.haml.tree.mutable.MutableAttribute;
+import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
+import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 import cz.judas.jan.haml.tokens.generic.ExactTextToken;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
