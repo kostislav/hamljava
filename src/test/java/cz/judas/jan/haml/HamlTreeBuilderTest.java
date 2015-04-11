@@ -94,6 +94,11 @@ public class HamlTreeBuilderTest {
         assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode("Wow this is cool!")))));
     }
 
+    @Test
+    public void tagsCanBeEscaped() throws Exception {
+        assertParses("%title\n\t\\= @title", root(node("title", textNode("= @title"))));
+    }
+
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(input), is(tree));
     }

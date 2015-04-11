@@ -63,18 +63,24 @@ public class DocumentToken implements Token<MutableRootNode> {
                                             match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
                                             GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
                                                     MutableHtmlNode::new,
-                                                    relaxedSequence(
-                                                            atMostOne(tagName),
-                                                            anyNumberOf(
-                                                                    GenericTokens.<MutableHtmlNode>anyOf(
-                                                                            strictWhitespace(),
-                                                                            idAttribute,
-                                                                            classAttribute,
-                                                                            attributeHash
-                                                                    )
+                                                    anyOf(
+                                                            sequence(
+                                                                    singleChar('\\'),
+                                                                    match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
                                                             ),
-                                                            whitespace(),
-                                                            match(anyNumberOf(c -> c != '\n'), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
+                                                            relaxedSequence(
+                                                                    atMostOne(tagName),
+                                                                    anyNumberOf(
+                                                                            GenericTokens.<MutableHtmlNode>anyOf(
+                                                                                    strictWhitespace(),
+                                                                                    idAttribute,
+                                                                                    classAttribute,
+                                                                                    attributeHash
+                                                                            )
+                                                                    ),
+                                                                    whitespace(),
+                                                                    match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
+                                                            )
                                                     ),
                                                     MutableRootNode::addNode
                                             )
