@@ -10,6 +10,6 @@ public class HamlParserTest {
     public void processesHaml() throws Exception {
         HamlParser parser = new HamlParser();
 
-        assertThat(parser.process("%html\n\t%head\n\t\t%title blah"), is("<html><head><title>blah</title></head></html>"));
+        assertThat(parser.process("!!! 5\n%html\n\t%head\n\t\t%title blah"), is("<!DOCTYPE html>\n<html><head><title>blah</title></head></html>"));
     }
 }

@@ -31,12 +31,7 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void html5Ddoctype() throws Exception {
-        assertParses("!!! 5", root("<!DOCTYPE html>"));
-    }
-
-    @Test(expected = ParseException.class)
-    public void otherDoctypesAreUnsupported() throws Exception {
-        treeBuilder.buildTreeFrom("!!! Strict");
+        assertParses("!!! 5", root("5"));
     }
 
     @Test

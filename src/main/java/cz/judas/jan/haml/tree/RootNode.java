@@ -1,11 +1,17 @@
 package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class RootNode implements Node {
+    private static final Map<String, String> DOCTYPES = ImmutableMap.of(
+            "5", "<!DOCTYPE html>"
+    );
+
     private final Optional<String> doctype;
     private final List<Node> children;
 
@@ -16,7 +22,7 @@ public class RootNode implements Node {
 
     @Override
     public void appendTo(StringBuilder stringBuilder) {
-        doctype.ifPresent(doctype -> stringBuilder.append(doctype).append('\n'));
+        doctype.ifPresent(doctype -> stringBuilder.append(DOCTYPES.get(doctype)).append('\n'));
 
         for (Node child : children) {
             child.appendTo(stringBuilder);

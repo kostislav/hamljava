@@ -4,6 +4,7 @@ import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.mutabletree.MutableAttribute;
 import cz.judas.jan.haml.mutabletree.MutableHtmlNode;
 import cz.judas.jan.haml.mutabletree.MutableRootNode;
+import cz.judas.jan.haml.tokens.generic.ExactTextToken;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
@@ -59,7 +60,14 @@ public class DocumentToken implements Token<MutableRootNode> {
             anyNumberOf(
                     relaxedSequence(
                             anyOf(
-                                    new DoctypeToken(),
+                                    sequence(
+                                            new ExactTextToken<MutableRootNode>("!!!"),
+                                            whitespace(),
+                                            GenericTokens.<MutableRootNode>onMatch(
+                                                    atLeastOne(singleChar(new IsTagNameChar())),
+                                                    MutableRootNode::setDoctype
+                                            )
+                                    ),
                                     sequence(
                                             new SignificantWhitespaceToken(),
                                             GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
