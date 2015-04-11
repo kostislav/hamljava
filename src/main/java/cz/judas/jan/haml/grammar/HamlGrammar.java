@@ -1,4 +1,4 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;

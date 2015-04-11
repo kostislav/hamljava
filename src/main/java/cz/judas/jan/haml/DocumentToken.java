@@ -1,5 +1,6 @@
 package cz.judas.jan.haml;
 
+import cz.judas.jan.haml.grammar.HamlGrammar;
 import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 
