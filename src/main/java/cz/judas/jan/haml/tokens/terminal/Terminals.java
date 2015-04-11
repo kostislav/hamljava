@@ -29,7 +29,7 @@ public class Terminals {
         return sequence(
                 singleChar(leadingChar),
                 onMatch(
-                        atLeastOne(singleChar(validChars)),
+                        atLeastOne(validChars),
                         onEnd
                 )
         );
@@ -37,10 +37,6 @@ public class Terminals {
 
     public static Token<Object> singleChar(char c) {
         return new SingleCharToken(c);
-    }
-
-    public static Token<Object> singleChar(CharPredicate predicate) {
-        return new SingleCharToken(predicate);
     }
 
     public static Token<Object> exactText(String value) {

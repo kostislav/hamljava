@@ -16,14 +16,14 @@ import static cz.judas.jan.haml.tokens.terminal.Terminals.*;
 public class DocumentToken implements Token<MutableRootNode> {
     private final WhitespaceAllowingSequenceToken<MutableAttribute> genericAttribute = relaxedSequence(
             whitespace(),
-            match(atLeastOne(singleChar(new IsTagNameChar())), MutableAttribute.class).to(MutableAttribute::setName),
+            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setName),
             singleChar(':'),
             whitespace(),
             singleChar('\''),
-            match(atLeastOne(singleChar(new IsTagNameChar())), MutableAttribute.class).to(MutableAttribute::setValue),
+            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setValue),
             singleChar('\''),
             whitespace(),
-            atMostOne(singleChar(','))
+            atMostOne(',')
     );
 
     private final Token<MutableHtmlNode> idAttribute = leadingChar('.', new IsIdOrClassChar(), MutableHtmlNode::addClass);
@@ -52,10 +52,10 @@ public class DocumentToken implements Token<MutableRootNode> {
                                     sequence(
                                             exactText("!!!"),
                                             whitespace(),
-                                            match(atLeastOne(singleChar(Character::isLetterOrDigit)), MutableRootNode.class).to(MutableRootNode::setDoctype)
+                                            match(atLeastOne(Character::isLetterOrDigit), MutableRootNode.class).to(MutableRootNode::setDoctype)
                                     ),
                                     sequence(
-                                            match(anyNumberOf(singleChar('\t')), MutableRootNode.class).to(MutableRootNode::levelUp),
+                                            match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
                                             GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
                                                     MutableHtmlNode::new,
                                                     relaxedSequence(
@@ -69,13 +69,13 @@ public class DocumentToken implements Token<MutableRootNode> {
                                                                     )
                                                             ),
                                                             whitespace(),
-                                                            match(anyNumberOf(singleChar(c -> c != '\n')), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
+                                                            match(anyNumberOf(c -> c != '\n'), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
                                                     ),
                                                     MutableRootNode::addNode
                                             )
                                     )
                             ),
-                            atMostOne(singleChar('\n'))
+                            atMostOne('\n')
                     )
             );
 

@@ -1,7 +1,9 @@
 package cz.judas.jan.haml.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.CharPredicate;
 import cz.judas.jan.haml.tokens.Token;
+import cz.judas.jan.haml.tokens.terminal.SingleCharToken;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -10,6 +12,14 @@ import java.util.function.Supplier;
 public class GenericTokens {
     public static <T> AnyNumberOfToken<T> anyNumberOf(Token<? super T> inner) {
         return new AnyNumberOfToken<>(inner);
+    }
+
+    public static <T> AnyNumberOfToken<T> anyNumberOf(CharPredicate predicate) {
+        return new AnyNumberOfToken<>(new SingleCharToken(predicate));
+    }
+
+    public static AnyNumberOfToken<Object> anyNumberOf(char c) {
+        return new AnyNumberOfToken<>(new SingleCharToken(c));
     }
 
     @SafeVarargs
@@ -26,8 +36,16 @@ public class GenericTokens {
         return new AtMostOneToken<>(token);
     }
 
+    public static <T> AtMostOneToken<T> atMostOne(char c) {
+        return new AtMostOneToken<>(new SingleCharToken(c));
+    }
+
     public static <T> AtLeastOneToken<T> atLeastOne(Token<? super T> token) {
         return new AtLeastOneToken<>(token);
+    }
+
+    public static AtLeastOneToken<Object> atLeastOne(CharPredicate predicate) {
+        return new AtLeastOneToken<>(new SingleCharToken(predicate));
     }
 
     public static <I, O> ContextSwitchToken<I, O> contextSwitch(Supplier<? extends O> contextSupplier, Token<? super O> inner, BiConsumer<? super I, ? super O> onSuccess) {
@@ -47,7 +65,6 @@ public class GenericTokens {
     public static <T> MatchHelper<T> match(Token<? super T> token, Class<? extends T> clazz) {
         return new MatchHelper<>(token);
     }
-
 
     public static class MatchHelper<T> {
         private final Token<? super T> token;
