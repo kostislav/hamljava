@@ -7,6 +7,7 @@ import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
 import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
 import cz.judas.jan.haml.tree.mutable.MutableAttribute;
+import cz.judas.jan.haml.tree.mutable.MutableHash;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 
@@ -32,12 +33,16 @@ public class DocumentToken implements Token<MutableRootNode> {
 
     private final SequenceOfTokens<MutableHtmlNode> attributeHash = sequence(
             singleChar('{'),
-            atLeastOne(
-                    GenericTokens.<MutableHtmlNode, MutableAttribute>contextSwitch(
-                            MutableAttribute::new,
-                            genericAttribute,
-                            MutableHtmlNode::addAttribute
-                    )
+            GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
+                    MutableHash::new,
+                    atLeastOne(
+                            GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
+                                    MutableAttribute::new,
+                                    genericAttribute,
+                                    MutableHash::addKeyValuePair
+                            )
+                    ),
+                    MutableHtmlNode::addAttributes
             ),
             whitespace(),
             singleChar('}')
