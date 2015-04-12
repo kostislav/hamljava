@@ -11,7 +11,7 @@ public class MutableHtmlNode implements MutableNode {
     private String tagName = null;
     private final Map<String, RubyValue> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();
-    private String id = null;
+    private RubyValue id = null;
     private String content = "";
 
     private final List<MutableNode> children = new ArrayList<>();
@@ -32,7 +32,7 @@ public class MutableHtmlNode implements MutableNode {
         classes.add(name);
     }
 
-    public void setId(String id) {
+    public void setId(RubyValue id) {
         this.id = id;
     }
 
@@ -61,7 +61,7 @@ public class MutableHtmlNode implements MutableNode {
         } else {
             Map<String, RubyValue> copy = new LinkedHashMap<>(attributes);
             if(id != null) {
-                copy.put("id", new StringRubyValue(id));
+                copy.put("id", id);
             }
             if(!classes.isEmpty()) {
                 copy.put("class", new StringRubyValue(StringUtils.join(classes, ' '))); // TODO array

@@ -4,6 +4,7 @@ import cz.judas.jan.haml.tokens.Token;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
+import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 
@@ -68,7 +69,7 @@ public class HamlGrammar {
             leadingChar('%', new IsTagNameChar(), MutableHtmlNode::setTagName);
 
     private static final Token<MutableHtmlNode> ID_ATTRIBUTE =
-            leadingChar('#', new IsIdOrClassChar(), MutableHtmlNode::setId);
+            leadingChar('#', new IsIdOrClassChar(), (node, value) -> node.setId(new StringRubyValue(value)));
 
     private static final Token<MutableHtmlNode> CLASS_ATTRIBUTE =
             leadingChar('.', new IsIdOrClassChar(), MutableHtmlNode::addClass);
