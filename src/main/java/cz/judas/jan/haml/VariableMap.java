@@ -7,7 +7,7 @@ import java.util.Map;
 public class VariableMap {
     private final Map<String, Object> values;
 
-    public VariableMap(Map<String, Object> values) {
+    public VariableMap(Map<String, ?> values) {
         this.values = ImmutableMap.copyOf(values);
     }
 

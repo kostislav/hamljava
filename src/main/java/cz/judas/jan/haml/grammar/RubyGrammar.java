@@ -10,6 +10,7 @@ import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
 import cz.judas.jan.haml.tree.mutable.MutableHash;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
+import cz.judas.jan.haml.tree.mutable.MutableRubyValue;
 
 import static cz.judas.jan.haml.tokens.ReflectionToken.reference;
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
@@ -51,7 +52,11 @@ public class RubyGrammar {
             match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to(MutableHashEntry::setName),
             singleChar(':'),
             whitespace(),
-            reference("SINGLE_QUOTE_VALUE")
+            GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
+                    MutableRubyValue::new,
+                    reference("SINGLE_QUOTE_VALUE"),
+                    MutableHashEntry::setValue
+            )
     );
 
     public static final Token<MutableHashEntry> OLD_STYLE_HASH_ENTRY = relaxedSequence(
@@ -60,12 +65,16 @@ public class RubyGrammar {
             whitespace(),
             exactText("=>"),
             whitespace(),
-            reference("SINGLE_QUOTE_VALUE")
+            GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
+                    MutableRubyValue::new,
+                    reference("SINGLE_QUOTE_VALUE"),
+                    MutableHashEntry::setValue
+            )
     );
 
-    public static final Token<MutableHashEntry> SINGLE_QUOTE_VALUE = sequence(
+    public static final Token<MutableRubyValue> SINGLE_QUOTE_VALUE = sequence(
             singleChar('\''),
-            match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
+            match(atLeastOne(new IsTagNameChar()), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
             singleChar('\'')
     );
 }

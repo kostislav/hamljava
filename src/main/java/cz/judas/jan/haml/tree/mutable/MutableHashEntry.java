@@ -18,7 +18,7 @@ public class MutableHashEntry {
         return value;
     }
 
-    public void setValue(RubyValue value) {
-        this.value = value;
+    public void setValue(MutableRubyValue value) {
+        this.value = value.getValue();
     }
 }
