@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.tokens.Token;
+import cz.judas.jan.haml.tokens.generic.AtLeastOneToken;
 import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
@@ -11,7 +12,6 @@ import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 
 import static cz.judas.jan.haml.tokens.ReflectionToken.reference;
 import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
-import static cz.judas.jan.haml.tokens.generic.GenericTokens.atLeastOne;
 import static cz.judas.jan.haml.tokens.terminal.Terminals.exactText;
 import static cz.judas.jan.haml.tokens.terminal.Terminals.singleChar;
 import static cz.judas.jan.haml.tokens.terminal.Terminals.whitespace;
@@ -22,25 +22,29 @@ public class RubyGrammar {
             singleChar('{'),
             GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
                     MutableHash::new,
-                    atLeastOne(
-                            relaxedSequence(
-                                    whitespace(),
-                                    GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
-                                            MutableAttribute::new,
-                                            anyOf(
-                                                    reference("NEW_STYLE_HASH_ENTRY"),
-                                                    reference("OLD_STYLE_HASH_ENTRY")
-                                            ),
-                                            MutableHash::addKeyValuePair
-                                    ),
-                                    atMostOne(',')
-                            )
+                    anyOf(
+                        hashEntries(reference("NEW_STYLE_HASH_ENTRY")),
+                        hashEntries(reference("OLD_STYLE_HASH_ENTRY"))
                     ),
                     MutableHtmlNode::addAttributes
             ),
             whitespace(),
             singleChar('}')
     );
+
+    private static AtLeastOneToken<? super MutableHash> hashEntries(Token<MutableAttribute> token) {
+        return atLeastOne(
+                relaxedSequence(
+                        whitespace(),
+                        GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
+                                MutableAttribute::new,
+                                token,
+                                MutableHash::addKeyValuePair
+                        ),
+                        atMostOne(',')
+                )
+        );
+    }
 
     public static final WhitespaceAllowingSequenceToken<MutableAttribute> NEW_STYLE_HASH_ENTRY = relaxedSequence(
             match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setName),
