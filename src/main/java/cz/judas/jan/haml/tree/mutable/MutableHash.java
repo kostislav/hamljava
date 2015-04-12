@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 public class MutableHash {
     private final Map<String, String> values = new LinkedHashMap<>();
 
-    public void addKeyValuePair(MutableAttribute attribute) {
+    public void addKeyValuePair(MutableHashEntry attribute) {
         values.put(attribute.getName(), attribute.getValue());
     }
 

@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.tree.mutable;
 
-public class MutableAttribute {
+public class MutableHashEntry {
     private String name;
     private String value;
 

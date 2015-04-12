@@ -6,7 +6,7 @@ import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
-import cz.judas.jan.haml.tree.mutable.MutableAttribute;
+import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
 import cz.judas.jan.haml.tree.mutable.MutableHash;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 
@@ -32,12 +32,12 @@ public class RubyGrammar {
             singleChar('}')
     );
 
-    private static AtLeastOneToken<? super MutableHash> hashEntries(Token<MutableAttribute> token) {
+    private static AtLeastOneToken<? super MutableHash> hashEntries(Token<MutableHashEntry> token) {
         return atLeastOne(
                 relaxedSequence(
                         whitespace(),
-                        GenericTokens.<MutableHash, MutableAttribute>contextSwitch(
-                                MutableAttribute::new,
+                        GenericTokens.<MutableHash, MutableHashEntry>contextSwitch(
+                                MutableHashEntry::new,
                                 token,
                                 MutableHash::addKeyValuePair
                         ),
@@ -46,25 +46,25 @@ public class RubyGrammar {
         );
     }
 
-    public static final WhitespaceAllowingSequenceToken<MutableAttribute> NEW_STYLE_HASH_ENTRY = relaxedSequence(
-            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setName),
+    public static final WhitespaceAllowingSequenceToken<MutableHashEntry> NEW_STYLE_HASH_ENTRY = relaxedSequence(
+            match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to(MutableHashEntry::setName),
             singleChar(':'),
             whitespace(),
             reference("SINGLE_QUOTE_VALUE")
     );
 
-    public static final Token<MutableAttribute> OLD_STYLE_HASH_ENTRY = relaxedSequence(
+    public static final Token<MutableHashEntry> OLD_STYLE_HASH_ENTRY = relaxedSequence(
             singleChar(':'),
-            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setName),
+            match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to(MutableHashEntry::setName),
             whitespace(),
             exactText("=>"),
             whitespace(),
             reference("SINGLE_QUOTE_VALUE")
     );
 
-    public static final Token<MutableAttribute> SINGLE_QUOTE_VALUE = sequence(
+    public static final Token<MutableHashEntry> SINGLE_QUOTE_VALUE = sequence(
             singleChar('\''),
-            match(atLeastOne(new IsTagNameChar()), MutableAttribute.class).to(MutableAttribute::setValue),
+            match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to(MutableHashEntry::setValue),
             singleChar('\'')
     );
 }
