@@ -12,7 +12,7 @@ public class MutableHtmlNode implements MutableNode {
     private final Map<String, RubyValue> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();
     private RubyValue id = null;
-    private String content = "";
+    private RubyValue content = StringRubyValue.EMPTY;
 
     private final List<MutableNode> children = new ArrayList<>();
 
@@ -20,7 +20,7 @@ public class MutableHtmlNode implements MutableNode {
         this.tagName = tagName;
     }
 
-    public void setContent(String content) {
+    public void setContent(RubyValue content) {
         this.content = content;
     }
 

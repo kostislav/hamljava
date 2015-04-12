@@ -21,7 +21,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyMap(),
-                "",
+                StringRubyValue.EMPTY,
                 Arrays.asList(children)
         );
     }
@@ -30,12 +30,12 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 attributes,
-                "",
+                StringRubyValue.EMPTY,
                 Arrays.asList(children)
         );
     }
 
-    public static HtmlNode node(String name, Map<String, RubyValue> attributes, String content) {
+    public static HtmlNode node(String name, Map<String, RubyValue> attributes, RubyValue content) {
         return new HtmlNode(
                 name,
                 attributes,
@@ -44,7 +44,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, String content) {
+    public static HtmlNode node(String name, RubyValue content) {
         return new HtmlNode(
                 name,
                 Collections.emptyMap(),
@@ -53,7 +53,7 @@ public class Nodes {
         );
     }
 
-    public static TextNode textNode(String content) {
+    public static TextNode textNode(RubyValue content) {
         return new TextNode(content);
     }
 }

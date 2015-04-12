@@ -37,47 +37,47 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void tagsCanHaveTextContent() throws Exception {
-        assertParses("%html\n\t%head\n\t\t%title something", root(node("html", node("head", node("title", "something")))));
+        assertParses("%html\n\t%head\n\t\t%title something", root(node("html", node("head", node("title", stringValue("something"))))));
     }
 
     @Test
     public void implicitClosing() throws Exception {
-        assertParses("%ul\n\t%li blah\n%p bleh", root(node("ul", node("li", "blah")), node("p", "bleh")));
+        assertParses("%ul\n\t%li blah\n%p bleh", root(node("ul", node("li", stringValue("blah"))), node("p", stringValue("bleh"))));
     }
 
     @Test
     public void classAttribute() throws Exception {
-        assertParses("%span.bluh bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh")), "bra bh")));
+        assertParses("%span.bluh bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh")), stringValue("bra bh"))));
     }
 
     @Test
     public void classAttributeWithoutContent() throws Exception {
-        assertParses("%h1.bluh\n\t%span bra bh", root(node("h1", ImmutableMap.of("class", stringValue("bluh")), node("span", "bra bh"))));
+        assertParses("%h1.bluh\n\t%span bra bh", root(node("h1", ImmutableMap.of("class", stringValue("bluh")), node("span", stringValue("bra bh")))));
     }
 
     @Test
     public void multipleClassAttributes() throws Exception {
-        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh lkj")), "bra bh")));
+        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh lkj")), stringValue("bra bh"))));
     }
 
     @Test
     public void idAttribute() throws Exception {
-        assertParses("%h2#hehe njhg", root(node("h2", ImmutableMap.of("id", stringValue("hehe")), "njhg")));
+        assertParses("%h2#hehe njhg", root(node("h2", ImmutableMap.of("id", stringValue("hehe")), stringValue("njhg"))));
     }
 
     @Test
     public void idAndClassAttribute() throws Exception {
-        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableMap.of("id", stringValue("hehe"), "class", stringValue("dre")), "njhg")));
+        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableMap.of("id", stringValue("hehe"), "class", stringValue("dre")), stringValue("njhg"))));
     }
 
     @Test
     public void defaultTagIsDiv() throws Exception {
-        assertParses("#going-to-hell blah", root(node("div", ImmutableMap.of("id", stringValue("going-to-hell")), "blah")));
+        assertParses("#going-to-hell blah", root(node("div", ImmutableMap.of("id", stringValue("going-to-hell")), stringValue("blah"))));
     }
 
     @Test
     public void partsCanBeSeparatedByWhitespace() throws Exception {
-        assertParses("%span .bluh .lkj bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh lkj")), "bra bh")));
+        assertParses("%span .bluh .lkj bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh lkj")), stringValue("bra bh"))));
     }
 
     @Test
@@ -92,12 +92,12 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void textLines() throws Exception {
-        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode("Wow this is cool!")))));
+        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode(stringValue("Wow this is cool!"))))));
     }
 
     @Test
     public void tagsCanBeEscaped() throws Exception {
-        assertParses("%title\n\t\\= @title", root(node("title", textNode("= @title"))));
+        assertParses("%title\n\t\\= @title", root(node("title", textNode(stringValue("= @title")))));
     }
 
     @Test

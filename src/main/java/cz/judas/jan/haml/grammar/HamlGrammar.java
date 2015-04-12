@@ -52,7 +52,7 @@ public class HamlGrammar {
                                                 )
                                         ),
                                         whitespace(),
-                                        match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
+                                        match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
                                 )
                         ),
                         MutableRootNode::addNode
@@ -62,7 +62,7 @@ public class HamlGrammar {
     private static final Token<MutableHtmlNode> ESCAPED_LINE =
             sequence(
                     singleChar('\\'),
-                    match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to(MutableHtmlNode::setContent)
+                    match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
             );
 
     private static final Token<MutableHtmlNode> TAG_NAME =

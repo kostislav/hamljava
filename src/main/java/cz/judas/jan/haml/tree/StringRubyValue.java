@@ -3,6 +3,8 @@ package cz.judas.jan.haml.tree;
 import cz.judas.jan.haml.VariableMap;
 
 public class StringRubyValue implements RubyValue {
+    public static final StringRubyValue EMPTY = new StringRubyValue("");
+
     private final String value;
 
     public StringRubyValue(String value) {

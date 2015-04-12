@@ -3,15 +3,15 @@ package cz.judas.jan.haml.tree;
 import cz.judas.jan.haml.VariableMap;
 
 public class TextNode implements Node {
-    private final String content;
+    private final RubyValue content;
 
-    public TextNode(String content) {
+    public TextNode(RubyValue content) {
         this.content = content;
     }
 
     @Override
     public void appendTo(StringBuilder stringBuilder, VariableMap variableMap) {
-        stringBuilder.append(content);
+        stringBuilder.append(content.evaluate(variableMap));
     }
 
     @Override
