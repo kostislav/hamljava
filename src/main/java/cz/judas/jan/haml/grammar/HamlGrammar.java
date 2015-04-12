@@ -47,7 +47,7 @@ public class HamlGrammar {
                                                         strictWhitespace(),
                                                         reference("ID_ATTRIBUTE"),
                                                         reference("CLASS_ATTRIBUTE"),
-                                                        Ruby.HASH
+                                                        RubyGrammar.HASH
                                                 )
                                         ),
                                         whitespace(),

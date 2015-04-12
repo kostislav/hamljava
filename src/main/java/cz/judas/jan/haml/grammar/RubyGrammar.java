@@ -17,7 +17,7 @@ import static cz.judas.jan.haml.tokens.terminal.Terminals.singleChar;
 import static cz.judas.jan.haml.tokens.terminal.Terminals.whitespace;
 
 @SuppressWarnings({"UtilityClass", "UnusedDeclaration"})
-public class Ruby {
+public class RubyGrammar {
     public static final SequenceOfTokens<MutableHtmlNode> HASH = sequence(
             singleChar('{'),
             GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
