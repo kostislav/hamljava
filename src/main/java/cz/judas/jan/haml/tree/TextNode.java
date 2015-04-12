@@ -1,5 +1,7 @@
 package cz.judas.jan.haml.tree;
 
+import cz.judas.jan.haml.VariableMap;
+
 public class TextNode implements Node {
     private final String content;
 
@@ -8,7 +10,7 @@ public class TextNode implements Node {
     }
 
     @Override
-    public void appendTo(StringBuilder stringBuilder) {
+    public void appendTo(StringBuilder stringBuilder, VariableMap variableMap) {
         stringBuilder.append(content);
     }
 

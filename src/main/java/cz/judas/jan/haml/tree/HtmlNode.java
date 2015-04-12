@@ -2,7 +2,9 @@ package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import cz.judas.jan.haml.VariableMap;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,17 +22,19 @@ public class HtmlNode implements Node {
     }
 
     @Override
-    public void appendTo(StringBuilder stringBuilder) {
+    public void appendTo(StringBuilder stringBuilder, VariableMap variableMap) {
         stringBuilder
                 .append('<').append(tagName);
 
         for (Map.Entry<String, RubyValue> entry : attributes.entrySet()) {
-            stringBuilder.append(' ').append(entry.getKey()).append("=\"").append(entry.getValue().evaluate()).append('"');
+            String attributeName = entry.getKey();
+            Object attributeValue = entry.getValue().evaluate(new VariableMap(Collections.emptyMap()));
+            stringBuilder.append(' ').append(attributeName).append("=\"").append(attributeValue).append('"');
         }
         stringBuilder.append('>');
         stringBuilder.append(textContent);
         for (Node child : children) {
-            child.appendTo(stringBuilder);
+            child.appendTo(stringBuilder, variableMap);
         }
         stringBuilder.append("</").append(tagName).append('>');
     }

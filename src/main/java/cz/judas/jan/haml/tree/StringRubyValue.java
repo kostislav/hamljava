@@ -1,5 +1,7 @@
 package cz.judas.jan.haml.tree;
 
+import cz.judas.jan.haml.VariableMap;
+
 public class StringRubyValue implements RubyValue {
     private final String value;
 
@@ -8,7 +10,7 @@ public class StringRubyValue implements RubyValue {
     }
 
     @Override
-    public Object evaluate() {
+    public Object evaluate(VariableMap variables) {
         return value;
     }
 
