@@ -1,5 +1,6 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,6 +31,14 @@ public class HamlParserTest {
         assertThat(
                 parser.process("%p\n\t<div id=\"blah\">Blah!</div>", new VariableMap(Collections.emptyMap())),
                 is("<p><div id=\"blah\">Blah!</div></p>")
+        );
+    }
+
+    @Test
+    public void usesVariables() throws Exception {
+        assertThat(
+                parser.process("%title\n\t= @title", new VariableMap(ImmutableMap.of("title", "MyPage"))),
+                is("<title>MyPage</title>")
         );
     }
 }
