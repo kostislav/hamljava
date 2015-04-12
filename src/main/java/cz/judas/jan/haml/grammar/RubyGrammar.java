@@ -16,6 +16,8 @@ import cz.judas.jan.haml.tree.mutable.MutableRubyValue;
 import static cz.judas.jan.haml.parser.tokens.ReflectionToken.reference;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
+import static cz.judas.jan.haml.predicates.Predicates.anyOf;
+import static cz.judas.jan.haml.predicates.Predicates.not;
 
 @SuppressWarnings({"UtilityClass", "UnusedDeclaration"})
 public class RubyGrammar {
@@ -24,7 +26,7 @@ public class RubyGrammar {
                     singleChar('{'),
                     GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
                             MutableHash::new,
-                            anyOf(
+                            GenericTokens.anyOf(
                                     hashEntries(reference("NEW_STYLE_HASH_ENTRY")),
                                     hashEntries(reference("OLD_STYLE_HASH_ENTRY"))
                             ),
@@ -75,9 +77,9 @@ public class RubyGrammar {
             );
 
     public static final Token<MutableRubyValue> VALUE =
-            anyOf(
+            GenericTokens.anyOf(
                     reference("VARIABLE"),
-                    reference("SINGLE_QUOTE_VALUE")
+                    reference("SINGLE_QUOTE_STRING")
             );
 
     public static final Token<MutableRubyValue> VARIABLE =
@@ -86,10 +88,10 @@ public class RubyGrammar {
                     match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableRubyValue.class).to((mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s)))
             );
 
-    public static final Token<MutableRubyValue> SINGLE_QUOTE_VALUE =
+    public static final Token<MutableRubyValue> SINGLE_QUOTE_STRING =
             sequence(
                     singleChar('\''),
-                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
+                    match(atLeastOne(not(anyOf('\'', '\n'))), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
                     singleChar('\'')
             );
 }
