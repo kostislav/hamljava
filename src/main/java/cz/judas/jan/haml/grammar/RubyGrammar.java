@@ -5,7 +5,7 @@ import cz.judas.jan.haml.parser.tokens.generic.AtLeastOneToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.parser.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.parser.tokens.generic.WhitespaceAllowingSequenceToken;
-import cz.judas.jan.haml.predicates.IsTagNameChar;
+import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.VariableReference;
 import cz.judas.jan.haml.tree.mutable.MutableHash;
@@ -50,7 +50,7 @@ public class RubyGrammar {
 
     public static final WhitespaceAllowingSequenceToken<MutableHashEntry> NEW_STYLE_HASH_ENTRY =
             relaxedSequence(
-                    match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to(MutableHashEntry::setName),
+                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
                     singleChar(':'),
                     whitespace(),
                     GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
@@ -63,7 +63,7 @@ public class RubyGrammar {
     public static final Token<MutableHashEntry> OLD_STYLE_HASH_ENTRY =
             relaxedSequence(
                     singleChar(':'),
-                    match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to(MutableHashEntry::setName),
+                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
                     whitespace(),
                     exactText("=>"),
                     whitespace(),
@@ -83,13 +83,13 @@ public class RubyGrammar {
     public static final Token<MutableRubyValue> VARIABLE =
             sequence(
                     singleChar('@'),
-                    match(atLeastOne(new IsTagNameChar()), MutableRubyValue.class).to((mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s)))
+                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableRubyValue.class).to((mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s)))
             );
 
     public static final Token<MutableRubyValue> SINGLE_QUOTE_VALUE =
             sequence(
                     singleChar('\''),
-                    match(atLeastOne(new IsTagNameChar()), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
+                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
                     singleChar('\'')
             );
 }

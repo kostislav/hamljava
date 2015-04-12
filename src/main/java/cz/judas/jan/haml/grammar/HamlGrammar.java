@@ -3,8 +3,7 @@ package cz.judas.jan.haml.grammar;
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.parser.tokens.generic.WhitespaceAllowingSequenceToken;
-import cz.judas.jan.haml.predicates.IsIdOrClassChar;
-import cz.judas.jan.haml.predicates.IsTagNameChar;
+import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
@@ -82,11 +81,11 @@ public class HamlGrammar {
     );
 
     private static final Token<MutableHtmlNode> TAG_NAME =
-            leadingChar('%', new IsTagNameChar(), MutableHtmlNode::setTagName);
+            leadingChar('%', Predicates.TAG_NAME_CHAR, MutableHtmlNode::setTagName);
 
     private static final Token<MutableHtmlNode> ID_ATTRIBUTE =
-            leadingChar('#', new IsIdOrClassChar(), (node, value) -> node.setId(new StringRubyValue(value)));
+            leadingChar('#', Predicates.ID_OR_CLASS_CHAR, (node, value) -> node.setId(new StringRubyValue(value)));
 
     private static final Token<MutableHtmlNode> CLASS_ATTRIBUTE =
-            leadingChar('.', new IsIdOrClassChar(), MutableHtmlNode::addClass);
+            leadingChar('.', Predicates.ID_OR_CLASS_CHAR, MutableHtmlNode::addClass);
 }
