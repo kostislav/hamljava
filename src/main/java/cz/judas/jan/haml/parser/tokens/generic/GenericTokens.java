@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.CharPredicate;
+import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 

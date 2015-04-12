@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
-import cz.judas.jan.haml.CharPredicate;
+import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.function.BiConsumer;
