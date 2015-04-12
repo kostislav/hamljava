@@ -5,7 +5,7 @@ import cz.judas.jan.haml.parser.tokens.generic.AtLeastOneToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.parser.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.parser.tokens.generic.WhitespaceAllowingSequenceToken;
-import cz.judas.jan.haml.parser.tokens.predicates.IsTagNameChar;
+import cz.judas.jan.haml.predicates.IsTagNameChar;
 import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.VariableReference;
 import cz.judas.jan.haml.tree.mutable.MutableHash;

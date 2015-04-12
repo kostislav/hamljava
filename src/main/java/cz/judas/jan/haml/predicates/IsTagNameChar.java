@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.parser.tokens.predicates;
+package cz.judas.jan.haml.predicates;
 
 import cz.judas.jan.haml.parser.CharPredicate;
 
