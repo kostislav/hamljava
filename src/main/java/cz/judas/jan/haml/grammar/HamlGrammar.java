@@ -1,18 +1,18 @@
 package cz.judas.jan.haml.grammar;
 
-import cz.judas.jan.haml.tokens.Token;
-import cz.judas.jan.haml.tokens.generic.GenericTokens;
-import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
-import cz.judas.jan.haml.tokens.predicates.IsIdOrClassChar;
-import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
+import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
+import cz.judas.jan.haml.parser.tokens.generic.WhitespaceAllowingSequenceToken;
+import cz.judas.jan.haml.parser.tokens.predicates.IsIdOrClassChar;
+import cz.judas.jan.haml.parser.tokens.predicates.IsTagNameChar;
 import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 import cz.judas.jan.haml.tree.mutable.MutableRubyValue;
 
-import static cz.judas.jan.haml.tokens.ReflectionToken.reference;
-import static cz.judas.jan.haml.tokens.generic.GenericTokens.*;
-import static cz.judas.jan.haml.tokens.terminal.Terminals.*;
+import static cz.judas.jan.haml.parser.tokens.ReflectionToken.reference;
+import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
+import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 
 @SuppressWarnings({"UtilityClass", "UnusedDeclaration"})
 public class HamlGrammar {
