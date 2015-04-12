@@ -2,8 +2,10 @@ package cz.judas.jan.haml.tree.mutable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import cz.judas.jan.haml.tree.HtmlNode;
 import cz.judas.jan.haml.tree.Node;
+import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.TextNode;
 import org.apache.commons.lang.StringUtils;
 
@@ -50,7 +52,7 @@ public class MutableHtmlNode implements MutableNode {
         } else {
             return new HtmlNode(
                     MoreObjects.firstNonNull(tagName, "div"),
-                    getAttributes(),
+                    Maps.transformValues(getAttributes(), StringRubyValue::new),
                     content,
                     Iterables.transform(children, MutableNode::toNode)
             );

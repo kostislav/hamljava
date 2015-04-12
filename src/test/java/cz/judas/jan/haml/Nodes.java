@@ -1,9 +1,6 @@
 package cz.judas.jan.haml;
 
-import cz.judas.jan.haml.tree.HtmlNode;
-import cz.judas.jan.haml.tree.Node;
-import cz.judas.jan.haml.tree.RootNode;
-import cz.judas.jan.haml.tree.TextNode;
+import cz.judas.jan.haml.tree.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +26,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, Map<String, String> attributes, Node... children) {
+    public static HtmlNode node(String name, Map<String, RubyValue> attributes, Node... children) {
         return new HtmlNode(
                 name,
                 attributes,
@@ -38,7 +35,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, Map<String, String> attributes, String content) {
+    public static HtmlNode node(String name, Map<String, RubyValue> attributes, String content) {
         return new HtmlNode(
                 name,
                 attributes,
