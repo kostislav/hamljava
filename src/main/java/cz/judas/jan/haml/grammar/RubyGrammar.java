@@ -6,6 +6,7 @@ import cz.judas.jan.haml.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.tokens.generic.SequenceOfTokens;
 import cz.judas.jan.haml.tokens.generic.WhitespaceAllowingSequenceToken;
 import cz.judas.jan.haml.tokens.predicates.IsTagNameChar;
+import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
 import cz.judas.jan.haml.tree.mutable.MutableHash;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
@@ -64,7 +65,7 @@ public class RubyGrammar {
 
     public static final Token<MutableHashEntry> SINGLE_QUOTE_VALUE = sequence(
             singleChar('\''),
-            match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to(MutableHashEntry::setValue),
+            match(atLeastOne(new IsTagNameChar()), MutableHashEntry.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
             singleChar('\'')
     );
 }

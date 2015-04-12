@@ -2,18 +2,14 @@ package cz.judas.jan.haml.tree.mutable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import cz.judas.jan.haml.tree.HtmlNode;
-import cz.judas.jan.haml.tree.Node;
-import cz.judas.jan.haml.tree.StringRubyValue;
-import cz.judas.jan.haml.tree.TextNode;
+import cz.judas.jan.haml.tree.*;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
 public class MutableHtmlNode implements MutableNode {
     private String tagName = null;
-    private final Map<String, String> attributes = new LinkedHashMap<>();
+    private final Map<String, RubyValue> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();
     private String id = null;
     private String content = "";
@@ -52,23 +48,23 @@ public class MutableHtmlNode implements MutableNode {
         } else {
             return new HtmlNode(
                     MoreObjects.firstNonNull(tagName, "div"),
-                    Maps.transformValues(getAttributes(), StringRubyValue::new),
+                    getAttributes(),
                     content,
                     Iterables.transform(children, MutableNode::toNode)
             );
         }
     }
 
-    private Map<String, String> getAttributes() {
+    private Map<String, RubyValue> getAttributes() {
         if (classes.isEmpty() && id == null) {
             return attributes;
         } else {
-            Map<String, String> copy = new LinkedHashMap<>(attributes);
+            Map<String, RubyValue> copy = new LinkedHashMap<>(attributes);
             if(id != null) {
-                copy.put("id", id);
+                copy.put("id", new StringRubyValue(id));
             }
             if(!classes.isEmpty()) {
-                copy.put("class", StringUtils.join(classes, ' '));
+                copy.put("class", new StringRubyValue(StringUtils.join(classes, ' '))); // TODO array
             }
             return copy;
         }
