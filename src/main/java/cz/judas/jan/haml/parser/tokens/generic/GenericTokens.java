@@ -11,33 +11,33 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("UtilityClass")
 public class GenericTokens {
-    public static <T> AnyNumberOfToken<T> anyNumberOf(Token<? super T> inner) {
+    public static <T> Token<T> anyNumberOf(Token<? super T> inner) {
         return new AnyNumberOfToken<>(inner);
     }
 
-    public static AnyNumberOfToken<Object> anyNumberOf(char c) {
+    public static Token<Object> anyNumberOf(char c) {
         return new AnyNumberOfToken<>(new SingleCharToken(c));
     }
 
     @SafeVarargs
-    public static <T> AnyOfToken<T> anyOf(Token<? super T>... alternatives) {
+    public static <T> Token<T> anyOf(Token<? super T>... alternatives) {
         return new AnyOfToken<>(ImmutableList.copyOf(alternatives));
     }
 
     @SafeVarargs
-    public static <T> SequenceOfTokens<T> sequence(Token<? super T>... tokens) {
+    public static <T> Token<T> sequence(Token<? super T>... tokens) {
         return new SequenceOfTokens<>(ImmutableList.copyOf(tokens));
     }
 
-    public static <T> AtMostOneToken<T> atMostOne(Token<? super T> token) {
+    public static <T> Token<T> atMostOne(Token<? super T> token) {
         return new AtMostOneToken<>(token);
     }
 
-    public static <T> AtMostOneToken<T> atMostOne(char c) {
+    public static <T> Token<T> atMostOne(char c) {
         return new AtMostOneToken<>(new SingleCharToken(c));
     }
 
-    public static <T> AtLeastOneToken<T> atLeastOne(Token<? super T> token) {
+    public static <T> Token<T> atLeastOne(Token<? super T> token) {
         return new AtLeastOneToken<>(token);
     }
 
@@ -45,12 +45,12 @@ public class GenericTokens {
         return new AtLeastOneCharToken<>(predicate);
     }
 
-    public static <I, O> ContextSwitchToken<I, O> contextSwitch(Supplier<? extends O> contextSupplier, Token<? super O> inner, BiConsumer<? super I, ? super O> onSuccess) {
+    public static <I, O> Token<I> contextSwitch(Supplier<? extends O> contextSupplier, Token<? super O> inner, BiConsumer<? super I, ? super O> onSuccess) {
         return new ContextSwitchToken<>(contextSupplier, inner, onSuccess);
     }
 
     @SafeVarargs
-    public static <T> WhitespaceAllowingSequenceToken<T> relaxedSequence(Token<? super T>... tokens) {
+    public static <T> Token<T> relaxedSequence(Token<? super T>... tokens) {
         return new WhitespaceAllowingSequenceToken<>(ImmutableList.copyOf(tokens));
     }
 

@@ -1,10 +1,7 @@
 package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.tokens.Token;
-import cz.judas.jan.haml.parser.tokens.generic.AtLeastOneToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
-import cz.judas.jan.haml.parser.tokens.generic.SequenceOfTokens;
-import cz.judas.jan.haml.parser.tokens.generic.WhitespaceAllowingSequenceToken;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.VariableReference;
@@ -21,7 +18,7 @@ import static cz.judas.jan.haml.predicates.Predicates.not;
 
 @SuppressWarnings({"UtilityClass", "UnusedDeclaration"})
 public class RubyGrammar {
-    public static final SequenceOfTokens<MutableHtmlNode> HASH =
+    public static final Token<MutableHtmlNode> HASH =
             sequence(
                     singleChar('{'),
                     GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
@@ -36,7 +33,7 @@ public class RubyGrammar {
                     singleChar('}')
             );
 
-    private static AtLeastOneToken<? super MutableHash> hashEntries(Token<MutableHashEntry> token) {
+    private static Token<? super MutableHash> hashEntries(Token<MutableHashEntry> token) {
         return atLeastOne(
                 relaxedSequence(
                         whitespace(),
@@ -50,7 +47,7 @@ public class RubyGrammar {
         );
     }
 
-    public static final WhitespaceAllowingSequenceToken<MutableHashEntry> NEW_STYLE_HASH_ENTRY =
+    public static final Token<MutableHashEntry> NEW_STYLE_HASH_ENTRY =
             relaxedSequence(
                     match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
                     singleChar(':'),

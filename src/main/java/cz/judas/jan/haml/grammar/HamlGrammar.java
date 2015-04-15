@@ -2,7 +2,6 @@ package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
-import cz.judas.jan.haml.parser.tokens.generic.WhitespaceAllowingSequenceToken;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
@@ -55,7 +54,7 @@ public class HamlGrammar {
                     match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
             );
 
-    private static final WhitespaceAllowingSequenceToken<MutableHtmlNode> PRINT_EXPRESSION =
+    private static final Token<MutableHtmlNode> PRINT_EXPRESSION =
             relaxedSequence(
                     singleChar('='),
                     whitespace(),
