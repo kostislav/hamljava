@@ -38,6 +38,16 @@ public class InputString {
         return currentPosition;
     }
 
+    @Deprecated
+    public String wholeLine() {
+        return input;
+    }
+
+    @Deprecated
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
     public boolean startsWith(String prefix) {
         if(input.startsWith(prefix, currentPosition)) {
             currentPosition += prefix.length();

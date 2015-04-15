@@ -16,10 +16,6 @@ public class SingleCharToken implements Token<Object> {
     }
 
     @Override
-    public int tryEat(String line, int position, Object parsingResult) {
-        return tryEat(new InputString(line, position), parsingResult);
-    }
-
     public int tryEat(InputString line, Object parsingResult) {
         if (line.currentCharIs(predicate)) {
             line.advance();

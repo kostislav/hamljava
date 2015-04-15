@@ -12,10 +12,6 @@ public class AtMostOneCharToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) {
-        return tryEat(new InputString(line, position), parsingResult);
-    }
-
     public int tryEat(InputString line, T parsingResult) {
         return line.compatibilityMethod(predicate, i -> i <= 1);
     }
