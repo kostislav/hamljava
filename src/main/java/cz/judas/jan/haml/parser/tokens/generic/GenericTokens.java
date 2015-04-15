@@ -3,6 +3,7 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.terminal.AnyNumberOfCharToken;
 import cz.judas.jan.haml.parser.tokens.terminal.AtLeastOneCharToken;
 import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 
@@ -15,8 +16,12 @@ public class GenericTokens {
         return new AnyNumberOfToken<>(inner);
     }
 
-    public static Token<Object> anyNumberOf(char c) {
-        return new AnyNumberOfToken<>(new SingleCharToken(c));
+    public static Token<Object> anyNumberOf(char matchingChar) {
+        return anyNumberOf(c -> c == matchingChar);
+    }
+
+    public static Token<Object> anyNumberOf(CharPredicate predicate) {
+        return new AnyNumberOfCharToken<>(predicate);
     }
 
     @SafeVarargs

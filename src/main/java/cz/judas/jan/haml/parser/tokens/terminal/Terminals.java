@@ -13,13 +13,9 @@ public class Terminals {
 
     private static final CharPredicate WHITESPACE_PREDICATE = c -> NOT_NEWLINE_PREDICATE.test(c) && Character.isWhitespace(c);
 
-    private static final SingleCharToken SINGLE_WHITESPACE_TOKEN = new SingleCharToken(WHITESPACE_PREDICATE);
-
-    private static final Token<Object> RELAXED_WHITESPACE_TOKEN = anyNumberOf(SINGLE_WHITESPACE_TOKEN);
+    private static final Token<Object> RELAXED_WHITESPACE_TOKEN = anyNumberOf(WHITESPACE_PREDICATE);
 
     private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOne(WHITESPACE_PREDICATE);
-
-    private static final Token<Object> NOT_NEWLINE_TOKEN = atLeastOne(NOT_NEWLINE_PREDICATE);
 
     public static Token<Object> whitespace() {
         return RELAXED_WHITESPACE_TOKEN;
@@ -29,8 +25,8 @@ public class Terminals {
         return STRICT_WHITESPACE_TOKEN;
     }
 
-    public static Token<Object> notNewLine() {
-        return NOT_NEWLINE_TOKEN;
+    public static CharPredicate notNewLine() {
+        return NOT_NEWLINE_PREDICATE;
     }
 
     public static <T> Token<T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super T, String> onEnd) {
