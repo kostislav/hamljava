@@ -15,102 +15,82 @@ public class InputStringTest {
     }
 
     @Test
-    public void canPeekAtCurrentChar() throws Exception {
-        assertThat(inputString.currentChar(), is('a'));
+    public void returnsTrueIfPredicateMatchesCurrentChar() throws Exception {
+        assertThat(inputString.currentCharIs(equalTo('a')), is(true));
     }
 
     @Test
-    public void peekDoesNotMoveCursor() throws Exception {
-        inputString.currentChar();
-
-        assertThat(inputString.currentChar(), is('a'));
+    public void returnsFalseIfPredicateDoesNotMatchCurrentChar() throws Exception {
+        assertThat(inputString.currentCharIs(equalTo('b')), is(false));
     }
 
     @Test
-    public void nextCharReturnsNextChars() throws Exception {
-        assertThat(inputString.nextChar(), is('b'));
-        assertThat(inputString.nextChar(), is('c'));
+    public void predicateLooksAtCurrentChar() throws Exception {
+        inputString.advance();
+
+        assertThat(inputString.currentCharIs(equalTo('b')), is(true));
     }
 
     @Test
-    public void peekingAfterNextChar() throws Exception {
-        inputString.nextChar();
+    public void doesNotMatchAfterEndOfString() throws Exception {
+        inputString.advance();
+        inputString.advance();
+        inputString.advance();
+        inputString.advance();
 
-        assertThat(inputString.currentChar(), is('b'));
+        assertThat(inputString.currentCharIs(equalTo('e')), is(false));
     }
 
     @Test
-    public void returnsZeroAtEndOfString() throws Exception {
-        inputString.nextChar();
-        inputString.nextChar();
-        inputString.nextChar();
+    public void tryParseReturnsTrueAndKeepsAdvanceIfMatch() throws Exception {
+        inputString.advance();
 
-        assertThat(inputString.nextChar(), is((char)0));
-        assertThat(inputString.currentChar(), is((char)0));
+        boolean result = inputString.tryParse(inputString -> {
+            inputString.advance();
+            inputString.advance();
+            return true;
+        });
+
+        assertThat(result, is(true));
+        assertCurrentCharIs('d');
     }
 
     @Test
-    public void returnsUnprocessedPart() throws Exception {
-        inputString.nextChar();
+    public void tryParseReturnsFalseAndRevertsAdvanceIfNoMatch() throws Exception {
+        inputString.advance();
 
-        assertThat(inputString.unprocessedPart(), is("a"));
+        boolean result = inputString.tryParse(inputString -> {
+            inputString.advance();
+            inputString.advance();
+            return false;
+        });
+
+        assertThat(result, is(false));
+        assertCurrentCharIs('b');
     }
 
     @Test
-    public void unprocessedPartMoves() throws Exception {
-        inputString.nextChar();
-        inputString.unprocessedPart();
-        inputString.nextChar();
-        inputString.nextChar();
+    public void tryParsesCanBeNested() throws Exception {
+        inputString.advance();
 
-        assertThat(inputString.unprocessedPart(), is("bc"));
+        boolean result = inputString.tryParse(inputString -> {
+            inputString.advance();
+            inputString.tryParse(inputString2 -> {
+                inputString2.advance();
+                return false;
+            });
+            return true;
+        });
+
+        assertThat(result, is(true));
+        assertCurrentCharIs('c');
     }
 
-    @Test
-    public void processingCanBeReverted() throws Exception {
-        inputString.takeSnapshot();
-        inputString.nextChar();
-        inputString.nextChar();
-
-        inputString.revert();
-
-        assertThat(inputString.currentChar(), is('a'));
+    private void assertCurrentCharIs(char c) {
+        assertThat(inputString.currentCharIs(equalTo(c)), is(true));
     }
 
-    @Test
-    public void stackedRevertsArePossible() throws Exception {
-        inputString.nextChar();
-
-        inputString.takeSnapshot();
-        inputString.nextChar();
-
-        inputString.takeSnapshot();
-        inputString.nextChar();
-
-        inputString.revert();
-        inputString.revert();
-
-        assertThat(inputString.currentChar(), is('b'));
-    }
-
-    @Test
-    public void substringPositionIsContainedInSnapshot() throws Exception {
-        inputString.nextChar();
-        inputString.unprocessedPart();
-
-        inputString.takeSnapshot();
-        inputString.nextChar();
-
-        inputString.unprocessedPart();
-
-        inputString.revert();
-        inputString.nextChar();
-
-        assertThat(inputString.unprocessedPart(), is("b"));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void cannotRevertWithoutTakingSnapshot() throws Exception {
-        inputString.revert();
+    private static CharPredicate equalTo(char matchingChar) {
+        return c -> c == matchingChar;
     }
 }
