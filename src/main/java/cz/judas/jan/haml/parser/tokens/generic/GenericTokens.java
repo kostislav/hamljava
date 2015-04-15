@@ -3,6 +3,7 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.terminal.AtLeastOneCharToken;
 import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 
 import java.util.function.BiConsumer;
@@ -40,8 +41,8 @@ public class GenericTokens {
         return new AtLeastOneToken<>(token);
     }
 
-    public static AtLeastOneToken<Object> atLeastOne(CharPredicate predicate) {
-        return new AtLeastOneToken<>(new SingleCharToken(predicate));
+    public static Token<Object> atLeastOne(CharPredicate predicate) {
+        return new AtLeastOneCharToken<>(predicate);
     }
 
     public static <I, O> ContextSwitchToken<I, O> contextSwitch(Supplier<? extends O> contextSupplier, Token<? super O> inner, BiConsumer<? super I, ? super O> onSuccess) {

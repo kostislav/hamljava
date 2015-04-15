@@ -17,7 +17,7 @@ public class Terminals {
 
     private static final Token<Object> RELAXED_WHITESPACE_TOKEN = anyNumberOf(SINGLE_WHITESPACE_TOKEN);
 
-    private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOne(SINGLE_WHITESPACE_TOKEN);
+    private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOne(WHITESPACE_PREDICATE);
 
     private static final Token<Object> NOT_NEWLINE_TOKEN = atLeastOne(NOT_NEWLINE_PREDICATE);
 
