@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
-import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.parser.CharPredicate;
+import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 public class AtMostOneCharToken<T> implements Token<T> {
@@ -12,15 +12,11 @@ public class AtMostOneCharToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) throws ParseException {
-        if(line.length() > position && predicate.test(line.charAt(position))) {
-            if(line.length() > position + 1 && predicate.test(line.charAt(position + 1))) {
-                return -1;
-            } else {
-                return position + 1;
-            }
-        } else {
-            return position;
-        }
+    public int tryEat(String line, int position, T parsingResult) {
+        return tryEat(new InputString(line, position), parsingResult);
+    }
+
+    public int tryEat(InputString line, T parsingResult) {
+        return line.compatibilityMethod(predicate, i -> i <= 1);
     }
 }

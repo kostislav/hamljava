@@ -11,6 +11,12 @@ public class InputString {
         this.input = input;
     }
 
+    @Deprecated
+    public InputString(String input, int currentPosition) {
+        this.input = input;
+        this.currentPosition = currentPosition;
+    }
+
     public boolean currentCharIs(CharPredicate predicate) {
         return currentPosition < input.length() && predicate.test(input.charAt(currentPosition));
     }
@@ -30,6 +36,23 @@ public class InputString {
     @Deprecated
     public int currentPosition() {
         return currentPosition;
+    }
+
+    public boolean startsWith(String prefix) {
+        if(input.startsWith(prefix, currentPosition)) {
+            currentPosition += prefix.length();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int compatibilityMethod(CharPredicate predicate, Predicate<Integer> test) {
+        if (tryParse(inputString -> test.test(inputString.matchingCount(predicate)))) {
+            return currentPosition;
+        } else {
+            return -1;
+        }
     }
 
     public boolean tryParse(Predicate<InputString> consumer) {
