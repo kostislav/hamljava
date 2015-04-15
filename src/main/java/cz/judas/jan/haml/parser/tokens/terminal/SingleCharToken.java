@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
-import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
 
@@ -17,12 +16,12 @@ public class SingleCharToken implements Token<Object> {
     }
 
     @Override
-    public int tryEat(String line, int position, Object parsingResult) throws ParseException {
+    public int tryEat(String line, int position, Object parsingResult) {
         return tryEat(new InputString(line, position), parsingResult);
     }
 
     public int tryEat(InputString line, Object parsingResult) {
-        if(line.currentCharIs(predicate)) {
+        if (line.currentCharIs(predicate)) {
             line.advance();
             return line.currentPosition();
         } else {

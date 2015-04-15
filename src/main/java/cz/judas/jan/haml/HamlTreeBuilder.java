@@ -8,7 +8,7 @@ import cz.judas.jan.haml.tree.RootNode;
 public class HamlTreeBuilder {
     private final Token<MutableRootNode> hyperToken = HamlGrammar.hamlDocument();
 
-    public RootNode buildTreeFrom(String input) throws ParseException {
+    public RootNode buildTreeFrom(String input) {
         MutableRootNode mutableRootNode = new MutableRootNode();
 
         hyperToken.tryEat(input, 0, mutableRootNode);

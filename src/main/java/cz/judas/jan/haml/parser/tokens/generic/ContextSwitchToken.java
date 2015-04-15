@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
-import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.function.BiConsumer;
@@ -18,7 +17,7 @@ public class ContextSwitchToken<I, O> implements Token<I> {
     }
 
     @Override
-    public int tryEat(String line, int position, I parsingResult) throws ParseException {
+    public int tryEat(String line, int position, I parsingResult) {
         O newContext = contextSupplier.get();
         int newPosition = inner.tryEat(line, position, newContext);
         if (newPosition != -1) {

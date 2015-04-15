@@ -1,7 +1,5 @@
 package cz.judas.jan.haml.parser.tokens;
 
-import cz.judas.jan.haml.ParseException;
-
 import java.lang.reflect.Field;
 
 public class ReflectionToken<T> implements Token<T> {
@@ -15,7 +13,7 @@ public class ReflectionToken<T> implements Token<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public int tryEat(String line, int position, T parsingResult) throws ParseException {
+    public int tryEat(String line, int position, T parsingResult) {
         try {
             if(token == null) {
                 token = ((Token<T>)field.get(null));

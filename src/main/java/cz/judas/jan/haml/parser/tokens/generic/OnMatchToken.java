@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
-import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.function.BiConsumer;
@@ -15,9 +14,9 @@ public class OnMatchToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) throws ParseException {
+    public int tryEat(String line, int position, T parsingResult) {
         int newPosition = token.tryEat(line, position, parsingResult);
-        if(newPosition != -1) {
+        if (newPosition != -1) {
             onMatch.accept(parsingResult, line.substring(position, newPosition));
         }
         return newPosition;

@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
-import cz.judas.jan.haml.ParseException;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 public class AtLeastOneToken<T> implements Token<T> {
@@ -11,7 +10,7 @@ public class AtLeastOneToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) throws ParseException {
+    public int tryEat(String line, int position, T parsingResult) {
         int currentPosition = position;
         while(true) {
             int newPosition = token.tryEat(line, currentPosition, parsingResult);
