@@ -32,6 +32,27 @@ public class InputStringTest {
     }
 
     @Test
+    public void returnsMatchingNumberOfChars() throws Exception {
+        assertThat(inputString.matchingCount(c -> c == 'a' || c == 'b'), is(2));
+    }
+
+    @Test
+    public void matchingCountMovesInternalPointer() throws Exception {
+        inputString.advance();
+
+        assertThat(inputString.matchingCount(equalTo('b')), is(1));
+        assertCurrentCharIs('c');
+    }
+
+    @Test
+    public void matchingCountStopsAtEndOfString() throws Exception {
+        inputString.advance();
+        inputString.advance();
+
+        assertThat(inputString.matchingCount(c -> c == 'c' || c == 'd'), is(2));
+    }
+
+    @Test
     public void doesNotMatchAfterEndOfString() throws Exception {
         inputString.advance();
         inputString.advance();

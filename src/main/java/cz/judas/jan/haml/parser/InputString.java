@@ -19,6 +19,19 @@ public class InputString {
         currentPosition++;
     }
 
+    public int matchingCount(CharPredicate predicate) {
+        int originalPosition = currentPosition;
+        while(currentCharIs(predicate)) {
+            currentPosition++;
+        }
+        return currentPosition - originalPosition;
+    }
+
+    @Deprecated
+    public int currentPosition() {
+        return currentPosition;
+    }
+
     public boolean tryParse(Predicate<InputString> consumer) {
         int snapshotPosition = currentPosition;
         if(consumer.test(this)) {
