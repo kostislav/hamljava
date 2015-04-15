@@ -5,7 +5,7 @@ import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.terminal.AnyNumberOfCharToken;
 import cz.judas.jan.haml.parser.tokens.terminal.AtLeastOneCharToken;
-import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
+import cz.judas.jan.haml.parser.tokens.terminal.AtMostOneCharToken;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -38,8 +38,8 @@ public class GenericTokens {
         return new AtMostOneToken<>(token);
     }
 
-    public static <T> Token<T> atMostOne(char c) {
-        return new AtMostOneToken<>(new SingleCharToken(c));
+    public static <T> Token<T> atMostOne(char matchingChar) {
+        return new AtMostOneCharToken<>(c -> c ==matchingChar);
     }
 
     public static <T> Token<T> atLeastOne(Token<? super T> token) {
