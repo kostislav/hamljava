@@ -12,7 +12,7 @@ public class AtMostOneCharToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(InputString line, T parsingResult) {
+    public boolean tryEat(InputString line, T parsingResult) {
         return line.compatibilityMethod(predicate, i -> i <= 1);
     }
 }

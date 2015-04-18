@@ -13,10 +13,7 @@ public class AtLeastOneToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(InputString line, T parsingResult) {
-        if(!line.tryParse(inputString -> token.tryEat(line, parsingResult) != -1)) {
-            return -1;
-        }
-        return restMatcher.tryEat(line, parsingResult);
+    public boolean tryEat(InputString line, T parsingResult) {
+        return line.tryParse(inputString -> token.tryEat(line, parsingResult)) && restMatcher.tryEat(line, parsingResult);
     }
 }

@@ -14,12 +14,12 @@ public class AnyOfToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(InputString line, T parsingResult) {
+    public boolean tryEat(InputString line, T parsingResult) {
         for (Token<? super T> alternative : alternatives) {
-            if(line.tryParse(inputString -> alternative.tryEat(inputString, parsingResult) != -1)) {
-                return line.currentPosition();
+            if(line.tryParse(inputString -> alternative.tryEat(inputString, parsingResult))) {
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 }

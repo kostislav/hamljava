@@ -11,11 +11,7 @@ public class ExactTextToken implements Token<Object> {
     }
 
     @Override
-    public int tryEat(InputString line, Object parsingResult) {
-        if(line.startsWith(content)) {
-            return line.currentPosition();
-        } else {
-            return -1;
-        }
+    public boolean tryEat(InputString line, Object parsingResult) {
+        return line.startsWith(content);
     }
 }

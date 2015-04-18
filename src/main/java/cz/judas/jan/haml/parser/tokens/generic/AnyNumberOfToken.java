@@ -11,12 +11,12 @@ public class AnyNumberOfToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(InputString line, T parsingResult) {
+    public boolean tryEat(InputString line, T parsingResult) {
         while(line.hasMoreChars()) {
-            if(!line.tryParse(inputString -> inner.tryEat(inputString, parsingResult) != -1)) {
+            if(!line.tryParse(inputString -> inner.tryEat(inputString, parsingResult))) {
                 break;
             }
         }
-        return line.currentPosition();
+        return true;
     }
 }

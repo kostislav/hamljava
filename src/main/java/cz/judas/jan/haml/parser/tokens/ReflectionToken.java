@@ -15,7 +15,7 @@ public class ReflectionToken<T> implements Token<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public int tryEat(InputString line, T parsingResult) {
+    public boolean tryEat(InputString line, T parsingResult) {
         try {
             if(token == null) {
                 token = ((Token<T>)field.get(null));

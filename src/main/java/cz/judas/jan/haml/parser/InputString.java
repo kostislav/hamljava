@@ -61,12 +61,8 @@ public class InputString {
         }
     }
 
-    public int compatibilityMethod(CharPredicate predicate, Predicate<Integer> test) {
-        if (tryParse(inputString -> test.test(inputString.matchingCount(predicate)))) {
-            return currentPosition;
-        } else {
-            return -1;
-        }
+    public boolean compatibilityMethod(CharPredicate predicate, Predicate<Integer> test) {
+        return tryParse(inputString -> test.test(inputString.matchingCount(predicate)));
     }
 
     public boolean tryParse(Predicate<InputString> consumer) {

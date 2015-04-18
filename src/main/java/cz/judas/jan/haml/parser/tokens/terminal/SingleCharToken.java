@@ -16,12 +16,12 @@ public class SingleCharToken implements Token<Object> {
     }
 
     @Override
-    public int tryEat(InputString line, Object parsingResult) {
+    public boolean tryEat(InputString line, Object parsingResult) {
         if (line.currentCharIs(predicate)) {
             line.advance();
-            return line.currentPosition();
+            return true;
         } else {
-            return -1;
+            return false;
         }
     }
 }
