@@ -12,13 +12,5 @@ public interface Token<T> {
         }
     }
 
-    default boolean tryEat(InputString line, T parsingResult) {
-        int newPosition = tryEat(line.wholeLine(), line.currentPosition(), parsingResult);
-        if(newPosition != -1) {
-            line.setCurrentPosition(newPosition);
-            return true;
-        } else {
-            return false;
-        }
-    }
+    boolean tryEat(InputString line, T parsingResult);
 }

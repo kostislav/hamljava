@@ -74,4 +74,14 @@ public class InputString {
             return false;
         }
     }
+
+    public String tryGetSubstring(Predicate<InputString> consumer) {
+        int snapshotPosition = currentPosition;
+        if(consumer.test(this)) {
+            return input.substring(snapshotPosition, currentPosition);
+        } else {
+            currentPosition = snapshotPosition;
+            return null;
+        }
+    }
 }

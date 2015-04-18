@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.List;
@@ -13,14 +14,7 @@ public class SequenceOfTokens<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) {
-        int currentPosition = position;
-        for (Token<? super T> token : sequence) {
-            currentPosition = token.tryEat(line, currentPosition, parsingResult);
-            if (currentPosition == -1) {
-                return -1;
-            }
-        }
-        return currentPosition;
+    public boolean tryEat(InputString line, T parsingResult) {
+        return line.tryParse(inputString -> sequence.stream().allMatch(token -> token.tryEat(inputString, parsingResult)));
     }
 }
