@@ -18,13 +18,9 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
 
     @Override
     public Token<MutableRootNode> buildRules() {
-        return anyNumberOf(
-                line(
-                        anyOf(
-                                doctype(),
-                                regularLine()
-                        )
-                )
+        return sequence(
+                atMostOne(line(doctype())),
+                anyNumberOf(line(indentedLine()))
         );
     }
 
@@ -36,19 +32,23 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
         ));
     }
 
-    private static Token<MutableRootNode> regularLine() {
+    private static Token<MutableRootNode> indentedLine() {
         return rule(() -> sequence(
                 match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
                 GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
                         MutableHtmlNode::new,
-                        anyOf(
-                                escapedPlainText(),
-                                printExpression(),
-                                htmlTag()
-                        ),
+                        lineContent(),
                         MutableRootNode::addNode
                 )
         ));
+    }
+
+    private static Token<MutableHtmlNode> lineContent() {
+        return anyOf(
+                escapedPlainText(),
+                printExpression(),
+                htmlTag()
+        );
     }
 
     private static Token<MutableHtmlNode> escapedPlainText() {
