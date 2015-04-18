@@ -49,7 +49,7 @@ public class RubyGrammar {
     }
 
     private static Token<MutableHashEntry> newStyleHashEntry() {
-        return rule(() -> relaxedSequence(
+        return rule(() -> sequence(
                 match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
                 singleChar(':'),
                 whitespace(),
@@ -62,7 +62,7 @@ public class RubyGrammar {
     }
 
     private static Token<MutableHashEntry> oldStyleHashEntry() {
-        return rule(() -> relaxedSequence(
+        return rule(() -> sequence(
                 singleChar(':'),
                 match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
                 whitespace(),
@@ -84,9 +84,10 @@ public class RubyGrammar {
     }
 
     private static Token<MutableRubyValue> variable() {
-        return rule(() -> sequence(
-                singleChar('@'),
-                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableRubyValue.class).to((mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s)))
+        return rule(() -> leadingChar(
+                '@',
+                Predicates.TAG_NAME_CHAR,
+                (mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s))
         ));
     }
 

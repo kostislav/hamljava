@@ -61,7 +61,6 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     private static Token<MutableHtmlNode> printExpression() {
         return rule(() -> relaxedSequence(
                 singleChar('='),
-                whitespace(),
                 GenericTokens.<MutableHtmlNode, MutableRubyValue>contextSwitch(
                         MutableRubyValue::new,
                         RubyGrammar.value(),
@@ -81,7 +80,6 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
                                 RubyGrammar.hash()
                         )
                 ),
-                whitespace(),
                 match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
         ));
     }
