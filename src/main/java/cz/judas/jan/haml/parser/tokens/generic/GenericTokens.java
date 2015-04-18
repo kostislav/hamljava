@@ -46,7 +46,7 @@ public class GenericTokens {
         return new AtLeastOneToken<>(token);
     }
 
-    public static Token<Object> atLeastOne(CharPredicate predicate) {
+    public static Token<Object> atLeastOneChar(CharPredicate predicate) {
         return new AtLeastOneCharToken<>(predicate);
     }
 

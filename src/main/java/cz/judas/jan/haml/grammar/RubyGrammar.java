@@ -10,28 +10,29 @@ import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRubyValue;
 
-import static cz.judas.jan.haml.parser.tokens.ReflectionToken.reference;
+import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
-import static cz.judas.jan.haml.predicates.Predicates.anyOf;
+import static cz.judas.jan.haml.predicates.Predicates.anyOfChars;
 import static cz.judas.jan.haml.predicates.Predicates.not;
 
-@SuppressWarnings({"UtilityClass", "UnusedDeclaration"})
+@SuppressWarnings("UtilityClass")
 public class RubyGrammar {
-    public static final Token<MutableHtmlNode> HASH =
-            sequence(
-                    singleChar('{'),
-                    GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
-                            MutableHash::new,
-                            GenericTokens.anyOf(
-                                    hashEntries(reference("NEW_STYLE_HASH_ENTRY")),
-                                    hashEntries(reference("OLD_STYLE_HASH_ENTRY"))
-                            ),
-                            MutableHtmlNode::addAttributes
-                    ),
-                    whitespace(),
-                    singleChar('}')
-            );
+    public static Token<MutableHtmlNode> hash() {
+        return rule(() -> sequence(
+                singleChar('{'),
+                GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
+                        MutableHash::new,
+                        GenericTokens.anyOf(
+                                hashEntries(newStyleHashEntry()),
+                                hashEntries(oldStyleHashEntry())
+                        ),
+                        MutableHtmlNode::addAttributes
+                ),
+                whitespace(),
+                singleChar('}')
+        ));
+    }
 
     private static Token<? super MutableHash> hashEntries(Token<MutableHashEntry> token) {
         return atLeastOne(
@@ -47,48 +48,53 @@ public class RubyGrammar {
         );
     }
 
-    public static final Token<MutableHashEntry> NEW_STYLE_HASH_ENTRY =
-            relaxedSequence(
-                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
-                    singleChar(':'),
-                    whitespace(),
-                    GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
-                            MutableRubyValue::new,
-                            reference("VALUE"),
-                            MutableHashEntry::setValue
-                    )
-            );
+    private static Token<MutableHashEntry> newStyleHashEntry() {
+        return rule(() -> relaxedSequence(
+                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
+                singleChar(':'),
+                whitespace(),
+                GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
+                        MutableRubyValue::new,
+                        value(),
+                        MutableHashEntry::setValue
+                )
+        ));
+    }
 
-    public static final Token<MutableHashEntry> OLD_STYLE_HASH_ENTRY =
-            relaxedSequence(
-                    singleChar(':'),
-                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
-                    whitespace(),
-                    exactText("=>"),
-                    whitespace(),
-                    GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
-                            MutableRubyValue::new,
-                            reference("VALUE"),
-                            MutableHashEntry::setValue
-                    )
-            );
+    private static Token<MutableHashEntry> oldStyleHashEntry() {
+        return rule(() -> relaxedSequence(
+                singleChar(':'),
+                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
+                whitespace(),
+                exactText("=>"),
+                whitespace(),
+                GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
+                        MutableRubyValue::new,
+                        value(),
+                        MutableHashEntry::setValue
+                )
+        ));
+    }
 
-    public static final Token<MutableRubyValue> VALUE =
-            GenericTokens.anyOf(
-                    reference("VARIABLE"),
-                    reference("SINGLE_QUOTE_STRING")
-            );
+    public static Token<MutableRubyValue> value() {
+        return rule(() -> anyOf(
+                variable(),
+                singleQuoteString()
+        ));
+    }
 
-    public static final Token<MutableRubyValue> VARIABLE =
-            sequence(
-                    singleChar('@'),
-                    match(atLeastOne(Predicates.TAG_NAME_CHAR), MutableRubyValue.class).to((mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s)))
-            );
+    private static Token<MutableRubyValue> variable() {
+        return rule(() -> sequence(
+                singleChar('@'),
+                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableRubyValue.class).to((mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s)))
+        ));
+    }
 
-    public static final Token<MutableRubyValue> SINGLE_QUOTE_STRING =
-            sequence(
-                    singleChar('\''),
-                    match(atLeastOne(not(anyOf('\'', '\n'))), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
-                    singleChar('\'')
-            );
+    private static Token<MutableRubyValue> singleQuoteString() {
+        return rule(() -> sequence(
+                singleChar('\''),
+                match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
+                singleChar('\'')
+        ));
+    }
 }

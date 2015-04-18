@@ -10,6 +10,6 @@ import static org.hamcrest.Matchers.is;
 public class RubyGrammarTest {
     @Test
     public void hashTypesCannotBeCombined() throws Exception {
-        assertThat(RubyGrammar.HASH.tryEat(new InputString("{ a: 'gf', :tr => 'hg' }"), new MutableHtmlNode()), is(false));
+        assertThat(RubyGrammar.hash().tryEat(new InputString("{ a: 'gf', :tr => 'hg' }"), new MutableHtmlNode()), is(false));
     }
 }

@@ -15,7 +15,7 @@ public class Terminals {
 
     private static final Token<Object> RELAXED_WHITESPACE_TOKEN = anyNumberOf(WHITESPACE_PREDICATE);
 
-    private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOne(WHITESPACE_PREDICATE);
+    private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
 
     public static Token<Object> whitespace() {
         return RELAXED_WHITESPACE_TOKEN;
@@ -33,7 +33,7 @@ public class Terminals {
         return sequence(
                 singleChar(leadingChar),
                 onMatch(
-                        atLeastOne(validChars),
+                        atLeastOneChar(validChars),
                         onEnd
                 )
         );

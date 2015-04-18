@@ -8,83 +8,92 @@ import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 import cz.judas.jan.haml.tree.mutable.MutableRubyValue;
 
-import static cz.judas.jan.haml.parser.tokens.ReflectionToken.reference;
+import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 
-@SuppressWarnings({"UtilityClass", "UnusedDeclaration"})
+@SuppressWarnings("UtilityClass")
 public class HamlGrammar {
 
     public static Token<MutableRootNode> hamlDocument() {
         return anyNumberOf(
                 relaxedSequence(
                         anyOf(
-                                reference("DOCTYPE"),
-                                reference("REGULAR_LINE")
+                                doctype(),
+                                regularLine()
                         ),
                         atMostOne('\n')
                 )
         );
     }
 
-    private static final Token<MutableRootNode> DOCTYPE =
-            sequence(
-                    exactText("!!!"),
-                    whitespace(),
-                    match(atLeastOne(Character::isLetterOrDigit), MutableRootNode.class).to(MutableRootNode::setDoctype)
-            );
+    private static Token<MutableRootNode> doctype() {
+        return rule(() -> sequence(
+                exactText("!!!"),
+                whitespace(),
+                match(atLeastOneChar(Character::isLetterOrDigit), MutableRootNode.class).to(MutableRootNode::setDoctype)
+        ));
+    }
 
-    private static final Token<MutableRootNode> REGULAR_LINE =
-            sequence(
-                    match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
-                    GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
-                            MutableHtmlNode::new,
-                            anyOf(
-                                    reference("ESCAPED_PLAINTEXT"),
-                                    reference("PRINT_EXPRESSION"),
-                                    reference("HTML_TAG")
-                            ),
-                            MutableRootNode::addNode
-                    )
-            );
+    private static Token<MutableRootNode> regularLine() {
+        return rule(() -> sequence(
+                match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
+                GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
+                        MutableHtmlNode::new,
+                        anyOf(
+                                escapedPlainText(),
+                                printExpression(),
+                                htmlTag()
+                        ),
+                        MutableRootNode::addNode
+                )
+        ));
+    }
 
-    private static final Token<MutableHtmlNode> ESCAPED_PLAINTEXT =
-            sequence(
-                    singleChar('\\'),
-                    match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
-            );
+    private static Token<MutableHtmlNode> escapedPlainText() {
+        return rule(() -> sequence(
+                singleChar('\\'),
+                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
+        ));
+    }
 
-    private static final Token<MutableHtmlNode> PRINT_EXPRESSION =
-            relaxedSequence(
-                    singleChar('='),
-                    whitespace(),
-                    GenericTokens.<MutableHtmlNode, MutableRubyValue>contextSwitch(
-                            MutableRubyValue::new,
-                            RubyGrammar.VALUE,
-                            (node, value) -> node.setContent(value.getValue())
-                    )
-            );
+    private static Token<MutableHtmlNode> printExpression() {
+        return rule(() -> relaxedSequence(
+                singleChar('='),
+                whitespace(),
+                GenericTokens.<MutableHtmlNode, MutableRubyValue>contextSwitch(
+                        MutableRubyValue::new,
+                        RubyGrammar.value(),
+                        (node, value) -> node.setContent(value.getValue())
+                )
+        ));
+    }
 
-    private static final Token<MutableHtmlNode> HTML_TAG = relaxedSequence(
-            atMostOne(reference("TAG_NAME")),
-            anyNumberOf(
-                    GenericTokens.<MutableHtmlNode>anyOf(
-                            strictWhitespace(),
-                            reference("ID_ATTRIBUTE"),
-                            reference("CLASS_ATTRIBUTE"),
-                            RubyGrammar.HASH
-                    )
-            ),
-            whitespace(),
-            match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
-    );
+    private static Token<MutableHtmlNode> htmlTag() {
+        return rule(() -> relaxedSequence(
+                atMostOne(tagName()),
+                anyNumberOf(
+                        GenericTokens.<MutableHtmlNode>anyOf(
+                                strictWhitespace(),
+                                idAttribute(),
+                                classAttribute(),
+                                RubyGrammar.hash()
+                        )
+                ),
+                whitespace(),
+                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
+        ));
+    }
 
-    private static final Token<MutableHtmlNode> TAG_NAME =
-            leadingChar('%', Predicates.TAG_NAME_CHAR, MutableHtmlNode::setTagName);
+    private static Token<MutableHtmlNode> tagName() {
+        return leadingChar('%', Predicates.TAG_NAME_CHAR, MutableHtmlNode::setTagName);
+    }
 
-    private static final Token<MutableHtmlNode> ID_ATTRIBUTE =
-            leadingChar('#', Predicates.ID_OR_CLASS_CHAR, (node, value) -> node.setId(new StringRubyValue(value)));
+    private static Token<MutableHtmlNode> idAttribute() {
+        return leadingChar('#', Predicates.ID_OR_CLASS_CHAR, (node, value) -> node.setId(new StringRubyValue(value)));
+    }
 
-    private static final Token<MutableHtmlNode> CLASS_ATTRIBUTE =
-            leadingChar('.', Predicates.ID_OR_CLASS_CHAR, MutableHtmlNode::addClass);
+    private static Token<MutableHtmlNode> classAttribute() {
+        return leadingChar('.', Predicates.ID_OR_CLASS_CHAR, MutableHtmlNode::addClass);
+    }
 }

@@ -12,7 +12,7 @@ public class Predicates {
         return c -> !original.test(c);
     }
 
-    public static CharPredicate anyOf(char... chars) {
+    public static CharPredicate anyOfChars(char... chars) {
         return c -> {
             for (char aChar : chars) {
                 if(aChar == c) {
