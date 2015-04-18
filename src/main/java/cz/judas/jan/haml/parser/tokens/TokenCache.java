@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.parser.tokens;
 
+import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.InputString;
 
 import java.util.HashMap;
@@ -10,23 +11,41 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("UtilityClass")
 public class TokenCache {
-    private static final Map<Caller, Set<ProxyToken<?>>> UNFINISHED_TOKENS = new HashMap<>();
+    private static final Map<Caller, SameTokens> UNFINISHED_TOKENS = new HashMap<>();
+
+    @SuppressWarnings("StaticNonFinalField")
+    private static boolean BUILDING = false;
+
+    public static synchronized <T> Token<T> build(Grammar<T> grammar) {
+        try {
+            BUILDING = true;
+            Token<T> mainToken = grammar.buildRules();
+            for (SameTokens proxyTokens : UNFINISHED_TOKENS.values()) {
+                proxyTokens.initializeTokens();
+            }
+            UNFINISHED_TOKENS.clear();
+            return mainToken;
+        } finally {
+            BUILDING = false;
+        }
+    }
 
     public static synchronized <T> Token<T> rule(Supplier<Token<T>> tokenSupplier) {
         Caller caller = getCaller();
-        Set<ProxyToken<?>> tokens = UNFINISHED_TOKENS.get(caller);
-        if(tokens == null) {
-            tokens = new HashSet<>();
+        SameTokens tokens = UNFINISHED_TOKENS.get(caller);
+        if (tokens == null) {
+            tokens = new SameTokens();
             UNFINISHED_TOKENS.put(caller, tokens);
             Token<T> token = tokenSupplier.get();
-            for (ProxyToken<?> proxyToken : tokens) {
-                proxyToken.setRealToken(token);
+            tokens.setRealToken(token);
+            if(!BUILDING) {
+                tokens.initializeTokens();
+                UNFINISHED_TOKENS.remove(caller);
             }
-            UNFINISHED_TOKENS.remove(caller);
             return token;
         } else {
             ProxyToken<T> token = new ProxyToken<>();
-            tokens.add(token);
+            tokens.addProxyToken(token);
             return token;
         }
     }
@@ -76,12 +95,31 @@ public class TokenCache {
         }
     }
 
+    private static class SameTokens {
+        private final Set<ProxyToken<?>> proxyTokens = new HashSet<>();
+        private Token<?> realToken;
+
+        public void addProxyToken(ProxyToken<?> proxyToken) {
+            proxyTokens.add(proxyToken);
+        }
+
+        public void setRealToken(Token<?> realToken) {
+            this.realToken = realToken;
+        }
+
+        public void initializeTokens() {
+            for (ProxyToken<?> proxyToken : proxyTokens) {
+                proxyToken.setRealToken(realToken);
+            }
+        }
+    }
+
     private static class ProxyToken<T> implements Token<T> {
         private Token<T> realToken;
 
         @SuppressWarnings("unchecked")
         private void setRealToken(Token<?> realToken) {
-            this.realToken = (Token<T>)realToken;
+            this.realToken = (Token<T>) realToken;
         }
 
         @Override
