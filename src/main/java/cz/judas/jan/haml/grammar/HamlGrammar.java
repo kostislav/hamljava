@@ -1,7 +1,9 @@
 package cz.judas.jan.haml.grammar;
 
+import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
+import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.StringRubyValue;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
@@ -12,10 +14,10 @@ import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 
-@SuppressWarnings("UtilityClass")
-public class HamlGrammar {
+public class HamlGrammar implements Grammar<MutableRootNode> {
 
-    public static Token<MutableRootNode> hamlDocument() {
+    @Override
+    public Token<MutableRootNode> buildRules() {
         return anyNumberOf(
                 relaxedSequence(
                         anyOf(
@@ -86,14 +88,14 @@ public class HamlGrammar {
     }
 
     private static Token<MutableHtmlNode> tagName() {
-        return leadingChar('%', Predicates.TAG_NAME_CHAR, MutableHtmlNode::setTagName);
+        return rule(() -> Terminals.<MutableHtmlNode>leadingChar('%', Predicates.TAG_NAME_CHAR, MutableHtmlNode::setTagName));
     }
 
     private static Token<MutableHtmlNode> idAttribute() {
-        return leadingChar('#', Predicates.ID_OR_CLASS_CHAR, (node, value) -> node.setId(new StringRubyValue(value)));
+        return rule(() -> Terminals.<MutableHtmlNode>leadingChar('#', Predicates.ID_OR_CLASS_CHAR, (node, value) -> node.setId(new StringRubyValue(value))));
     }
 
     private static Token<MutableHtmlNode> classAttribute() {
-        return leadingChar('.', Predicates.ID_OR_CLASS_CHAR, MutableHtmlNode::addClass);
+        return rule(() -> Terminals.<MutableHtmlNode>leadingChar('.', Predicates.ID_OR_CLASS_CHAR, MutableHtmlNode::addClass));
     }
 }
