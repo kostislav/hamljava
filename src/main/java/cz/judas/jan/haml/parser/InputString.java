@@ -25,6 +25,10 @@ public class InputString {
         currentPosition++;
     }
 
+    public boolean hasMoreChars() {
+        return currentPosition < input.length();
+    }
+
     public int matchingCount(CharPredicate predicate) {
         int originalPosition = currentPosition;
         while(currentCharIs(predicate)) {

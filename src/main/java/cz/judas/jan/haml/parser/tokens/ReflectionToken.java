@@ -1,5 +1,7 @@
 package cz.judas.jan.haml.parser.tokens;
 
+import cz.judas.jan.haml.parser.InputString;
+
 import java.lang.reflect.Field;
 
 public class ReflectionToken<T> implements Token<T> {
@@ -13,12 +15,12 @@ public class ReflectionToken<T> implements Token<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public int tryEat(String line, int position, T parsingResult) {
+    public int tryEat(InputString line, T parsingResult) {
         try {
             if(token == null) {
                 token = ((Token<T>)field.get(null));
             }
-            return token.tryEat(line, position, parsingResult);
+            return token.tryEat(line, parsingResult);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Could not access field " + field.getName() + " of " + field.getDeclaringClass().getName());
         }

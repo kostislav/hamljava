@@ -1,28 +1,22 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
+import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 public class AtLeastOneToken<T> implements Token<T> {
     private final Token<? super T> token;
+    private final AnyNumberOfToken<? super T> restMatcher;
 
     public AtLeastOneToken(Token<? super T> token) {
         this.token = token;
+        restMatcher = new AnyNumberOfToken<>(token);
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) {
-        int currentPosition = position;
-        while(true) {
-            int newPosition = token.tryEat(line, currentPosition, parsingResult);
-            if(newPosition == -1) {
-                if(currentPosition == position) {
-                    return -1;
-                } else {
-                    return currentPosition;
-                }
-            } else {
-                currentPosition = newPosition;
-            }
+    public int tryEat(InputString line, T parsingResult) {
+        if(!line.tryParse(inputString -> token.tryEat(line, parsingResult) != -1)) {
+            return -1;
         }
+        return restMatcher.tryEat(line, parsingResult);
     }
 }

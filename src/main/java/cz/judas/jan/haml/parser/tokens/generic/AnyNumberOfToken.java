@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
+import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 public class AnyNumberOfToken<T> implements Token<T> {
@@ -10,16 +11,12 @@ public class AnyNumberOfToken<T> implements Token<T> {
     }
 
     @Override
-    public int tryEat(String line, int position, T parsingResult) {
-        int currentPosition = position;
-        while(currentPosition < line.length()) {
-            int newPosition = inner.tryEat(line, currentPosition, parsingResult);
-            if(newPosition == -1) {
-                return currentPosition;
-            } else {
-                currentPosition = newPosition;
+    public int tryEat(InputString line, T parsingResult) {
+        while(line.hasMoreChars()) {
+            if(!line.tryParse(inputString -> inner.tryEat(inputString, parsingResult) != -1)) {
+                break;
             }
         }
-        return currentPosition;
+        return line.currentPosition();
     }
 }
