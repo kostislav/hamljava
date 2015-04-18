@@ -3,8 +3,9 @@ package cz.judas.jan.haml.grammar;
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.predicates.Predicates;
-import cz.judas.jan.haml.tree.RubyString;
 import cz.judas.jan.haml.tree.FieldReference;
+import cz.judas.jan.haml.tree.RubyString;
+import cz.judas.jan.haml.tree.RubySymbol;
 import cz.judas.jan.haml.tree.mutable.MutableHash;
 import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
@@ -65,8 +66,11 @@ public class RubyGrammar {
 
     private static Token<MutableHashEntry> oldStyleHashEntry() {
         return rule(() -> sequence(
-                singleChar(':'),
-                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
+                GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
+                        MutableRubyExpression::new,
+                        symbol(),
+                        MutableHashEntry::setName
+                ),
                 whitespace(),
                 exactText("=>"),
                 whitespace(),
@@ -91,6 +95,21 @@ public class RubyGrammar {
                 Predicates.TAG_NAME_CHAR,
                 (mutableRubyValue, s) -> mutableRubyValue.setValue(new FieldReference(s))
         ));
+    }
+
+    public static Token<MutableRubyExpression> symbol() {
+        return sequence(
+                singleChar(':'),
+                match(variableName(), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubySymbol(value)))
+        );
+    }
+
+    public static Token<MutableRubyExpression> variableName() {
+        return sequence(
+                singleChar(c -> Character.isAlphabetic(c) || c == '@' || c == '$' || c == '_'),
+                anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_')),
+                anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '='))
+        );
     }
 
     private static Token<MutableRubyExpression> singleQuoteString() {

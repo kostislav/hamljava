@@ -26,7 +26,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, Map<String, RubyExpression> attributes, Node... children) {
+    public static HtmlNode node(String name, Map<RubyExpression, RubyExpression> attributes, Node... children) {
         return new HtmlNode(
                 name,
                 attributes,
@@ -35,7 +35,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, Map<String, RubyExpression> attributes, RubyExpression content) {
+    public static HtmlNode node(String name, Map<RubyExpression, RubyExpression> attributes, RubyExpression content) {
         return new HtmlNode(
                 name,
                 attributes,

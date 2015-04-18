@@ -9,6 +9,7 @@ import static cz.judas.jan.haml.Nodes.node;
 import static cz.judas.jan.haml.Nodes.root;
 import static cz.judas.jan.haml.Nodes.textNode;
 import static cz.judas.jan.haml.Values.stringValue;
+import static cz.judas.jan.haml.Values.symbol;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -47,47 +48,47 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void classAttribute() throws Exception {
-        assertParses("%span.bluh bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh")), stringValue("bra bh"))));
+        assertParses("%span.bluh bra bh", root(node("span", ImmutableMap.of(stringValue("class"), stringValue("bluh")), stringValue("bra bh"))));
     }
 
     @Test
     public void classAttributeWithoutContent() throws Exception {
-        assertParses("%h1.bluh\n\t%span bra bh", root(node("h1", ImmutableMap.of("class", stringValue("bluh")), node("span", stringValue("bra bh")))));
+        assertParses("%h1.bluh\n\t%span bra bh", root(node("h1", ImmutableMap.of(stringValue("class"), stringValue("bluh")), node("span", stringValue("bra bh")))));
     }
 
     @Test
     public void multipleClassAttributes() throws Exception {
-        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh lkj")), stringValue("bra bh"))));
+        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableMap.of(stringValue("class"), stringValue("bluh lkj")), stringValue("bra bh"))));
     }
 
     @Test
     public void idAttribute() throws Exception {
-        assertParses("%h2#hehe njhg", root(node("h2", ImmutableMap.of("id", stringValue("hehe")), stringValue("njhg"))));
+        assertParses("%h2#hehe njhg", root(node("h2", ImmutableMap.of(stringValue("id"), stringValue("hehe")), stringValue("njhg"))));
     }
 
     @Test
     public void idAndClassAttribute() throws Exception {
-        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableMap.of("id", stringValue("hehe"), "class", stringValue("dre")), stringValue("njhg"))));
+        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableMap.of(stringValue("id"), stringValue("hehe"), stringValue("class"), stringValue("dre")), stringValue("njhg"))));
     }
 
     @Test
     public void defaultTagIsDiv() throws Exception {
-        assertParses("#going-to-hell blah", root(node("div", ImmutableMap.of("id", stringValue("going-to-hell")), stringValue("blah"))));
+        assertParses("#going-to-hell blah", root(node("div", ImmutableMap.of(stringValue("id"), stringValue("going-to-hell")), stringValue("blah"))));
     }
 
     @Test
     public void partsCanBeSeparatedByWhitespace() throws Exception {
-        assertParses("%span .bluh .lkj bra bh", root(node("span", ImmutableMap.of("class", stringValue("bluh lkj")), stringValue("bra bh"))));
+        assertParses("%span .bluh .lkj bra bh", root(node("span", ImmutableMap.of(stringValue("class"), stringValue("bluh lkj")), stringValue("bra bh"))));
     }
 
     @Test
     public void oneGenericAttribute() throws Exception {
-        assertParses("%input{ name: 'blah' }", root(node("input", ImmutableMap.of("name", stringValue("blah")))));
+        assertParses("%input{ name: 'blah' }", root(node("input", ImmutableMap.of(stringValue("name"), stringValue("blah")))));
     }
 
     @Test
     public void multipleGenericAttributes() throws Exception {
-        assertParses("%input{ name: 'blah', value: 'bleh'}", root(node("input", ImmutableMap.of("name", stringValue("blah"), "value", stringValue("bleh")))));
+        assertParses("%input{ name: 'blah', value: 'bleh'}", root(node("input", ImmutableMap.of(stringValue("name"), stringValue("blah"), stringValue("value"), stringValue("bleh")))));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void oldStyleAttributeHash() throws Exception {
-        assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", ImmutableMap.of("name", stringValue("blah"), "value", stringValue("bleh")))));
+        assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", ImmutableMap.of(symbol("name"), stringValue("blah"), symbol("value"), stringValue("bleh")))));
     }
 
     private void assertParses(String input, RootNode tree) throws Exception {

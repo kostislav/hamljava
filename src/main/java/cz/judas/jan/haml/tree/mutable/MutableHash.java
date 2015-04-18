@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class MutableHash {
-    private final Map<String, RubyExpression> values = new LinkedHashMap<>();
+    private final Map<RubyExpression, RubyExpression> values = new LinkedHashMap<>();
 
     public void addKeyValuePair(MutableHashEntry attribute) {
         values.put(attribute.getName(), attribute.getValue());
     }
 
-    public void forEach(BiConsumer<String, RubyExpression> consumer) {
-        for (Map.Entry<String, RubyExpression> entry : values.entrySet()) {
+    public void forEach(BiConsumer<RubyExpression, RubyExpression> consumer) {
+        for (Map.Entry<RubyExpression, RubyExpression> entry : values.entrySet()) {
             consumer.accept(entry.getKey(), entry.getValue());
         }
     }

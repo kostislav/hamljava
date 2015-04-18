@@ -43,6 +43,10 @@ public class Terminals {
         return new SingleCharToken(c);
     }
 
+    public static Token<Object> singleChar(CharPredicate predicate) {
+        return new SingleCharToken(predicate);
+    }
+
     public static Token<Object> exactText(String value) {
         return new ExactTextToken(value);
     }

@@ -9,7 +9,7 @@ import java.util.*;
 
 public class MutableHtmlNode implements MutableNode {
     private String tagName = null;
-    private final Map<String, RubyExpression> attributes = new LinkedHashMap<>();
+    private final Map<RubyExpression, RubyExpression> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();
     private RubyExpression id = null;
     private RubyExpression content = RubyString.EMPTY;
@@ -55,16 +55,16 @@ public class MutableHtmlNode implements MutableNode {
         }
     }
 
-    private Map<String, RubyExpression> getAttributes() {
+    private Map<RubyExpression, RubyExpression> getAttributes() {
         if (classes.isEmpty() && id == null) {
             return attributes;
         } else {
-            Map<String, RubyExpression> copy = new LinkedHashMap<>(attributes);
+            Map<RubyExpression, RubyExpression> copy = new LinkedHashMap<>(attributes);
             if(id != null) {
-                copy.put("id", id);
+                copy.put(new RubyString("id"), id);
             }
             if(!classes.isEmpty()) {
-                copy.put("class", new RubyString(StringUtils.join(classes, ' '))); // TODO array
+                copy.put(new RubyString("class"), new RubyString(StringUtils.join(classes, ' '))); // TODO array
             }
             return copy;
         }

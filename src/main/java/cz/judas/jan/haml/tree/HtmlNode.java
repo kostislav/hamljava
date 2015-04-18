@@ -4,17 +4,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.VariableMap;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class HtmlNode implements Node {
     private final String tagName;
-    private final Map<String, RubyExpression> attributes;
+    private final Map<RubyExpression, RubyExpression> attributes;
     private final RubyExpression textContent;
     private final List<Node> children;
 
-    public HtmlNode(String tagName, Map<String, RubyExpression> attributes, RubyExpression textContent, Iterable<? extends Node> children) {
+    public HtmlNode(String tagName, Map<RubyExpression, RubyExpression> attributes, RubyExpression textContent, Iterable<? extends Node> children) {
         this.tagName = tagName;
         this.attributes = ImmutableMap.copyOf(attributes);
         this.textContent = textContent;
@@ -26,9 +25,9 @@ public class HtmlNode implements Node {
         stringBuilder
                 .append('<').append(tagName);
 
-        for (Map.Entry<String, RubyExpression> entry : attributes.entrySet()) {
-            String attributeName = entry.getKey();
-            Object attributeValue = entry.getValue().evaluate(new VariableMap(Collections.emptyMap()));
+        for (Map.Entry<RubyExpression, RubyExpression> entry : attributes.entrySet()) {
+            Object attributeName = entry.getKey().evaluate(variableMap);
+            Object attributeValue = entry.getValue().evaluate(variableMap);
             stringBuilder.append(' ').append(attributeName).append("=\"").append(attributeValue).append('"');
         }
         stringBuilder.append('>');
