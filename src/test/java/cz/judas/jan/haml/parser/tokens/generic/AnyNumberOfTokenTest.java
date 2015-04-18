@@ -4,8 +4,7 @@ import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class AnyNumberOfTokenTest {
     private AnyNumberOfToken<Object> token;
@@ -17,16 +16,16 @@ public class AnyNumberOfTokenTest {
 
     @Test
     public void eatsAllThatIsAvailable() throws Exception {
-        assertThat(token.tryEat("apppper", 1, 9), is(5));
+        assertParses(token, "apppper", 1, 5);
     }
 
     @Test
     public void succeedsEvenIfNoMatch() throws Exception {
-        assertThat(token.tryEat("abc", 1, 9), is(1));
+        assertParses(token, "abc", 1, 1);
     }
 
     @Test
     public void stopsAtEndOfString() throws Exception {
-        assertThat(token.tryEat("appppp", 1, 9), is(6));
+        assertParses(token, "appppp", 1, 6);
     }
 }

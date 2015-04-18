@@ -5,11 +5,11 @@ import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class AnyOfTokenTest {
-    private AnyOfToken<Integer> token;
+    private AnyOfToken<Object> token;
 
     @Before
     public void setUp() throws Exception {
@@ -21,21 +21,21 @@ public class AnyOfTokenTest {
 
     @Test
     public void matchesIfFirstTokenMatches() throws Exception {
-        assertThat(token.tryEat("podax", 3, 8), is(4));
+        assertParses(token, "podax", 3, 4);
     }
 
     @Test
     public void matchesIfSecondTokenMatches() throws Exception {
-        assertThat(token.tryEat("pobx", 2, 8), is(3));
+        assertParses(token, "pobx", 2, 3);
     }
 
     @Test
     public void failsIfNeitherMatches() throws Exception {
-        assertThat(token.tryEat("pocem", 2, 8), is(-1));
+        assertNotParses(token, "pocem", 2);
     }
 
     @Test
     public void onlyEatsOneTokenWorthOfInput() throws Exception {
-        assertThat(token.tryEat("podbaba", 3, 8), is(4));
+        assertParses(token, "podbaba", 3, 4);
     }
 }

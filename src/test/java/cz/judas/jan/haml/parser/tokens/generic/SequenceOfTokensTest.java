@@ -5,12 +5,12 @@ import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class SequenceOfTokensTest {
 
-    private SequenceOfTokens<Integer> token;
+    private SequenceOfTokens<Object> token;
 
     @Before
     public void setUp() throws Exception {
@@ -22,16 +22,16 @@ public class SequenceOfTokensTest {
 
     @Test
     public void matchesIfAllMatch() throws Exception {
-        assertThat(token.tryEat("svrabec", 3, 99), is(5));
+        assertParses(token, "svrabec", 3, 5);
     }
 
     @Test
     public void failsIfNoneMatch() throws Exception {
-        assertThat(token.tryEat("svrfg", 3, 99), is(-1));
+        assertNotParses(token, "svrfg", 3);
     }
 
     @Test
     public void failsIfOnlySomeMatch() throws Exception {
-        assertThat(token.tryEat("svratka", 3, 99), is(-1));
+        assertNotParses(token, "svratka", 3);
     }
 }

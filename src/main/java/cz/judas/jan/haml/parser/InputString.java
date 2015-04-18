@@ -11,7 +11,6 @@ public class InputString {
         this.input = input;
     }
 
-    @Deprecated
     public InputString(String input, int currentPosition) {
         this.input = input;
         this.currentPosition = currentPosition;
@@ -37,19 +36,8 @@ public class InputString {
         return currentPosition - originalPosition;
     }
 
-    @Deprecated
     public int currentPosition() {
         return currentPosition;
-    }
-
-    @Deprecated
-    public String wholeLine() {
-        return input;
-    }
-
-    @Deprecated
-    public void setCurrentPosition(int currentPosition) {
-        this.currentPosition = currentPosition;
     }
 
     public boolean startsWith(String prefix) {

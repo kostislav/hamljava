@@ -5,8 +5,8 @@ import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class WhitespaceAllowingSequenceTokenTest {
     private WhitespaceAllowingSequenceToken<Object> token;
@@ -22,16 +22,16 @@ public class WhitespaceAllowingSequenceTokenTest {
 
     @Test
     public void allowsWhitespaceBetweenTokens() throws Exception {
-        assertThat(token.tryEat("ha   b\tcge", 1, 1000), is(8));
+        assertParses(token, "ha   b\tcge", 1, 8);
     }
 
     @Test
     public void whitespaceIsOptional() throws Exception {
-        assertThat(token.tryEat("habcge", 1, 1000), is(4));
+        assertParses(token, "habcge", 1, 4);
     }
 
     @Test
     public void failsIfSequenceDoesNotMatch() throws Exception {
-        assertThat(token.tryEat("habe", 1, 1000), is(-1));
+        assertNotParses(token, "habe", 1);
     }
 }

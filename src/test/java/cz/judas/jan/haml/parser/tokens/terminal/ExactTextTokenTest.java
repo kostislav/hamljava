@@ -3,8 +3,8 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class ExactTextTokenTest {
     private ExactTextToken token;
@@ -16,16 +16,16 @@ public class ExactTextTokenTest {
 
     @Test
     public void failsIfStringNotFound() throws Exception {
-        assertThat(token.tryEat("hasc", 1, 98), is(-1));
+        assertNotParses(token, "hasc", 1);
     }
 
     @Test
     public void matchesIfWholeTextIsFound() throws Exception {
-        assertThat(token.tryEat("haaaaa", 1, 98), is(4));
+        assertParses(token, "haaaaa", 1, 4);
     }
 
     @Test
     public void stopsAtEndOfString() throws Exception {
-        assertThat(token.tryEat("haa", 1, 98), is(-1));
+        assertNotParses(token, "haa", 1);
     }
 }

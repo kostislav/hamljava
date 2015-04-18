@@ -3,28 +3,30 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 import cz.judas.jan.haml.parser.tokens.Token;
 import org.junit.Test;
 
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class TerminalsTest {
     @Test
     public void whitespaceEatsMuchWhitespace() throws Exception {
-        assertThat(Terminals.whitespace().tryEat("hg \t r", 2, 32), is(5));
+        assertParses(Terminals.whitespace(), "hg \t r", 2, 5);
     }
 
     @Test
     public void whitespaceSucceedsEvenIfNoWhitespace() throws Exception {
-        assertThat(Terminals.whitespace().tryEat("aaagd", 2, 32), is(2));
+        assertParses(Terminals.whitespace(), "aaagd", 2, 2);
     }
 
     @Test
     public void strictWhitespaceEatsMuchWhitespace() throws Exception {
-        assertThat(Terminals.strictWhitespace().tryEat("hg \t r", 2, 32), is(5));
+        assertParses(Terminals.strictWhitespace(), "hg \t r", 2, 5);
     }
 
     @Test
     public void strictWhitespaceFailsIfNoWhitespace() throws Exception {
-        assertThat(Terminals.strictWhitespace().tryEat("aaagd", 2, 32), is(-1));
+        assertNotParses(Terminals.strictWhitespace(), "aaagd", 2);
     }
 
     @Test
@@ -32,7 +34,7 @@ public class TerminalsTest {
         StringBuilder stringBuilder = new StringBuilder();
         Token<StringBuilder> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append);
 
-        assertThat(leadingChar.tryEat("bh.aab", 2, stringBuilder), is(5));
+        assertParses(leadingChar, "bh.aab", 2, stringBuilder, 5);
         assertThat(stringBuilder.toString(), is("aa"));
     }
 
@@ -41,7 +43,7 @@ public class TerminalsTest {
         StringBuilder stringBuilder = new StringBuilder();
         Token<StringBuilder> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append);
 
-        assertThat(leadingChar.tryEat("bh. aab", 2, stringBuilder), is(-1));
+        assertNotParses(leadingChar, "bh. aab", 2, stringBuilder);
         assertThat(stringBuilder.length(), is(0));
     }
 }
