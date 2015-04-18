@@ -19,18 +19,20 @@ import static cz.judas.jan.haml.predicates.Predicates.not;
 @SuppressWarnings("UtilityClass")
 public class RubyGrammar {
     public static Token<MutableHtmlNode> hash() {
-        return rule(() -> sequence(
-                singleChar('{'),
-                GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
-                        MutableHash::new,
-                        GenericTokens.anyOf(
-                                hashEntries(newStyleHashEntry()),
-                                hashEntries(oldStyleHashEntry())
+        return rule(() -> delimited(
+                '{',
+                sequence(
+                        GenericTokens.<MutableHtmlNode, MutableHash>contextSwitch(
+                                MutableHash::new,
+                                GenericTokens.anyOf(
+                                        hashEntries(newStyleHashEntry()),
+                                        hashEntries(oldStyleHashEntry())
+                                ),
+                                MutableHtmlNode::addAttributes
                         ),
-                        MutableHtmlNode::addAttributes
+                        whitespace()
                 ),
-                whitespace(),
-                singleChar('}')
+                '}'
         ));
     }
 
@@ -92,10 +94,10 @@ public class RubyGrammar {
     }
 
     private static Token<MutableRubyValue> singleQuoteString() {
-        return rule(() -> sequence(
-                singleChar('\''),
+        return rule(() -> delimited(
+                '\'',
                 match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
-                singleChar('\'')
+                '\''
         ));
     }
 }

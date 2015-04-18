@@ -29,6 +29,10 @@ public class GenericTokens {
         return new AnyOfToken<>(ImmutableList.copyOf(alternatives));
     }
 
+    public static <T> Token<T> sequence(Token<? super T> firstToken, Token<? super T> secondToken) {
+        return new TwoItemSequenceToken<>(firstToken, secondToken);
+    }
+
     @SafeVarargs
     public static <T> Token<T> sequence(Token<? super T>... tokens) {
         return new SequenceOfTokens<>(ImmutableList.copyOf(tokens));
@@ -64,6 +68,10 @@ public class GenericTokens {
                 lineContent,
                 atMostOne('\n')
         );
+    }
+
+    public static <T> Token<T> delimited(char startDelimiter, Token<? super T> token, char endDelimiter) {
+        return new DelimitedToken<>(startDelimiter, token, endDelimiter);
     }
 
     public static <T> Token<T> onMatch(Token<? super T> token, BiConsumer<? super T, String> onMatch) {

@@ -21,6 +21,15 @@ public class InputString {
         return currentPosition < input.length() && predicate.test(input.charAt(currentPosition));
     }
 
+    public boolean advanceIf(char c) {
+        if (currentPosition < input.length() && input.charAt(currentPosition) == c) {
+            currentPosition++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void advance() {
         currentPosition++;
     }
