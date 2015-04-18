@@ -10,11 +10,11 @@ import java.util.Map;
 
 public class HtmlNode implements Node {
     private final String tagName;
-    private final Map<String, RubyValue> attributes;
-    private final RubyValue textContent;
+    private final Map<String, RubyExpression> attributes;
+    private final RubyExpression textContent;
     private final List<Node> children;
 
-    public HtmlNode(String tagName, Map<String, RubyValue> attributes, RubyValue textContent, Iterable<? extends Node> children) {
+    public HtmlNode(String tagName, Map<String, RubyExpression> attributes, RubyExpression textContent, Iterable<? extends Node> children) {
         this.tagName = tagName;
         this.attributes = ImmutableMap.copyOf(attributes);
         this.textContent = textContent;
@@ -26,7 +26,7 @@ public class HtmlNode implements Node {
         stringBuilder
                 .append('<').append(tagName);
 
-        for (Map.Entry<String, RubyValue> entry : attributes.entrySet()) {
+        for (Map.Entry<String, RubyExpression> entry : attributes.entrySet()) {
             String attributeName = entry.getKey();
             Object attributeValue = entry.getValue().evaluate(new VariableMap(Collections.emptyMap()));
             stringBuilder.append(' ').append(attributeName).append("=\"").append(attributeValue).append('"');

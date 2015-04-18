@@ -5,10 +5,10 @@ import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 import cz.judas.jan.haml.predicates.Predicates;
-import cz.judas.jan.haml.tree.StringRubyValue;
+import cz.judas.jan.haml.tree.RubyString;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
-import cz.judas.jan.haml.tree.mutable.MutableRubyValue;
+import cz.judas.jan.haml.tree.mutable.MutableRubyExpression;
 
 import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
@@ -54,15 +54,15 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     private static Token<MutableHtmlNode> escapedPlainText() {
         return rule(() -> sequence(
                 singleChar('\\'),
-                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
+                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value)))
         ));
     }
 
     private static Token<MutableHtmlNode> printExpression() {
         return rule(() -> relaxedSequence(
                 singleChar('='),
-                GenericTokens.<MutableHtmlNode, MutableRubyValue>contextSwitch(
-                        MutableRubyValue::new,
+                GenericTokens.<MutableHtmlNode, MutableRubyExpression>contextSwitch(
+                        MutableRubyExpression::new,
                         RubyGrammar.value(),
                         (node, value) -> node.setContent(value.getValue())
                 )
@@ -80,7 +80,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
                                 RubyGrammar.hash()
                         )
                 ),
-                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new StringRubyValue(value)))
+                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value)))
         ));
     }
 
@@ -89,7 +89,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     }
 
     private static Token<MutableHtmlNode> idAttribute() {
-        return rule(() -> Terminals.<MutableHtmlNode>leadingChar('#', Predicates.ID_OR_CLASS_CHAR, (node, value) -> node.setId(new StringRubyValue(value))));
+        return rule(() -> Terminals.<MutableHtmlNode>leadingChar('#', Predicates.ID_OR_CLASS_CHAR, (node, value) -> node.setId(new RubyString(value))));
     }
 
     private static Token<MutableHtmlNode> classAttribute() {

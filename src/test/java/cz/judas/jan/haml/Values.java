@@ -1,11 +1,11 @@
 package cz.judas.jan.haml;
 
-import cz.judas.jan.haml.tree.RubyValue;
-import cz.judas.jan.haml.tree.StringRubyValue;
+import cz.judas.jan.haml.tree.RubyExpression;
+import cz.judas.jan.haml.tree.RubyString;
 
 @SuppressWarnings("UtilityClass")
 public class Values {
-    public static RubyValue stringValue(String value) {
-        return new StringRubyValue(value);
+    public static RubyExpression stringValue(String value) {
+        return new RubyString(value);
     }
 }

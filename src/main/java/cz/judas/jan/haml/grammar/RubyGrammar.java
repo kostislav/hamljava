@@ -3,12 +3,12 @@ package cz.judas.jan.haml.grammar;
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.predicates.Predicates;
-import cz.judas.jan.haml.tree.StringRubyValue;
-import cz.judas.jan.haml.tree.VariableReference;
+import cz.judas.jan.haml.tree.RubyString;
+import cz.judas.jan.haml.tree.FieldReference;
 import cz.judas.jan.haml.tree.mutable.MutableHash;
 import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
-import cz.judas.jan.haml.tree.mutable.MutableRubyValue;
+import cz.judas.jan.haml.tree.mutable.MutableRubyExpression;
 
 import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
@@ -55,8 +55,8 @@ public class RubyGrammar {
                 match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
                 singleChar(':'),
                 whitespace(),
-                GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
-                        MutableRubyValue::new,
+                GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
+                        MutableRubyExpression::new,
                         value(),
                         MutableHashEntry::setValue
                 )
@@ -70,33 +70,33 @@ public class RubyGrammar {
                 whitespace(),
                 exactText("=>"),
                 whitespace(),
-                GenericTokens.<MutableHashEntry, MutableRubyValue>contextSwitch(
-                        MutableRubyValue::new,
+                GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
+                        MutableRubyExpression::new,
                         value(),
                         MutableHashEntry::setValue
                 )
         ));
     }
 
-    public static Token<MutableRubyValue> value() {
+    public static Token<MutableRubyExpression> value() {
         return rule(() -> anyOf(
                 variable(),
                 singleQuoteString()
         ));
     }
 
-    private static Token<MutableRubyValue> variable() {
+    private static Token<MutableRubyExpression> variable() {
         return rule(() -> leadingChar(
                 '@',
                 Predicates.TAG_NAME_CHAR,
-                (mutableRubyValue, s) -> mutableRubyValue.setValue(new VariableReference(s))
+                (mutableRubyValue, s) -> mutableRubyValue.setValue(new FieldReference(s))
         ));
     }
 
-    private static Token<MutableRubyValue> singleQuoteString() {
+    private static Token<MutableRubyExpression> singleQuoteString() {
         return rule(() -> delimited(
                 '\'',
-                match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyValue.class).to((entry, value) -> entry.setValue(new StringRubyValue(value))),
+                match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubyString(value))),
                 '\''
         ));
     }

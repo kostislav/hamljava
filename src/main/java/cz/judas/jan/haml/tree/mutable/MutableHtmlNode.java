@@ -9,10 +9,10 @@ import java.util.*;
 
 public class MutableHtmlNode implements MutableNode {
     private String tagName = null;
-    private final Map<String, RubyValue> attributes = new LinkedHashMap<>();
+    private final Map<String, RubyExpression> attributes = new LinkedHashMap<>();
     private final Set<String> classes = new LinkedHashSet<>();
-    private RubyValue id = null;
-    private RubyValue content = StringRubyValue.EMPTY;
+    private RubyExpression id = null;
+    private RubyExpression content = RubyString.EMPTY;
 
     private final List<MutableNode> children = new ArrayList<>();
 
@@ -20,7 +20,7 @@ public class MutableHtmlNode implements MutableNode {
         this.tagName = tagName;
     }
 
-    public void setContent(RubyValue content) {
+    public void setContent(RubyExpression content) {
         this.content = content;
     }
 
@@ -32,7 +32,7 @@ public class MutableHtmlNode implements MutableNode {
         classes.add(name);
     }
 
-    public void setId(RubyValue id) {
+    public void setId(RubyExpression id) {
         this.id = id;
     }
 
@@ -55,16 +55,16 @@ public class MutableHtmlNode implements MutableNode {
         }
     }
 
-    private Map<String, RubyValue> getAttributes() {
+    private Map<String, RubyExpression> getAttributes() {
         if (classes.isEmpty() && id == null) {
             return attributes;
         } else {
-            Map<String, RubyValue> copy = new LinkedHashMap<>(attributes);
+            Map<String, RubyExpression> copy = new LinkedHashMap<>(attributes);
             if(id != null) {
                 copy.put("id", id);
             }
             if(!classes.isEmpty()) {
-                copy.put("class", new StringRubyValue(StringUtils.join(classes, ' '))); // TODO array
+                copy.put("class", new RubyString(StringUtils.join(classes, ' '))); // TODO array
             }
             return copy;
         }

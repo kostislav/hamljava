@@ -2,10 +2,10 @@ package cz.judas.jan.haml.tree;
 
 import cz.judas.jan.haml.VariableMap;
 
-public class VariableReference implements RubyValue {
+public class FieldReference implements RubyExpression {
     private final String name;
 
-    public VariableReference(String name) {
+    public FieldReference(String name) {
         this.name = name;
     }
 

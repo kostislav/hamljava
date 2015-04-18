@@ -3,9 +3,9 @@ package cz.judas.jan.haml.tree;
 import cz.judas.jan.haml.VariableMap;
 
 public class TextNode implements Node {
-    private final RubyValue content;
+    private final RubyExpression content;
 
-    public TextNode(RubyValue content) {
+    public TextNode(RubyExpression content) {
         this.content = content;
     }
 

@@ -2,12 +2,12 @@ package cz.judas.jan.haml.tree;
 
 import cz.judas.jan.haml.VariableMap;
 
-public class StringRubyValue implements RubyValue {
-    public static final StringRubyValue EMPTY = new StringRubyValue("");
+public class RubyString implements RubyExpression {
+    public static final RubyString EMPTY = new RubyString("");
 
     private final String value;
 
-    public StringRubyValue(String value) {
+    public RubyString(String value) {
         this.value = value;
     }
 
@@ -25,7 +25,7 @@ public class StringRubyValue implements RubyValue {
             return false;
         }
 
-        StringRubyValue that = (StringRubyValue) o;
+        RubyString that = (RubyString) o;
 
         return value.equals(that.value);
     }
@@ -37,7 +37,7 @@ public class StringRubyValue implements RubyValue {
 
     @Override
     public String toString() {
-        return "StringRubyValue{" +
+        return "RubyString{" +
                 "value='" + value + '\'' +
                 '}';
     }

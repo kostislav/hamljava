@@ -21,21 +21,21 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyMap(),
-                StringRubyValue.EMPTY,
+                RubyString.EMPTY,
                 Arrays.asList(children)
         );
     }
 
-    public static HtmlNode node(String name, Map<String, RubyValue> attributes, Node... children) {
+    public static HtmlNode node(String name, Map<String, RubyExpression> attributes, Node... children) {
         return new HtmlNode(
                 name,
                 attributes,
-                StringRubyValue.EMPTY,
+                RubyString.EMPTY,
                 Arrays.asList(children)
         );
     }
 
-    public static HtmlNode node(String name, Map<String, RubyValue> attributes, RubyValue content) {
+    public static HtmlNode node(String name, Map<String, RubyExpression> attributes, RubyExpression content) {
         return new HtmlNode(
                 name,
                 attributes,
@@ -44,7 +44,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, RubyValue content) {
+    public static HtmlNode node(String name, RubyExpression content) {
         return new HtmlNode(
                 name,
                 Collections.emptyMap(),
@@ -53,7 +53,7 @@ public class Nodes {
         );
     }
 
-    public static TextNode textNode(RubyValue content) {
+    public static TextNode textNode(RubyExpression content) {
         return new TextNode(content);
     }
 }
