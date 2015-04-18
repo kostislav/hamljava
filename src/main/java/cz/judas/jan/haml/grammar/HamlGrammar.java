@@ -19,12 +19,11 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     @Override
     public Token<MutableRootNode> buildRules() {
         return anyNumberOf(
-                relaxedSequence(
+                line(
                         anyOf(
                                 doctype(),
                                 regularLine()
-                        ),
-                        atMostOne('\n')
+                        )
                 )
         );
     }

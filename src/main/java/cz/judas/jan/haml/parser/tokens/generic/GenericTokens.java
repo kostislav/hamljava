@@ -59,6 +59,13 @@ public class GenericTokens {
         return new WhitespaceAllowingSequenceToken<>(ImmutableList.copyOf(tokens));
     }
 
+    public static <T> Token<T> line(Token<T> lineContent) {
+        return sequence(
+                lineContent,
+                atMostOne('\n')
+        );
+    }
+
     public static <T> Token<T> onMatch(Token<? super T> token, BiConsumer<? super T, String> onMatch) {
         return new OnMatchToken<>(token, onMatch);
     }
