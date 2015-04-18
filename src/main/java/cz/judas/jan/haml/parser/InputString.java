@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.parser;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class InputString {
@@ -49,8 +50,8 @@ public class InputString {
         }
     }
 
-    public boolean compatibilityMethod(CharPredicate predicate, Predicate<Integer> test) {
-        return tryParse(inputString -> test.test(inputString.matchingCount(predicate)));
+    public Optional<String> tryGetSubstringIf(CharPredicate predicate, Predicate<Integer> test) {
+        return tryParseString(inputString -> test.test(inputString.matchingCount(predicate)));
     }
 
     public boolean tryParse(Predicate<InputString> consumer) {
@@ -63,13 +64,13 @@ public class InputString {
         }
     }
 
-    public String tryGetSubstring(Predicate<InputString> consumer) {
+    public Optional<String> tryParseString(Predicate<InputString> consumer) {
         int snapshotPosition = currentPosition;
         if(consumer.test(this)) {
-            return input.substring(snapshotPosition, currentPosition);
+            return Optional.of(input.substring(snapshotPosition, currentPosition));
         } else {
             currentPosition = snapshotPosition;
-            return null;
+            return Optional.empty();
         }
     }
 }

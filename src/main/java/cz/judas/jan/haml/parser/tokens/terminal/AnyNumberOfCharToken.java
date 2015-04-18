@@ -13,6 +13,6 @@ public class AnyNumberOfCharToken<T> implements Token<T> {
 
     @Override
     public boolean tryEat(InputString line, T parsingResult) {
-        return line.compatibilityMethod(predicate, i -> i >= 0);
+        return line.tryGetSubstringIf(predicate, i -> i >= 0).isPresent();
     }
 }
