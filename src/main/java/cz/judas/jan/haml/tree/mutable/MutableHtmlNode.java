@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.tree.mutable;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.*;
 
@@ -31,11 +30,11 @@ public class MutableHtmlNode implements MutableNode {
     }
 
     public void addClass(String name) {
-        attributes.add(singleValueHash(CLASS_KEY, new RubyString(name)));
+        attributes.add(RubyHash.singleEntryHash(CLASS_KEY, new RubyString(name)));
     }
 
     public void setId(RubyExpression id) {
-        attributes.add(singleValueHash(ID_KEY, id));
+        attributes.add(RubyHash.singleEntryHash(ID_KEY, id));
     }
 
     @Override
@@ -55,9 +54,5 @@ public class MutableHtmlNode implements MutableNode {
                     Iterables.transform(children, MutableNode::toNode)
             );
         }
-    }
-
-    private RubyHash singleValueHash(RubyExpression key, RubyExpression value) {
-        return new RubyHash(ImmutableList.of(new HashEntry(key, value)));
     }
 }

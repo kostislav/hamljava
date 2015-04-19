@@ -1,7 +1,9 @@
 package cz.judas.jan.haml;
 
-import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.tree.*;
+import cz.judas.jan.haml.tree.RubyExpression;
+import cz.judas.jan.haml.tree.RubyHash;
+import cz.judas.jan.haml.tree.RubyString;
+import cz.judas.jan.haml.tree.RubySymbol;
 
 @SuppressWarnings("UtilityClass")
 public class Expressions {
@@ -14,6 +16,6 @@ public class Expressions {
     }
 
     public static RubyHash hash(RubyExpression key, RubyExpression value) {
-        return new RubyHash(ImmutableList.of(new HashEntry(key, value)));
+        return RubyHash.singleEntryHash(key, value);
     }
 }

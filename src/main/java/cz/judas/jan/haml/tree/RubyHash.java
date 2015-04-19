@@ -23,6 +23,10 @@ public class RubyHash implements RubyExpression {
         return builder.build();
     }
 
+    public static RubyHash singleEntryHash(RubyExpression key, RubyExpression value) {
+        return new RubyHash(ImmutableList.of(new HashEntry(key, value)));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
