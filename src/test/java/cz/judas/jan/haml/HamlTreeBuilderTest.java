@@ -77,11 +77,6 @@ public class HamlTreeBuilderTest {
     }
 
     @Test
-    public void partsCanBeSeparatedByWhitespace() throws Exception {
-        assertParses("%span .bluh .lkj bra bh", root(node("span", ImmutableMap.of(symbol("class"), string("bluh lkj")), string("bra bh"))));
-    }
-
-    @Test
     public void oneGenericAttribute() throws Exception {
         assertParses("%input{ name: 'blah' }", root(node("input", ImmutableMap.of(symbol("name"), string("blah")))));
     }

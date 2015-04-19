@@ -74,7 +74,6 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
                 atMostOne(tagName()),
                 anyNumberOf(
                         GenericTokens.<MutableHtmlNode>anyOf(
-                                strictWhitespace(),
                                 idAttribute(),
                                 classAttribute(),
                                 RubyGrammar.hash()
