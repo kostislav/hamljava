@@ -6,6 +6,7 @@ import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.terminal.AnyNumberOfCharToken;
 import cz.judas.jan.haml.parser.tokens.terminal.AtLeastOneCharToken;
 import cz.judas.jan.haml.parser.tokens.terminal.AtMostOneCharToken;
+import cz.judas.jan.haml.parser.tokens.terminal.EndOfLineToken;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -73,7 +74,7 @@ public class GenericTokens {
     public static <C, T> Token<C> line(Token<C> lineContent) {
         return GenericTokens.<C, T, Character, T>sequence(
                 lineContent,
-                atMostOne('\n'),
+                new EndOfLineToken<>(),
                 (content, newLine) -> content
         );
     }
