@@ -53,10 +53,11 @@ public class RubyGrammar {
 
     private static Token<MutableHashEntry> newStyleHashEntry() {
         return rule(() -> relaxedSequence(
+                whitespace(),
                 newStyleHashKey(),
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
-                        value(),
+                        expression(),
                         MutableHashEntry::setValue
                 )
         ));
@@ -79,24 +80,23 @@ public class RubyGrammar {
                 exactText("=>"),
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
-                        value(),
+                        expression(),
                         MutableHashEntry::setValue
                 )
         ));
     }
 
-    public static Token<MutableRubyExpression> value() {
+    public static Token<MutableRubyExpression> expression() {
         return rule(() -> anyOf(
-                variable(),
+                fieldReference(),
                 singleQuoteString()
         ));
     }
 
-    private static Token<MutableRubyExpression> variable() {
-        return rule(() -> leadingChar(
-                '@',
-                Predicates.TAG_NAME_CHAR,
-                (mutableRubyValue, s) -> mutableRubyValue.setValue(new FieldReference(s))
+    private static Token<MutableRubyExpression> fieldReference() {
+        return rule(() -> sequence(
+                singleChar('@'),
+                match(variableName(), MutableRubyExpression.class).to((expression, name) -> expression.setValue(new FieldReference(name)))
         ));
     }
 
@@ -109,7 +109,7 @@ public class RubyGrammar {
 
     public static Token<MutableRubyExpression> variableName() {
         return sequence(
-                singleChar(c -> Character.isAlphabetic(c) || c == '@' || c == '$' || c == '_'),
+                singleChar(c -> Character.isAlphabetic(c) || c == '$' || c == '_'),
                 anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_')),
                 anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '='))
         );

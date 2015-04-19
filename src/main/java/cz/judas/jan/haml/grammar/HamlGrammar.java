@@ -63,7 +63,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
                 singleChar('='),
                 GenericTokens.<MutableHtmlNode, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
-                        RubyGrammar.value(),
+                        RubyGrammar.expression(),
                         (node, value) -> node.setContent(value.getValue())
                 )
         ));
