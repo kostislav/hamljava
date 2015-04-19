@@ -8,6 +8,7 @@ import cz.judas.jan.haml.parser.tokens.terminal.AtLeastOneCharToken;
 import cz.judas.jan.haml.parser.tokens.terminal.AtMostOneCharToken;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 @SuppressWarnings("UtilityClass")
@@ -29,19 +30,19 @@ public class GenericTokens {
         return new AnyOfToken<>(ImmutableList.copyOf(alternatives));
     }
 
-    public static <T> Token<T> sequence(Token<? super T> firstToken, Token<? super T> secondToken) {
+    public static <C, T1, T2, T> Token<C> sequence(Token<? super C> firstToken, Token<? super C> secondToken, BiFunction<T1, T2, T> transform) {
         return new TwoItemSequenceToken<>(firstToken, secondToken);
     }
 
-    public static <T> Token<T> sequence(Token<? super T> firstToken, Token<? super T> secondToken, Token<? super T> thirdToken) {
+    public static <C, T1, T2, T3, T> Token<C> sequence(Token<? super C> firstToken, Token<? super C> secondToken, Token<? super C> thirdToken, TriFunction<T1, T2, T3, T> transform) {
         return new ThreeItemSequenceToken<>(firstToken, secondToken, thirdToken);
     }
 
-    public static <T> Token<T> relaxedSequence(Token<? super T> firstToken, Token<? super T> secondToken) {
+    public static <C, T1, T2, T> Token<C> relaxedSequence(Token<? super C> firstToken, Token<? super C> secondToken, BiFunction<T1, T2, T> transform) {
         return new TwoItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken));
     }
 
-    public static <T> Token<T> relaxedSequence(Token<? super T> firstToken, Token<? super T> secondToken, Token<? super T> thirdToken) {
+    public static <C, T1, T2, T3, T> Token<C> relaxedSequence(Token<? super C> firstToken, Token<? super C> secondToken, Token<? super C> thirdToken, TriFunction<T1, T2, T3, T> transform) {
         return new ThreeItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken), precededWithWhitespace(thirdToken));
     }
 
@@ -69,10 +70,11 @@ public class GenericTokens {
         return new ContextSwitchToken<>(contextSupplier, inner, onSuccess);
     }
 
-    public static <T> Token<T> line(Token<T> lineContent) {
-        return sequence(
+    public static <C, T> Token<C> line(Token<C> lineContent) {
+        return GenericTokens.<C, T, Character, T>sequence(
                 lineContent,
-                atMostOne('\n')
+                atMostOne('\n'),
+                (content, newLine) -> content
         );
     }
 

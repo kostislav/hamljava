@@ -2,8 +2,10 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 
@@ -29,13 +31,14 @@ public class Terminals {
         return NOT_NEWLINE_PREDICATE;
     }
 
-    public static <T> Token<T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super T, String> onEnd) {
-        return sequence(
+    public static <C, T> Token<C> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super C, String> onEnd, Function<String, ? extends T> transform) {
+        return GenericTokens.<C, Character, String, T>sequence(
                 singleChar(leadingChar),
                 onMatch(
                         atLeastOneChar(validChars),
                         onEnd
-                )
+                ),
+                (ignored, value) -> transform.apply(value)
         );
     }
 

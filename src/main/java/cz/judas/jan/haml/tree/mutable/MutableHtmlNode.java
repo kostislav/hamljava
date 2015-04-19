@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.tree.mutable;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.*;
 
@@ -12,10 +13,20 @@ public class MutableHtmlNode implements MutableNode {
     private static final RubySymbol CLASS_KEY = new RubySymbol("class");
 
     private String tagName = null;
-    private final List<RubyHash> attributes = new ArrayList<>();
+    private final List<RubyHash> attributes;
     private RubyExpression content = RubyString.EMPTY;
 
     private final List<MutableNode> children = new ArrayList<>();
+
+    public MutableHtmlNode() {
+        attributes = new ArrayList<>();
+    }
+
+    public MutableHtmlNode(String tagName, List<RubyHash> attributes, RubyExpression content) {
+        this.tagName = tagName;
+        this.attributes = ImmutableList.copyOf(attributes);
+        this.content = content;
+    }
 
     public void setTagName(String tagName) {
         this.tagName = tagName;

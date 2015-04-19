@@ -32,7 +32,7 @@ public class TerminalsTest {
     @Test
     public void leadingCharSetsValueOnSuccess() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
-        Token<StringBuilder> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append);
+        Token<StringBuilder> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append, str -> str);
 
         assertParses(leadingChar, "bh.aab", 2, stringBuilder, 5);
         assertThat(stringBuilder.toString(), is("aa"));
@@ -41,7 +41,7 @@ public class TerminalsTest {
     @Test
     public void leadingCharDoesNotAllowWhitespace() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
-        Token<StringBuilder> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append);
+        Token<StringBuilder> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append, str -> str);
 
         assertNotParses(leadingChar, "bh. aab", 2, stringBuilder);
         assertThat(stringBuilder.length(), is(0));
