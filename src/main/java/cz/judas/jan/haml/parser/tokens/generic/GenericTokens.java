@@ -33,9 +33,8 @@ public class GenericTokens {
         return new TwoItemSequenceToken<>(firstToken, secondToken);
     }
 
-    @SafeVarargs
-    public static <T> Token<T> sequence(Token<? super T>... tokens) {
-        return new SequenceOfTokens<>(ImmutableList.copyOf(tokens));
+    public static <T> Token<T> sequence(Token<? super T> firstToken, Token<? super T> secondToken, Token<? super T> thirdToken) {
+        return new ThreeItemSequenceToken<>(firstToken, secondToken, thirdToken);
     }
 
     public static <T> Token<T> atMostOne(Token<? super T> token) {

@@ -3,13 +3,15 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
 
-public class TwoItemSequenceToken<T> implements Token<T> {
+public class ThreeItemSequenceToken<T> implements Token<T> {
     private final Token<? super T> firstToken;
     private final Token<? super T> secondToken;
+    private final Token<? super T> thirdToken;
 
-    public TwoItemSequenceToken(Token<? super T> firstToken, Token<? super T> secondToken) {
+    public ThreeItemSequenceToken(Token<? super T> firstToken, Token<? super T> secondToken, Token<? super T> thirdToken) {
         this.firstToken = firstToken;
         this.secondToken = secondToken;
+        this.thirdToken = thirdToken;
     }
 
     @Override
@@ -17,6 +19,7 @@ public class TwoItemSequenceToken<T> implements Token<T> {
         return line.tryParse(
                 inputString -> firstToken.tryEat(inputString, parsingResult)
                         && secondToken.tryEat(inputString, parsingResult)
+                        && thirdToken.tryEat(inputString, parsingResult)
         );
     }
 }
