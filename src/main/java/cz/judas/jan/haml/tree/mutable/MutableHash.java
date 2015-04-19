@@ -1,21 +1,19 @@
 package cz.judas.jan.haml.tree.mutable;
 
-import cz.judas.jan.haml.tree.RubyExpression;
+import cz.judas.jan.haml.tree.HashEntry;
+import cz.judas.jan.haml.tree.RubyHash;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MutableHash {
-    private final Map<RubyExpression, RubyExpression> values = new LinkedHashMap<>();
+    private final List<HashEntry> values = new ArrayList<>();
 
-    public void addKeyValuePair(MutableHashEntry attribute) {
-        values.put(attribute.getName(), attribute.getValue());
+    public void addKeyValuePair(HashEntry attribute) {
+        values.add(attribute);
     }
 
-    public void forEach(BiConsumer<RubyExpression, RubyExpression> consumer) {
-        for (Map.Entry<RubyExpression, RubyExpression> entry : values.entrySet()) {
-            consumer.accept(entry.getKey(), entry.getValue());
-        }
+    public RubyHash toHash() {
+        return new RubyHash(values);
     }
 }

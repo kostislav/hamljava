@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.tree.mutable;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.*;
 import org.apache.commons.lang.StringUtils;
@@ -9,7 +10,7 @@ import java.util.*;
 
 public class MutableHtmlNode implements MutableNode {
     private String tagName = null;
-    private final Map<RubyExpression, RubyExpression> attributes = new LinkedHashMap<>();
+    private final List<RubyHash> attributes = new ArrayList<>();
     private final Set<String> classes = new LinkedHashSet<>();
     private RubyExpression id = null;
     private RubyExpression content = RubyString.EMPTY;
@@ -24,8 +25,8 @@ public class MutableHtmlNode implements MutableNode {
         this.content = content;
     }
 
-    public void addAttributes(MutableHash attributes) {
-        attributes.forEach(this.attributes::put);
+    public void addAttributes(RubyHash attributes) {
+        this.attributes.add(attributes);
     }
 
     public void addClass(String name) {
@@ -56,17 +57,22 @@ public class MutableHtmlNode implements MutableNode {
     }
 
     private Map<RubyExpression, RubyExpression> getAttributes() {
+        ImmutableMap.Builder<RubyExpression, RubyExpression> builder = ImmutableMap.builder();
         if (classes.isEmpty() && id == null) {
-            return attributes;
+            for (RubyHash hash : attributes) {
+                hash.forEach(builder::put);
+            }
         } else {
-            Map<RubyExpression, RubyExpression> copy = new LinkedHashMap<>(attributes);
             if(id != null) {
-                copy.put(new RubySymbol("id"), id);
+                builder.put(new RubySymbol("id"), id);
             }
             if(!classes.isEmpty()) {
-                copy.put(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' '))); // TODO array
+                builder.put(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' '))); // TODO array
             }
-            return copy;
+            for (RubyHash hash : attributes) {
+                hash.forEach(builder::put);
+            }
         }
+        return builder.build();
     }
 }

@@ -1,29 +1,21 @@
 package cz.judas.jan.haml.tree.mutable;
 
+import cz.judas.jan.haml.tree.HashEntry;
 import cz.judas.jan.haml.tree.RubyExpression;
-import cz.judas.jan.haml.tree.RubySymbol;
 
 public class MutableHashEntry {
     private RubyExpression name;
     private RubyExpression value;
 
-    public RubyExpression getName() {
-        return name;
+    public void setKey(RubyExpression name) {
+        this.name = name;
     }
 
-    public void setName(String name) {
-        this.name = new RubySymbol(name);
+    public void setValue(RubyExpression value) {
+        this.value = value;
     }
 
-    public void setName(MutableRubyExpression name) {
-        this.name = name.getValue();
-    }
-
-    public RubyExpression getValue() {
-        return value;
-    }
-
-    public void setValue(MutableRubyExpression value) {
-        this.value = value.getValue();
+    public HashEntry toEntry() {
+        return new HashEntry(name, value);
     }
 }

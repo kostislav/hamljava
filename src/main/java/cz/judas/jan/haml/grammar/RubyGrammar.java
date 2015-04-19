@@ -29,7 +29,7 @@ public class RubyGrammar {
                                         hashEntries(newStyleHashEntry()),
                                         hashEntries(oldStyleHashEntry())
                                 ),
-                                MutableHtmlNode::addAttributes
+                                (node, attributes) -> node.addAttributes(attributes.toHash())
                         ),
                         whitespace()
                 ),
@@ -44,7 +44,7 @@ public class RubyGrammar {
                         GenericTokens.<MutableHash, MutableHashEntry>contextSwitch(
                                 MutableHashEntry::new,
                                 token,
-                                MutableHash::addKeyValuePair
+                                (hash, entry) -> hash.addKeyValuePair(entry.toEntry())
                         ),
                         atMostOne(',')
                 )
@@ -58,15 +58,15 @@ public class RubyGrammar {
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         expression(),
-                        MutableHashEntry::setValue
+                        (entry, value) -> entry.setValue(value.toExpression())
                 )
         ));
     }
 
     private static Token<? super MutableHashEntry> newStyleHashKey() {
         return sequence(
-            match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
-            singleChar(':')
+                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to((entry, name) -> entry.setKey(new RubySymbol(name))),
+                singleChar(':')
         );
     }
 
@@ -75,13 +75,13 @@ public class RubyGrammar {
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         symbol(),
-                        MutableHashEntry::setName
+                        (entry, name) -> entry.setKey(name.toExpression())
                 ),
                 exactText("=>"),
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         expression(),
-                        MutableHashEntry::setValue
+                        (entry, value) -> entry.setValue(value.toExpression())
                 )
         ));
     }
