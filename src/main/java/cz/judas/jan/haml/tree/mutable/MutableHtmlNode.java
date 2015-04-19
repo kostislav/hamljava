@@ -1,12 +1,15 @@
 package cz.judas.jan.haml.tree.mutable;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.*;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MutableHtmlNode implements MutableNode {
     private String tagName = null;
@@ -56,22 +59,14 @@ public class MutableHtmlNode implements MutableNode {
         }
     }
 
-    private Map<RubyExpression, RubyExpression> getAttributes() {
-        ImmutableMap.Builder<RubyExpression, RubyExpression> builder = ImmutableMap.builder();
-        if (classes.isEmpty() && id == null) {
-            for (RubyHash hash : attributes) {
-                hash.forEach(builder::put);
-            }
-        } else {
-            if(id != null) {
-                builder.put(new RubySymbol("id"), id);
-            }
-            if(!classes.isEmpty()) {
-                builder.put(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' '))); // TODO array
-            }
-            for (RubyHash hash : attributes) {
-                hash.forEach(builder::put);
-            }
+    private List<RubyHash> getAttributes() {
+        ImmutableList.Builder<RubyHash> builder = ImmutableList.builder();
+        builder.addAll(attributes);
+        if(id != null) {
+            builder.add(new RubyHash(ImmutableList.of(new HashEntry(new RubySymbol("id"), id))));
+        }
+        if(!classes.isEmpty()) {
+            builder.add(new RubyHash(ImmutableList.of(new HashEntry(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' ')))))); // TODO array
         }
         return builder.build();
     }

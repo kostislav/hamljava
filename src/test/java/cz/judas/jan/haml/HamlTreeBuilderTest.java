@@ -1,10 +1,12 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.tree.RootNode;
 import org.junit.Before;
 import org.junit.Test;
 
+import static cz.judas.jan.haml.Expressions.hash;
 import static cz.judas.jan.haml.Nodes.node;
 import static cz.judas.jan.haml.Nodes.root;
 import static cz.judas.jan.haml.Nodes.textNode;
@@ -68,7 +70,7 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void idAndClassAttribute() throws Exception {
-        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableMap.of(symbol("id"), string("hehe"), symbol("class"), string("dre")), string("njhg"))));
+        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableList.of(hash(symbol("id"), string("hehe")), hash(symbol("class"), string("dre"))), string("njhg"))));
     }
 
     @Test

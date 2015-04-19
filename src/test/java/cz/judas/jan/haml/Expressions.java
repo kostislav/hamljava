@@ -1,8 +1,7 @@
 package cz.judas.jan.haml;
 
-import cz.judas.jan.haml.tree.RubyExpression;
-import cz.judas.jan.haml.tree.RubyString;
-import cz.judas.jan.haml.tree.RubySymbol;
+import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.tree.*;
 
 @SuppressWarnings("UtilityClass")
 public class Expressions {
@@ -12,5 +11,9 @@ public class Expressions {
 
     public static RubyExpression symbol(String value) {
         return new RubySymbol(value);
+    }
+
+    public static RubyHash hash(RubyExpression key, RubyExpression value) {
+        return new RubyHash(ImmutableList.of(new HashEntry(key, value)));
     }
 }
