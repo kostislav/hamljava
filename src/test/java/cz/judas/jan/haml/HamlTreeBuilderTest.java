@@ -60,7 +60,7 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void multipleClassAttributes() throws Exception {
-        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableMap.of(symbol("class"), string("bluh lkj")), string("bra bh"))));
+        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableList.of(hash(symbol("class"), string("bluh")), hash(symbol("class"), string("lkj"))), string("bra bh"))));
     }
 
     @Test

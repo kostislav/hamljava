@@ -4,19 +4,16 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.*;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 public class MutableHtmlNode implements MutableNode {
     private static final RubySymbol ID_KEY = new RubySymbol("id");
+    private static final RubySymbol CLASS_KEY = new RubySymbol("class");
 
     private String tagName = null;
     private final List<RubyHash> attributes = new ArrayList<>();
-    private final Set<String> classes = new LinkedHashSet<>();
     private RubyExpression content = RubyString.EMPTY;
 
     private final List<MutableNode> children = new ArrayList<>();
@@ -34,7 +31,7 @@ public class MutableHtmlNode implements MutableNode {
     }
 
     public void addClass(String name) {
-        classes.add(name);
+        attributes.add(singleValueHash(CLASS_KEY, new RubyString(name)));
     }
 
     public void setId(RubyExpression id) {
@@ -48,25 +45,16 @@ public class MutableHtmlNode implements MutableNode {
 
     @Override
     public Node toNode() {
-        if(tagName == null && attributes.isEmpty() && classes.isEmpty()) {
+        if(tagName == null && attributes.isEmpty()) {
             return new TextNode(content);
         } else {
             return new HtmlNode(
                     MoreObjects.firstNonNull(tagName, "div"),
-                    getAttributes(),
+                    attributes,
                     content,
                     Iterables.transform(children, MutableNode::toNode)
             );
         }
-    }
-
-    private List<RubyHash> getAttributes() {
-        ImmutableList.Builder<RubyHash> builder = ImmutableList.builder();
-        builder.addAll(attributes);
-        if(!classes.isEmpty()) {
-            builder.add(singleValueHash(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' ')))); // TODO array
-        }
-        return builder.build();
     }
 
     private RubyHash singleValueHash(RubyExpression key, RubyExpression value) {

@@ -2,8 +2,9 @@ package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.VariableMap;
+import org.apache.commons.lang.StringUtils;
 
-import java.util.List;
+import java.util.*;
 
 public class HtmlNode implements Node {
     private final String tagName;
@@ -23,12 +24,15 @@ public class HtmlNode implements Node {
         stringBuilder
                 .append('<').append(tagName);
 
-        for (RubyHash hash : attributes) {
-            hash.forEach((key, value) -> {
-                Object attributeName = key.evaluate(variableMap);
-                Object attributeValue = value.evaluate(variableMap);
-                stringBuilder.append(' ').append(attributeName).append("=\"").append(attributeValue).append('"');
-            });
+        for (Map.Entry<String, Object> entry : mergeAttributes(variableMap).entrySet()) {
+            String attributeName = entry.getKey();
+            Object attributeValue;
+            if(attributeName.equals("class")) {
+                attributeValue = StringUtils.join((Collection<Object>)entry.getValue(), ' ');
+            } else {
+                attributeValue = entry.getValue();
+            }
+            stringBuilder.append(' ').append(attributeName).append("=\"").append(attributeValue).append('"');
         }
 
         stringBuilder.append('>');
@@ -37,6 +41,27 @@ public class HtmlNode implements Node {
             child.appendTo(stringBuilder, variableMap);
         }
         stringBuilder.append("</").append(tagName).append('>');
+    }
+
+    private Map<String, Object> mergeAttributes(VariableMap variableMap) {
+        Map<String, Object> mergedAttributes = new LinkedHashMap<>();
+        for (RubyHash hash : attributes) {
+            for (Map.Entry<Object, Object> entry : hash.evaluate(variableMap).entrySet()) {
+                String attributeName = entry.getKey().toString();
+                Object attributeValue = entry.getValue();
+                if(attributeName.equals("class")) {
+                    List<Object> classes = (List<Object>)mergedAttributes.get("class");
+                    if(classes == null) {
+                        classes = new ArrayList<>();
+                        mergedAttributes.put("class", classes);
+                    }
+                    classes.add(attributeValue);
+                } else {
+                    mergedAttributes.put(attributeName, attributeValue);
+                }
+            }
+        }
+        return mergedAttributes;
     }
 
     @Override
