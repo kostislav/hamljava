@@ -8,8 +8,8 @@ import org.junit.Test;
 import static cz.judas.jan.haml.Nodes.node;
 import static cz.judas.jan.haml.Nodes.root;
 import static cz.judas.jan.haml.Nodes.textNode;
-import static cz.judas.jan.haml.Values.string;
-import static cz.judas.jan.haml.Values.symbol;
+import static cz.judas.jan.haml.Expressions.string;
+import static cz.judas.jan.haml.Expressions.symbol;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

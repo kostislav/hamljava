@@ -5,7 +5,7 @@ import cz.judas.jan.haml.tree.RubyString;
 import cz.judas.jan.haml.tree.RubySymbol;
 
 @SuppressWarnings("UtilityClass")
-public class Values {
+public class Expressions {
     public static RubyExpression string(String value) {
         return new RubyString(value);
     }
