@@ -52,10 +52,8 @@ public class RubyGrammar {
     }
 
     private static Token<MutableHashEntry> newStyleHashEntry() {
-        return rule(() -> sequence(
-                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
-                singleChar(':'),
-                whitespace(),
+        return rule(() -> relaxedSequence(
+                newStyleHashKey(),
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         value(),
@@ -64,16 +62,21 @@ public class RubyGrammar {
         ));
     }
 
+    private static Token<? super MutableHashEntry> newStyleHashKey() {
+        return sequence(
+            match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to(MutableHashEntry::setName),
+            singleChar(':')
+        );
+    }
+
     private static Token<MutableHashEntry> oldStyleHashEntry() {
-        return rule(() -> sequence(
+        return rule(() -> relaxedSequence(
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         symbol(),
                         MutableHashEntry::setName
                 ),
-                whitespace(),
                 exactText("=>"),
-                whitespace(),
                 GenericTokens.<MutableHashEntry, MutableRubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         value(),
