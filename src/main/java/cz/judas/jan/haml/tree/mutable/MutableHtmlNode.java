@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 public class MutableHtmlNode implements MutableNode {
+    private static final RubySymbol ID_KEY = new RubySymbol("id");
+
     private String tagName = null;
     private final List<RubyHash> attributes = new ArrayList<>();
     private final Set<String> classes = new LinkedHashSet<>();
-    private RubyExpression id = null;
     private RubyExpression content = RubyString.EMPTY;
 
     private final List<MutableNode> children = new ArrayList<>();
@@ -37,7 +38,7 @@ public class MutableHtmlNode implements MutableNode {
     }
 
     public void setId(RubyExpression id) {
-        this.id = id;
+        attributes.add(singleValueHash(ID_KEY, id));
     }
 
     @Override
@@ -47,7 +48,7 @@ public class MutableHtmlNode implements MutableNode {
 
     @Override
     public Node toNode() {
-        if(tagName == null && attributes.isEmpty() && classes.isEmpty() && id == null) {
+        if(tagName == null && attributes.isEmpty() && classes.isEmpty()) {
             return new TextNode(content);
         } else {
             return new HtmlNode(
@@ -62,12 +63,13 @@ public class MutableHtmlNode implements MutableNode {
     private List<RubyHash> getAttributes() {
         ImmutableList.Builder<RubyHash> builder = ImmutableList.builder();
         builder.addAll(attributes);
-        if(id != null) {
-            builder.add(new RubyHash(ImmutableList.of(new HashEntry(new RubySymbol("id"), id))));
-        }
         if(!classes.isEmpty()) {
-            builder.add(new RubyHash(ImmutableList.of(new HashEntry(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' ')))))); // TODO array
+            builder.add(singleValueHash(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' ')))); // TODO array
         }
         return builder.build();
+    }
+
+    private RubyHash singleValueHash(RubyExpression key, RubyExpression value) {
+        return new RubyHash(ImmutableList.of(new HashEntry(key, value)));
     }
 }
