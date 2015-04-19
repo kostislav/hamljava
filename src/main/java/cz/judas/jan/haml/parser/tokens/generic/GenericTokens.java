@@ -37,6 +37,18 @@ public class GenericTokens {
         return new ThreeItemSequenceToken<>(firstToken, secondToken, thirdToken);
     }
 
+    public static <T> Token<T> relaxedSequence(Token<? super T> firstToken, Token<? super T> secondToken) {
+        return new TwoItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken));
+    }
+
+    public static <T> Token<T> relaxedSequence(Token<? super T> firstToken, Token<? super T> secondToken, Token<? super T> thirdToken) {
+        return new ThreeItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken), precededWithWhitespace(thirdToken));
+    }
+
+    private static <T> PrecededWithWhitespaceToken<T> precededWithWhitespace(Token<? super T> secondToken) {
+        return new PrecededWithWhitespaceToken<>(secondToken);
+    }
+
     public static <T> Token<T> atMostOne(Token<? super T> token) {
         return new AtMostOneToken<>(token);
     }
@@ -55,11 +67,6 @@ public class GenericTokens {
 
     public static <I, O> Token<I> contextSwitch(Supplier<? extends O> contextSupplier, Token<? super O> inner, BiConsumer<? super I, ? super O> onSuccess) {
         return new ContextSwitchToken<>(contextSupplier, inner, onSuccess);
-    }
-
-    @SafeVarargs
-    public static <T> Token<T> relaxedSequence(Token<? super T>... tokens) {
-        return new WhitespaceAllowingSequenceToken<>(ImmutableList.copyOf(tokens));
     }
 
     public static <T> Token<T> line(Token<T> lineContent) {
