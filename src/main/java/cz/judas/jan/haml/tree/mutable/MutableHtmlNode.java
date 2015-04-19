@@ -61,10 +61,10 @@ public class MutableHtmlNode implements MutableNode {
         } else {
             Map<RubyExpression, RubyExpression> copy = new LinkedHashMap<>(attributes);
             if(id != null) {
-                copy.put(new RubyString("id"), id);
+                copy.put(new RubySymbol("id"), id);
             }
             if(!classes.isEmpty()) {
-                copy.put(new RubyString("class"), new RubyString(StringUtils.join(classes, ' '))); // TODO array
+                copy.put(new RubySymbol("class"), new RubyString(StringUtils.join(classes, ' '))); // TODO array
             }
             return copy;
         }

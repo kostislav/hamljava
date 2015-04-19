@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.tree.mutable;
 
 import cz.judas.jan.haml.tree.RubyExpression;
-import cz.judas.jan.haml.tree.RubyString;
+import cz.judas.jan.haml.tree.RubySymbol;
 
 public class MutableHashEntry {
     private RubyExpression name;
@@ -12,7 +12,7 @@ public class MutableHashEntry {
     }
 
     public void setName(String name) {
-        this.name = new RubyString(name);
+        this.name = new RubySymbol(name);
     }
 
     public void setName(MutableRubyExpression name) {
