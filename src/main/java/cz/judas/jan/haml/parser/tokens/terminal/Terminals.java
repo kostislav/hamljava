@@ -19,6 +19,8 @@ public class Terminals {
 
     private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
 
+    private static final Token<Object> END_OF_LINE_TOKEN = new EndOfLineToken<>();
+
     public static Token<Object> whitespace() {
         return RELAXED_WHITESPACE_TOKEN;
     }
@@ -29,6 +31,10 @@ public class Terminals {
 
     public static CharPredicate notNewLine() {
         return NOT_NEWLINE_PREDICATE;
+    }
+
+    public static Token<Object> endOfLine() {
+        return END_OF_LINE_TOKEN;
     }
 
     public static <C, T> Token<C> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super C, String> onEnd, Function<String, ? extends T> transform) {

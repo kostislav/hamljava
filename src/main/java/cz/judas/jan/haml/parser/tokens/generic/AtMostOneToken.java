@@ -12,6 +12,6 @@ public class AtMostOneToken<T> implements Token<T> {
 
     @Override
     public boolean tryEat(InputString line, T parsingResult) {
-        return !line.tryParse(inputString -> token.tryEat(inputString, parsingResult)) || !line.tryParse(inputString -> token.tryEat(inputString, parsingResult));
+        return !(line.tryParse(inputString -> token.tryEat(inputString, parsingResult)) && line.tryParse(inputString -> token.tryEat(inputString, parsingResult)));
     }
 }

@@ -67,11 +67,11 @@ public class RubyGrammar {
     }
 
     private static Token<? super MutableHashEntry> newStyleHashKey() {
-        return GenericTokens.<MutableHashEntry, String, Character, String>sequence(
+        return rule(() -> GenericTokens.<MutableHashEntry, String, Character, String>sequence(
                 match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to((entry, name) -> entry.setKey(new RubySymbol(name))),
                 singleChar(':'),
                 (key, ignored) -> key
-        );
+        ));
     }
 
     private static Token<MutableHashEntry> oldStyleHashEntry() {
@@ -115,12 +115,12 @@ public class RubyGrammar {
     }
 
     public static Token<MutableRubyExpression> variableName() {
-        return GenericTokens.<MutableRubyExpression, Character, String, String, String>sequence(
+        return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, String, String>sequence(
                 singleChar(c -> Character.isAlphabetic(c) || c == '$' || c == '_'),
                 anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_')),
                 anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '=')),
                 (firstChar, nextChars, lastChars) -> firstChar + nextChars + lastChars
-        );
+        ));
     }
 
     private static Token<MutableRubyExpression> singleQuoteString() {

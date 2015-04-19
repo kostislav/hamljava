@@ -3,14 +3,13 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
-import cz.judas.jan.haml.parser.tokens.terminal.AnyNumberOfCharToken;
-import cz.judas.jan.haml.parser.tokens.terminal.AtLeastOneCharToken;
-import cz.judas.jan.haml.parser.tokens.terminal.AtMostOneCharToken;
-import cz.judas.jan.haml.parser.tokens.terminal.EndOfLineToken;
+import cz.judas.jan.haml.parser.tokens.terminal.*;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+
+import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.endOfLine;
 
 @SuppressWarnings("UtilityClass")
 public class GenericTokens {
@@ -74,7 +73,7 @@ public class GenericTokens {
     public static <C, T> Token<C> line(Token<C> lineContent) {
         return GenericTokens.<C, T, Character, T>sequence(
                 lineContent,
-                new EndOfLineToken<>(),
+                endOfLine(),
                 (content, newLine) -> content
         );
     }

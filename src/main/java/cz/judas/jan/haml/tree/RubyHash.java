@@ -45,4 +45,11 @@ public class RubyHash implements RubyExpression {
     public int hashCode() {
         return entries.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "RubyHash{" +
+                "entries=" + entries +
+                '}';
+    }
 }

@@ -38,8 +38,8 @@ public class HamlParserTest {
     @Test
     public void usesVariables() throws Exception {
         assertThat(
-                parser.process("%title\n\t= @title", new VariableMap(ImmutableMap.of("title", "MyPage"))),
-                is("<title>MyPage</title>")
+                parser.process("%title\n\t= @title\n%p= @content", new VariableMap(ImmutableMap.of("title", "MyPage", "content", "blah"))),
+                is("<title>MyPage</title><p>blah</p>")
         );
     }
 

@@ -38,4 +38,12 @@ public class HashEntry {
         result = 31 * result + value.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "HashEntry{" +
+                "key=" + key +
+                ", value=" + value +
+                '}';
+    }
 }

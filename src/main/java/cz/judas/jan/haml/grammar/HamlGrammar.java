@@ -23,7 +23,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     public Token<MutableRootNode> buildRules() {
         return GenericTokens.<MutableRootNode, Optional<String>, List<Node>, RootNode>sequence(
                 atMostOne(line(doctype())),
-                anyNumberOf(line(indentedLine())),
+                anyNumberOf(indentedLine()),
                 RootNode::new
         );
     }
@@ -50,17 +50,17 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     }
 
     private static Token<MutableHtmlNode> lineContent() {
-        return anyOf(
-                escapedPlainText(),
-                printExpression(),
-                htmlTag()
-        );
+        return rule(() -> anyOf(
+                line(escapedPlainText()),
+                line(htmlTag()),
+                line(textContent())
+        ));
     }
 
     private static Token<MutableHtmlNode> escapedPlainText() {
         return rule(() -> GenericTokens.<MutableHtmlNode, Character, String, Node>sequence(
                 singleChar('\\'),
-                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value))),
+                textContent(),
                 (ignored, text) -> new TextNode(new RubyString(text))
         ));
     }
@@ -78,7 +78,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     }
 
     private static Token<MutableHtmlNode> htmlTag() {
-        return rule(() -> GenericTokens.<MutableHtmlNode, Optional<String>, List<RubyHash>, RubyExpression, MutableHtmlNode>relaxedSequence(
+        return rule(() -> GenericTokens.<MutableHtmlNode, Optional<String>, List<RubyHash>, RubyExpression, MutableHtmlNode>sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
                         GenericTokens.<MutableHtmlNode>anyOf(
@@ -87,9 +87,22 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
                                 RubyGrammar.hash()
                         )
                 ),
-                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value))),
+                atMostOne(
+                        anyOf(
+                                printExpression(),
+                                GenericTokens.<MutableHtmlNode, Character, String, RubyExpression>sequence(
+                                        singleChar(' '),
+                                        textContent(),
+                                        (ignored, content) -> new RubyString(content)
+                                )
+                        )
+                ),
                 (tagName, attributes, content) -> new MutableHtmlNode(tagName.orElse(null), attributes, content)
         ));
+    }
+
+    private static Token<MutableHtmlNode> textContent() {
+        return rule(() -> match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value))));
     }
 
     private static Token<MutableHtmlNode> tagName() {
