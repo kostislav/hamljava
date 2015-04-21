@@ -23,9 +23,9 @@ public class TokenCache {
             for (SameTokens proxyTokens : UNFINISHED_TOKENS.values()) {
                 proxyTokens.initializeTokens();
             }
-            UNFINISHED_TOKENS.clear();
             return mainToken;
         } finally {
+            UNFINISHED_TOKENS.clear();
             BUILDING = false;
         }
     }
