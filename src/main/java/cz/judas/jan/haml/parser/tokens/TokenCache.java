@@ -44,7 +44,7 @@ public class TokenCache {
             }
             return token;
         } else {
-            ProxyToken<T> token = new ProxyToken<>();
+            ProxyToken<T, Object> token = new ProxyToken<>();
             tokens.addProxyToken(token);
             return token;
         }
@@ -96,10 +96,10 @@ public class TokenCache {
     }
 
     private static class SameTokens {
-        private final Set<ProxyToken<?>> proxyTokens = new HashSet<>();
+        private final Set<ProxyToken<?, ?>> proxyTokens = new HashSet<>();
         private Token<?> realToken;
 
-        public void addProxyToken(ProxyToken<?> proxyToken) {
+        public void addProxyToken(ProxyToken<?, ?> proxyToken) {
             proxyTokens.add(proxyToken);
         }
 
@@ -108,22 +108,22 @@ public class TokenCache {
         }
 
         public void initializeTokens() {
-            for (ProxyToken<?> proxyToken : proxyTokens) {
+            for (ProxyToken<?, ?> proxyToken : proxyTokens) {
                 proxyToken.setRealToken(realToken);
             }
         }
     }
 
-    private static class ProxyToken<T> implements Token<T> {
-        private Token<T> realToken;
+    private static class ProxyToken<C, T> implements TypedToken<C, T> {
+        private Token<C> realToken;
 
         @SuppressWarnings("unchecked")
         private void setRealToken(Token<?> realToken) {
-            this.realToken = (Token<T>) realToken;
+            this.realToken = (Token<C>) realToken;
         }
 
         @Override
-        public boolean tryEat(InputString line, T parsingResult) {
+        public boolean tryEat(InputString line, C parsingResult) {
             return realToken.tryEat(line, parsingResult);
         }
     }

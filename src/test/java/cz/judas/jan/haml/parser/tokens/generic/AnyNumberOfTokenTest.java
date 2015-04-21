@@ -7,7 +7,7 @@ import org.junit.Test;
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class AnyNumberOfTokenTest {
-    private AnyNumberOfToken<Object> token;
+    private AnyNumberOfToken<Object, Character> token;
 
     @Before
     public void setUp() throws Exception {

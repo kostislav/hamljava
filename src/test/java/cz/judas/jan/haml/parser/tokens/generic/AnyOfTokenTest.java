@@ -9,7 +9,7 @@ import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class AnyOfTokenTest {
-    private AnyOfToken<Object> token;
+    private AnyOfToken<Object, Character> token;
 
     @Before
     public void setUp() throws Exception {

@@ -2,9 +2,11 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.InputString;
-import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.TypedToken;
 
-public class AtMostOneCharToken<T> implements Token<T> {
+import java.util.Optional;
+
+public class AtMostOneCharToken implements TypedToken<Object, Optional<Character>> {
     private final CharPredicate predicate;
 
     public AtMostOneCharToken(CharPredicate predicate) {
@@ -12,7 +14,7 @@ public class AtMostOneCharToken<T> implements Token<T> {
     }
 
     @Override
-    public boolean tryEat(InputString line, T parsingResult) {
+    public boolean tryEat(InputString line, Object parsingResult) {
         return line.tryGetSubstringIf(predicate, i -> i <= 1).isPresent();
     }
 }

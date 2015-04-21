@@ -40,7 +40,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     private static Token<MutableRootNode> indentedLine() {
         return rule(() -> GenericTokens.<MutableRootNode, String, Node, Node>sequence(
                 match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
-                GenericTokens.<MutableRootNode, MutableHtmlNode>contextSwitch(
+                GenericTokens.<MutableRootNode, MutableHtmlNode, MutableHtmlNode>contextSwitch(
                         MutableHtmlNode::new,
                         lineContent(),
                         MutableRootNode::addNode
@@ -68,7 +68,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
     private static Token<MutableHtmlNode> printExpression() {
         return rule(() -> GenericTokens.<MutableHtmlNode, Character, RubyExpression, Node>relaxedSequence(
                 singleChar('='),
-                GenericTokens.<MutableHtmlNode, MutableRubyExpression>contextSwitch(
+                GenericTokens.<MutableHtmlNode, MutableRubyExpression, RubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         RubyGrammar.expression(),
                         (node, value) -> node.setContent(value.toExpression())
@@ -81,7 +81,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
         return rule(() -> GenericTokens.<MutableHtmlNode, Optional<String>, List<RubyHash>, RubyExpression, MutableHtmlNode>sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
-                        GenericTokens.<MutableHtmlNode>anyOf(
+                        GenericTokens.<MutableHtmlNode, RubyHash>anyOf(
                                 idAttribute(),
                                 classAttribute(),
                                 RubyGrammar.hash()

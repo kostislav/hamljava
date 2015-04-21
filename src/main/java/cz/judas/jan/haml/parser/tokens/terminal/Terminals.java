@@ -2,8 +2,10 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -19,7 +21,7 @@ public class Terminals {
 
     private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
 
-    private static final Token<Object> END_OF_LINE_TOKEN = new EndOfLineToken<>();
+    private static final TypedToken<Object, Optional<Character>> END_OF_LINE_TOKEN = new EndOfLineToken();
 
     public static Token<Object> whitespace() {
         return RELAXED_WHITESPACE_TOKEN;
@@ -33,7 +35,7 @@ public class Terminals {
         return NOT_NEWLINE_PREDICATE;
     }
 
-    public static Token<Object> endOfLine() {
+    public static TypedToken<Object, Optional<Character>> endOfLine() {
         return END_OF_LINE_TOKEN;
     }
 
@@ -48,15 +50,15 @@ public class Terminals {
         );
     }
 
-    public static Token<Object> singleChar(char c) {
+    public static TypedToken<Object, Character> singleChar(char c) {
         return new SingleCharToken(c);
     }
 
-    public static Token<Object> singleChar(CharPredicate predicate) {
+    public static TypedToken<Object, Character> singleChar(CharPredicate predicate) {
         return new SingleCharToken(predicate);
     }
 
-    public static Token<Object> exactText(String value) {
+    public static TypedToken<Object, String> exactText(String value) {
         return new ExactTextToken(value);
     }
 }
