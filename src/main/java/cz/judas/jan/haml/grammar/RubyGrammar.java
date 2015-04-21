@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.*;
@@ -9,6 +10,7 @@ import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRubyExpression;
 
+import java.util.List;
 import java.util.Optional;
 
 import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
@@ -19,11 +21,11 @@ import static cz.judas.jan.haml.predicates.Predicates.not;
 
 @SuppressWarnings("UtilityClass")
 public class RubyGrammar {
-    public static Token<MutableHtmlNode> hash() {
+    public static TypedToken<MutableHtmlNode, RubyHash> hash() {
         return rule(() -> delimited(
                 '{',
-                GenericTokens.<MutableHtmlNode, RubyHash, String, RubyHash>sequence(
-                        GenericTokens.<MutableHtmlNode, MutableHash, RubyHash>contextSwitch(
+                GenericTokens.<MutableHtmlNode, List<HashEntry>, String, RubyHash>sequence(
+                        GenericTokens.<MutableHtmlNode, MutableHash, List<HashEntry>>contextSwitch(
                                 MutableHash::new,
                                 GenericTokens.anyOf(
                                         hashEntries(newStyleHashEntry()),
@@ -32,13 +34,13 @@ public class RubyGrammar {
                                 (node, attributes) -> node.addAttributes(attributes.toHash())
                         ),
                         whitespace(),
-                        (hash, ignored) -> hash
+                        (entries, ignored) -> new RubyHash(entries)
                 ),
                 '}'
         ));
     }
 
-    private static Token<? super MutableHash> hashEntries(Token<MutableHashEntry> token) {
+    private static TypedToken<MutableHash, List<HashEntry>> hashEntries(Token<MutableHashEntry> token) {
         return atLeastOne(
                 GenericTokens.<MutableHash, String, HashEntry, Optional<Character>, HashEntry>relaxedSequence(
                         whitespace(),
@@ -53,7 +55,7 @@ public class RubyGrammar {
         );
     }
 
-    private static Token<MutableHashEntry> newStyleHashEntry() {
+    private static TypedToken<MutableHashEntry, HashEntry> newStyleHashEntry() {
         return rule(() -> GenericTokens.<MutableHashEntry, String, RubyExpression, RubyExpression, HashEntry>relaxedSequence(
                 whitespace(),
                 newStyleHashKey(),
@@ -66,7 +68,7 @@ public class RubyGrammar {
         ));
     }
 
-    private static Token<? super MutableHashEntry> newStyleHashKey() {
+    private static TypedToken<MutableHashEntry, RubySymbol> newStyleHashKey() {
         return rule(() -> GenericTokens.<MutableHashEntry, String, Character, String>sequence(
                 match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to((entry, name) -> entry.setKey(new RubySymbol(name))),
                 singleChar(':'),
@@ -74,7 +76,7 @@ public class RubyGrammar {
         ));
     }
 
-    private static Token<MutableHashEntry> oldStyleHashEntry() {
+    private static TypedToken<MutableHashEntry, HashEntry> oldStyleHashEntry() {
         return rule(() -> GenericTokens.<MutableHashEntry, RubyExpression, String, RubyExpression, HashEntry>relaxedSequence(
                 GenericTokens.<MutableHashEntry, MutableRubyExpression, RubyExpression>contextSwitch(
                         MutableRubyExpression::new,
@@ -91,14 +93,14 @@ public class RubyGrammar {
         ));
     }
 
-    public static Token<MutableRubyExpression> expression() {
+    public static TypedToken<MutableRubyExpression, RubyExpression> expression() {
         return rule(() -> anyOf(
                 fieldReference(),
                 singleQuoteString()
         ));
     }
 
-    private static Token<MutableRubyExpression> fieldReference() {
+    private static TypedToken<MutableRubyExpression, FieldReference> fieldReference() {
         return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, FieldReference>sequence(
                 singleChar('@'),
                 match(variableName(), MutableRubyExpression.class).to((expression, name) -> expression.setValue(new FieldReference(name))),
@@ -106,7 +108,7 @@ public class RubyGrammar {
         ));
     }
 
-    public static Token<MutableRubyExpression> symbol() {
+    public static TypedToken<MutableRubyExpression, RubySymbol> symbol() {
         return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, RubySymbol>sequence(
                 singleChar(':'),
                 match(variableName(), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubySymbol(value))),
@@ -114,7 +116,7 @@ public class RubyGrammar {
         ));
     }
 
-    public static Token<MutableRubyExpression> variableName() {
+    public static TypedToken<MutableRubyExpression, String> variableName() {
         return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, String, String>sequence(
                 singleChar(c -> Character.isAlphabetic(c) || c == '$' || c == '_'),
                 anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_')),
@@ -123,7 +125,7 @@ public class RubyGrammar {
         ));
     }
 
-    private static Token<MutableRubyExpression> singleQuoteString() {
+    private static TypedToken<MutableRubyExpression, RubyString> singleQuoteString() {
         return rule(() -> delimited(
                 '\'',
                 match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubyString(value))),

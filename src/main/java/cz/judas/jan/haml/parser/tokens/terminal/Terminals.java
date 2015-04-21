@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
-import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 
@@ -17,17 +16,17 @@ public class Terminals {
 
     private static final CharPredicate WHITESPACE_PREDICATE = c -> NOT_NEWLINE_PREDICATE.test(c) && Character.isWhitespace(c);
 
-    private static final Token<Object> RELAXED_WHITESPACE_TOKEN = anyNumberOf(WHITESPACE_PREDICATE);
+    private static final TypedToken<Object, String> RELAXED_WHITESPACE_TOKEN = anyNumberOf(WHITESPACE_PREDICATE);
 
-    private static final Token<Object> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
+    private static final TypedToken<Object, String> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
 
     private static final TypedToken<Object, Optional<Character>> END_OF_LINE_TOKEN = new EndOfLineToken();
 
-    public static Token<Object> whitespace() {
+    public static TypedToken<Object, String> whitespace() {
         return RELAXED_WHITESPACE_TOKEN;
     }
 
-    public static Token<Object> strictWhitespace() {
+    public static TypedToken<Object, String> strictWhitespace() {
         return STRICT_WHITESPACE_TOKEN;
     }
 
@@ -39,7 +38,7 @@ public class Terminals {
         return END_OF_LINE_TOKEN;
     }
 
-    public static <C, T> Token<C> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super C, String> onEnd, Function<String, ? extends T> transform) {
+    public static <C, T> TypedToken<C, T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super C, String> onEnd, Function<String, ? extends T> transform) {
         return GenericTokens.<C, Character, String, T>sequence(
                 singleChar(leadingChar),
                 onMatch(

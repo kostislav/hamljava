@@ -2,6 +2,7 @@ package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 import cz.judas.jan.haml.predicates.Predicates;
@@ -57,7 +58,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
         ));
     }
 
-    private static Token<MutableHtmlNode> escapedPlainText() {
+    private static TypedToken<MutableHtmlNode, MutableHtmlNode> escapedPlainText() {
         return rule(() -> GenericTokens.<MutableHtmlNode, Character, String, Node>sequence(
                 singleChar('\\'),
                 textContent(),
@@ -65,19 +66,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
         ));
     }
 
-    private static Token<MutableHtmlNode> printExpression() {
-        return rule(() -> GenericTokens.<MutableHtmlNode, Character, RubyExpression, Node>relaxedSequence(
-                singleChar('='),
-                GenericTokens.<MutableHtmlNode, MutableRubyExpression, RubyExpression>contextSwitch(
-                        MutableRubyExpression::new,
-                        RubyGrammar.expression(),
-                        (node, value) -> node.setContent(value.toExpression())
-                ),
-                (ignored, expression) -> new TextNode(expression)
-        ));
-    }
-
-    private static Token<MutableHtmlNode> htmlTag() {
+    private static TypedToken<MutableHtmlNode, MutableHtmlNode> htmlTag() {
         return rule(() -> GenericTokens.<MutableHtmlNode, Optional<String>, List<RubyHash>, RubyExpression, MutableHtmlNode>sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
@@ -101,11 +90,23 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
         ));
     }
 
+    private static Token<MutableHtmlNode> printExpression() {
+        return rule(() -> GenericTokens.<MutableHtmlNode, Character, RubyExpression, Node>relaxedSequence(
+                singleChar('='),
+                GenericTokens.<MutableHtmlNode, MutableRubyExpression, RubyExpression>contextSwitch(
+                        MutableRubyExpression::new,
+                        RubyGrammar.expression(),
+                        (node, value) -> node.setContent(value.toExpression())
+                ),
+                (ignored, expression) -> new TextNode(expression)
+        ));
+    }
+
     private static Token<MutableHtmlNode> textContent() {
         return rule(() -> match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value))));
     }
 
-    private static Token<MutableHtmlNode> tagName() {
+    private static TypedToken<MutableHtmlNode, String> tagName() {
         return rule(() -> Terminals.<MutableHtmlNode, String>leadingChar(
                 '%',
                 Predicates.TAG_NAME_CHAR,
@@ -114,7 +115,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
         ));
     }
 
-    private static Token<MutableHtmlNode> idAttribute() {
+    private static TypedToken<MutableHtmlNode, RubyHash> idAttribute() {
         return rule(() -> Terminals.<MutableHtmlNode, RubyHash>leadingChar(
                 '#',
                 Predicates.ID_OR_CLASS_CHAR,
@@ -123,7 +124,7 @@ public class HamlGrammar implements Grammar<MutableRootNode> {
         ));
     }
 
-    private static Token<MutableHtmlNode> classAttribute() {
+    private static TypedToken<MutableHtmlNode, RubyHash> classAttribute() {
         return rule(() -> Terminals.<MutableHtmlNode, RubyHash>leadingChar(
                 '.',
                 Predicates.ID_OR_CLASS_CHAR,

@@ -16,10 +16,10 @@ public class TokenCache {
     @SuppressWarnings("StaticNonFinalField")
     private static boolean BUILDING = false;
 
-    public static synchronized <T> Token<T> build(Grammar<T> grammar) {
+    public static synchronized <C> Token<C> build(Grammar<C> grammar) {
         try {
             BUILDING = true;
-            Token<T> mainToken = grammar.buildRules();
+            Token<C> mainToken = grammar.buildRules();
             for (SameTokens proxyTokens : UNFINISHED_TOKENS.values()) {
                 proxyTokens.initializeTokens();
             }
@@ -30,13 +30,13 @@ public class TokenCache {
         }
     }
 
-    public static synchronized <T> Token<T> rule(Supplier<Token<T>> tokenSupplier) {
+    public static synchronized <C, T> TypedToken<C, T> rule(Supplier<Token<C>> tokenSupplier) {
         Caller caller = getCaller();
         SameTokens tokens = UNFINISHED_TOKENS.get(caller);
         if (tokens == null) {
             tokens = new SameTokens();
             UNFINISHED_TOKENS.put(caller, tokens);
-            Token<T> token = tokenSupplier.get();
+            TypedToken<C, T> token = (TypedToken<C, T>) tokenSupplier.get(); // TODO
             tokens.setRealToken(token);
             if(!BUILDING) {
                 tokens.initializeTokens();
@@ -44,7 +44,7 @@ public class TokenCache {
             }
             return token;
         } else {
-            ProxyToken<T, Object> token = new ProxyToken<>();
+            ProxyToken<C, T> token = new ProxyToken<>();
             tokens.addProxyToken(token);
             return token;
         }
