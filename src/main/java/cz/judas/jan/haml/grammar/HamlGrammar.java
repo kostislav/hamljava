@@ -22,10 +22,10 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
 
     @Override
     public TypedToken<MutableRootNode, RootNode> buildRules() {
-        return GenericTokens.<MutableRootNode, Optional<String>, List<Node>, RootNode>sequence(
+        return GenericTokens.<MutableRootNode, Optional<String>, List<MutableHtmlNode>, RootNode>sequence(
                 atMostOne(line(doctype())),
                 anyNumberOf(indentedLine()),
-                RootNode::new
+                (doctype, children) -> new RootNode(doctype, children, 6)
         );
     }
 
@@ -39,7 +39,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
     }
 
     private static TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
-        return rule(() -> GenericTokens.<MutableRootNode, String, Node, Node>sequence(
+        return rule(() -> sequence(
                 match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
                 GenericTokens.<MutableRootNode, MutableHtmlNode, MutableHtmlNode>contextSwitch(
                         MutableHtmlNode::new,
@@ -59,15 +59,15 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
     }
 
     private static TypedToken<MutableHtmlNode, MutableHtmlNode> escapedPlainText() {
-        return rule(() -> GenericTokens.<MutableHtmlNode, Character, String, Node>sequence(
+        return rule(() -> sequence(
                 singleChar('\\'),
                 textContent(),
-                (ignored, text) -> new TextNode(new RubyString(text))
+                (ignored, text) -> new TextNode(text)
         ));
     }
 
     private static TypedToken<MutableHtmlNode, MutableHtmlNode> htmlTag() {
-        return rule(() -> GenericTokens.<MutableHtmlNode, Optional<String>, List<RubyHash>, RubyExpression, MutableHtmlNode>sequence(
+        return rule(() -> GenericTokens.<MutableHtmlNode, Optional<String>, List<RubyHash>, Optional<RubyExpression>, MutableHtmlNode>sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
                         GenericTokens.<MutableHtmlNode, RubyHash>anyOf(
@@ -79,14 +79,14 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
                 atMostOne(
                         anyOf(
                                 printExpression(),
-                                GenericTokens.<MutableHtmlNode, Character, String, RubyExpression>sequence(
+                                sequence(
                                         singleChar(' '),
                                         textContent(),
-                                        (ignored, content) -> new RubyString(content)
+                                        (ignored, content) -> content
                                 )
                         )
                 ),
-                (tagName, attributes, content) -> new MutableHtmlNode(tagName.orElse(null), attributes, content)
+                (tagName, attributes, content) -> new MutableHtmlNode(tagName.orElse(null), attributes, content.orElse(null))
         ));
     }
 

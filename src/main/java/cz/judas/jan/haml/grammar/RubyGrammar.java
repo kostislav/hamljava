@@ -40,11 +40,11 @@ public class RubyGrammar {
         ));
     }
 
-    private static TypedToken<MutableHash, List<HashEntry>> hashEntries(Token<MutableHashEntry> token) {
+    private static TypedToken<MutableHash, List<HashEntry>> hashEntries(TypedToken<MutableHashEntry, HashEntry> token) {
         return atLeastOne(
                 GenericTokens.<MutableHash, String, HashEntry, Optional<Character>, HashEntry>relaxedSequence(
                         whitespace(),
-                        GenericTokens.<MutableHash, MutableHashEntry, RubyHash>contextSwitch(
+                        GenericTokens.<MutableHash, MutableHashEntry, HashEntry>contextSwitch(
                                 MutableHashEntry::new,
                                 token,
                                 (hash, entry) -> hash.addKeyValuePair(entry.toEntry())
@@ -59,7 +59,7 @@ public class RubyGrammar {
         return rule(() -> GenericTokens.<MutableHashEntry, String, RubyExpression, RubyExpression, HashEntry>relaxedSequence(
                 whitespace(),
                 newStyleHashKey(),
-                GenericTokens.<MutableHashEntry, MutableRubyExpression, HashEntry>contextSwitch(
+                GenericTokens.<MutableHashEntry, MutableRubyExpression, RubyExpression>contextSwitch(
                         MutableRubyExpression::new,
                         expression(),
                         (entry, value) -> entry.setValue(value.toExpression())
@@ -119,8 +119,8 @@ public class RubyGrammar {
     public static TypedToken<MutableRubyExpression, String> variableName() {
         return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, String, String>sequence(
                 singleChar(c -> Character.isAlphabetic(c) || c == '$' || c == '_'),
-                anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_')),
-                anyNumberOf(singleChar(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '=')),
+                anyNumberOf(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_'),
+                anyNumberOf(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '='),
                 (firstChar, nextChars, lastChars) -> firstChar + nextChars + lastChars
         ));
     }

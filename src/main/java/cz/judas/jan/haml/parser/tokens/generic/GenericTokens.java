@@ -17,7 +17,7 @@ import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.endOfLine;
 
 @SuppressWarnings("UtilityClass")
 public class GenericTokens {
-    public static <C, T> TypedToken<C, List<T>> anyNumberOf(Token<? super C> inner) {
+    public static <C, T> TypedToken<C, List<T>> anyNumberOf(TypedToken<? super C, ? extends T> inner) {
         return new AnyNumberOfToken<>(inner);
     }
 
@@ -30,31 +30,31 @@ public class GenericTokens {
     }
 
     @SafeVarargs
-    public static <C, T> TypedToken<C, T> anyOf(Token<? super C>... alternatives) {
+    public static <C, T> TypedToken<C, T> anyOf(TypedToken<? super C, ? extends T>... alternatives) {
         return new AnyOfToken<>(ImmutableList.copyOf(alternatives));
     }
 
-    public static <C, T1, T2, T> TypedToken<C, T> sequence(Token<? super C> firstToken, Token<? super C> secondToken, BiFunction<T1, T2, T> transform) {
+    public static <C, T1, T2, T> TypedToken<C, T> sequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, BiFunction<T1, T2, T> transform) {
         return new TwoItemSequenceToken<>(firstToken, secondToken);
     }
 
-    public static <C, T1, T2, T3, T> TypedToken<C, T> sequence(Token<? super C> firstToken, Token<? super C> secondToken, Token<? super C> thirdToken, TriFunction<T1, T2, T3, T> transform) {
+    public static <C, T1, T2, T3, T> TypedToken<C, T> sequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, TypedToken<? super C, ? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
         return new ThreeItemSequenceToken<>(firstToken, secondToken, thirdToken);
     }
 
-    public static <C, T1, T2, T> TypedToken<C, T> relaxedSequence(Token<? super C> firstToken, Token<? super C> secondToken, BiFunction<T1, T2, T> transform) {
+    public static <C, T1, T2, T> TypedToken<C, T> relaxedSequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, BiFunction<T1, T2, T> transform) {
         return new TwoItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken));
     }
 
-    public static <C, T1, T2, T3, T> TypedToken<C, T> relaxedSequence(Token<? super C> firstToken, Token<? super C> secondToken, Token<? super C> thirdToken, TriFunction<T1, T2, T3, T> transform) {
+    public static <C, T1, T2, T3, T> TypedToken<C, T> relaxedSequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, TypedToken<? super C, ? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
         return new ThreeItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken), precededWithWhitespace(thirdToken));
     }
 
-    private static <C, T> TypedToken<C, T> precededWithWhitespace(Token<? super C> secondToken) {
+    private static <C, T> TypedToken<C, T> precededWithWhitespace(TypedToken<? super C, ? extends T> secondToken) {
         return new PrecededWithWhitespaceToken<>(secondToken);
     }
 
-    public static <C, T> TypedToken<C, Optional<T>> atMostOne(Token<? super C> token) {
+    public static <C, T> TypedToken<C, Optional<T>> atMostOne(TypedToken<? super C, ? extends T> token) {
         return new AtMostOneToken<>(token);
     }
 
@@ -62,7 +62,7 @@ public class GenericTokens {
         return new AtMostOneCharToken(c -> c ==matchingChar);
     }
 
-    public static <C, T> TypedToken<C, List<T>> atLeastOne(Token<? super C> token) {
+    public static <C, T> TypedToken<C, List<T>> atLeastOne(TypedToken<? super C, ? extends T> token) {
         return new AtLeastOneToken<>(token);
     }
 
@@ -70,23 +70,23 @@ public class GenericTokens {
         return new AtLeastOneCharToken<>(predicate);
     }
 
-    public static <IC, OC, T> TypedToken<IC, T> contextSwitch(Supplier<? extends OC> contextSupplier, Token<? super OC> inner, BiConsumer<? super IC, ? super OC> onSuccess) {
+    public static <IC, OC, T> TypedToken<IC, T> contextSwitch(Supplier<? extends OC> contextSupplier, TypedToken<? super OC, ? extends T> inner, BiConsumer<? super IC, ? super OC> onSuccess) {
         return new ContextSwitchToken<>(contextSupplier, inner, onSuccess);
     }
 
-    public static <C, T> TypedToken<C, T> line(Token<? super C> lineContent) {
-        return GenericTokens.<C, T, Character, T>sequence(
+    public static <C, T> TypedToken<C, T> line(TypedToken<? super C, ? extends T> lineContent) {
+        return sequence(
                 lineContent,
                 endOfLine(),
                 (content, newLine) -> content
         );
     }
 
-    public static <C, T> TypedToken<C, T> delimited(char startDelimiter, Token<? super C> token, char endDelimiter) {
+    public static <C, T> TypedToken<C, T> delimited(char startDelimiter, TypedToken<? super C, ? extends T> token, char endDelimiter) {
         return new DelimitedToken<>(startDelimiter, token, endDelimiter);
     }
 
-    public static <C, T> TypedToken<C, T> onMatch(Token<? super C> token, BiConsumer<? super C, String> onMatch) {
+    public static <C, T> TypedToken<C, T> onMatch(TypedToken<? super C, ? extends T> token, BiConsumer<? super C, String> onMatch) {
         return new OnMatchToken<>(token, onMatch);
     }
 
@@ -95,14 +95,14 @@ public class GenericTokens {
     }
 
     @SuppressWarnings("UnusedParameters") // class argument is for type inference only
-    public static <C, T> MatchHelper<C, T> match(Token<? super C> token, Class<? extends C> clazz) {
+    public static <C, T> MatchHelper<C, T> match(TypedToken<? super C, ? extends T> token, Class<? extends C> clazz) {
         return new MatchHelper<>(token);
     }
 
     public static class MatchHelper<C, T> {
-        private final Token<? super C> token;
+        private final TypedToken<? super C, ? extends T> token;
 
-        public MatchHelper(Token<? super C> token) {
+        public MatchHelper(TypedToken<? super C, ? extends T> token) {
             this.token = token;
         }
 
