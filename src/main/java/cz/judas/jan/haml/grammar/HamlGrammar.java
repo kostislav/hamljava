@@ -18,7 +18,7 @@ import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 
-public class HamlGrammar implements Grammar<MutableRootNode> {
+public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
 
     @Override
     public TypedToken<MutableRootNode, RootNode> buildRules() {

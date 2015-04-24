@@ -1,16 +1,16 @@
 package cz.judas.jan.haml.parser;
 
-import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TokenCache;
+import cz.judas.jan.haml.parser.tokens.TypedToken;
 
-public class Parser<T> {
-    private final Token<T> token;
+public class Parser<C, T> {
+    private final TypedToken<C, T> token;
 
-    public Parser(Grammar<T> grammar) {
+    public Parser(Grammar<C, T> grammar) {
         token = TokenCache.build(grammar);
     }
 
-    public T parse(String input, T context) {
+    public C parse(String input, C context) {
         token.tryEat(new InputString(input), context);
         return context;
     }

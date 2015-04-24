@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.parser;
 
-import cz.judas.jan.haml.parser.tokens.Token;
+import cz.judas.jan.haml.parser.tokens.TypedToken;
 
-public interface Grammar<T> {
-    Token<T> buildRules();
+public interface Grammar<C, T> {
+    TypedToken<C, T> buildRules();
 }
