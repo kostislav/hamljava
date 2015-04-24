@@ -1,15 +1,14 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
 import cz.judas.jan.haml.parser.InputString;
-import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.List;
 
 public class AnyNumberOfToken<C, T> implements TypedToken<C, List<T>> {
-    private final Token<? super C> inner;
+    private final TypedToken<? super C, ? extends T> inner;
 
-    public AnyNumberOfToken(Token<? super C> inner) {
+    public AnyNumberOfToken(TypedToken<? super C, ? extends T> inner) {
         this.inner = inner;
     }
 

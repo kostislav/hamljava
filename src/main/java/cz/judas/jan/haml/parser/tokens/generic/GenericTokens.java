@@ -2,9 +2,10 @@ package cz.judas.jan.haml.parser.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.CharPredicate;
-import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
-import cz.judas.jan.haml.parser.tokens.terminal.*;
+import cz.judas.jan.haml.parser.tokens.terminal.AnyNumberOfCharToken;
+import cz.judas.jan.haml.parser.tokens.terminal.AtLeastOneCharToken;
+import cz.judas.jan.haml.parser.tokens.terminal.AtMostOneCharToken;
 
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,7 @@ public class GenericTokens {
         return new OnMatchToken<>(token, onMatch);
     }
 
-    public static <C, IT, OT> TypedToken<C, OT> transformation(Token<C> token, Function<IT, OT> transform) {
+    public static <C, IT, OT> TypedToken<C, OT> transformation(TypedToken<? super C, ? extends IT> token, Function<IT, OT> transform) {
         return new TransformationToken<>(token, transform);
     }
 
