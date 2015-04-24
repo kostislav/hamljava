@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.grammar;
 
-import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.predicates.Predicates;
@@ -69,10 +68,10 @@ public class RubyGrammar {
     }
 
     private static TypedToken<MutableHashEntry, RubySymbol> newStyleHashKey() {
-        return rule(() -> GenericTokens.<MutableHashEntry, String, Character, String>sequence(
+        return rule(() -> GenericTokens.<MutableHashEntry, String, Character, RubySymbol>sequence(
                 match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to((entry, name) -> entry.setKey(new RubySymbol(name))),
                 singleChar(':'),
-                (key, ignored) -> key
+                (key, ignored) -> new RubySymbol(key)
         ));
     }
 
@@ -104,14 +103,14 @@ public class RubyGrammar {
         return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, FieldReference>sequence(
                 singleChar('@'),
                 match(variableName(), MutableRubyExpression.class).to((expression, name) -> expression.setValue(new FieldReference(name))),
-                (ignored, name) ->new FieldReference(name)
+                (ignored, name) -> new FieldReference(name)
         ));
     }
 
     public static TypedToken<MutableRubyExpression, RubySymbol> symbol() {
         return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, RubySymbol>sequence(
                 singleChar(':'),
-                match(variableName(), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubySymbol(value))),
+                GenericTokens.<MutableRubyExpression, String>match(variableName(), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubySymbol(value))),
                 (ignored, name) -> new RubySymbol(name)
         ));
     }
@@ -126,10 +125,13 @@ public class RubyGrammar {
     }
 
     private static TypedToken<MutableRubyExpression, RubyString> singleQuoteString() {
-        return rule(() -> delimited(
-                '\'',
-                match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubyString(value))),
-                '\''
+        return rule(() -> GenericTokens.<MutableRubyExpression, String, RubyString>transformation(
+                delimited(
+                        '\'',
+                        match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubyString(value))),
+                        '\''
+                ),
+                RubyString::new
         ));
     }
 }

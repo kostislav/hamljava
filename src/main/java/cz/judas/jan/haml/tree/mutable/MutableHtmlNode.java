@@ -6,6 +6,7 @@ import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MutableHtmlNode implements MutableNode {
@@ -65,5 +66,9 @@ public class MutableHtmlNode implements MutableNode {
                     Iterables.transform(children, MutableNode::toNode)
             );
         }
+    }
+
+    public static MutableHtmlNode textNode(RubyExpression content) {
+        return new MutableHtmlNode(null, Collections.emptyList(), content);
     }
 }

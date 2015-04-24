@@ -54,7 +54,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
         return rule(() -> anyOf(
                 line(escapedPlainText()),
                 line(htmlTag()),
-                line(GenericTokens.<MutableHtmlNode, RubyString, MutableHtmlNode>transformation(textContent(), content -> new MutableHtmlNode(null, Collections.emptyList(), content)))
+                line(GenericTokens.<MutableHtmlNode, RubyString, MutableHtmlNode>transformation(textContent(), MutableHtmlNode::textNode))
         ));
     }
 
@@ -62,7 +62,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
         return rule(() -> sequence(
                 singleChar('\\'),
                 textContent(),
-                (ignored, text) -> new TextNode(text)
+                (ignored, text) -> MutableHtmlNode.textNode(text)
         ));
     }
 
@@ -103,7 +103,10 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
     }
 
     private static TypedToken<MutableHtmlNode, RubyString> textContent() {
-        return rule(() -> match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value))));
+        return rule(() -> GenericTokens.<MutableHtmlNode, String, RubyString>transformation(
+                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value))),
+                RubyString::new
+        ));
     }
 
     private static TypedToken<MutableHtmlNode, String> tagName() {

@@ -30,13 +30,13 @@ public class TokenCache {
         }
     }
 
-    public static synchronized <C, T> TypedToken<C, T> rule(Supplier<Token<C>> tokenSupplier) {
+    public static synchronized <C, T> TypedToken<C, T> rule(Supplier<TypedToken<C, T>> tokenSupplier) {
         Caller caller = getCaller();
         SameTokens tokens = UNFINISHED_TOKENS.get(caller);
         if (tokens == null) {
             tokens = new SameTokens();
             UNFINISHED_TOKENS.put(caller, tokens);
-            TypedToken<C, T> token = (TypedToken<C, T>) tokenSupplier.get(); // TODO
+            TypedToken<C, T> token = tokenSupplier.get();
             tokens.setRealToken(token);
             if(!BUILDING) {
                 tokens.initializeTokens();
