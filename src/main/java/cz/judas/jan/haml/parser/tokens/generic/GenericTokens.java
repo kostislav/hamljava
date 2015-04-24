@@ -36,19 +36,19 @@ public class GenericTokens {
     }
 
     public static <C, T1, T2, T> TypedToken<C, T> sequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, BiFunction<T1, T2, T> transform) {
-        return new TwoItemSequenceToken<>(firstToken, secondToken);
+        return new TwoItemSequenceToken<>(firstToken, secondToken, transform);
     }
 
     public static <C, T1, T2, T3, T> TypedToken<C, T> sequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, TypedToken<? super C, ? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
-        return new ThreeItemSequenceToken<>(firstToken, secondToken, thirdToken);
+        return new ThreeItemSequenceToken<>(firstToken, secondToken, thirdToken, transform);
     }
 
     public static <C, T1, T2, T> TypedToken<C, T> relaxedSequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, BiFunction<T1, T2, T> transform) {
-        return new TwoItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken));
+        return new TwoItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken), transform);
     }
 
     public static <C, T1, T2, T3, T> TypedToken<C, T> relaxedSequence(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, TypedToken<? super C, ? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
-        return new ThreeItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken), precededWithWhitespace(thirdToken));
+        return new ThreeItemSequenceToken<>(firstToken, precededWithWhitespace(secondToken), precededWithWhitespace(thirdToken), transform);
     }
 
     private static <C, T> TypedToken<C, T> precededWithWhitespace(TypedToken<? super C, ? extends T> secondToken) {
