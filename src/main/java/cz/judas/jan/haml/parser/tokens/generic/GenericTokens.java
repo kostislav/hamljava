@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.endOfLine;
@@ -87,6 +88,10 @@ public class GenericTokens {
 
     public static <C, T> TypedToken<C, T> onMatch(Token<? super C> token, BiConsumer<? super C, String> onMatch) {
         return new OnMatchToken<>(token, onMatch);
+    }
+
+    public static <C, IT, OT> TypedToken<C, OT> transformation(Token<C> token, Function<IT, OT> transform) {
+        return new TransformationToken<>(token, transform);
     }
 
     @SuppressWarnings("UnusedParameters") // class argument is for type inference only
