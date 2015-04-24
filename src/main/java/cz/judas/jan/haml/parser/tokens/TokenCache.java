@@ -97,13 +97,13 @@ public class TokenCache {
 
     private static class SameTokens {
         private final Set<ProxyToken<?, ?>> proxyTokens = new HashSet<>();
-        private Token<?> realToken;
+        private TypedToken<?, ?> realToken;
 
         public void addProxyToken(ProxyToken<?, ?> proxyToken) {
             proxyTokens.add(proxyToken);
         }
 
-        public void setRealToken(Token<?> realToken) {
+        public void setRealToken(TypedToken<?, ?> realToken) {
             this.realToken = realToken;
         }
 
@@ -115,11 +115,11 @@ public class TokenCache {
     }
 
     private static class ProxyToken<C, T> implements TypedToken<C, T> {
-        private Token<C> realToken;
+        private TypedToken<C, T> realToken;
 
         @SuppressWarnings("unchecked")
-        private void setRealToken(Token<?> realToken) {
-            this.realToken = (Token<C>) realToken;
+        private void setRealToken(TypedToken<?, ?> realToken) {
+            this.realToken = (TypedToken<C, T>) realToken;
         }
 
         @Override

@@ -7,11 +7,11 @@ import static org.hamcrest.Matchers.is;
 
 @SuppressWarnings("UtilityClass")
 public class TokenAssertions {
-    public static void assertParses(Token<Object> token, String input, int position, int expectedEndPosition) {
+    public static void assertParses(TypedToken<Object, ?> token, String input, int position, int expectedEndPosition) {
         assertParses(token, input, position, 7, expectedEndPosition);
     }
 
-    public static <T> void assertParses(Token<? super T> token, String input, int position, T context, int expectedEndPosition) {
+    public static <C> void assertParses(TypedToken<? super C, ?> token, String input, int position, C context, int expectedEndPosition) {
         InputString inputString = new InputString(input, position);
 
         boolean result = token.tryEat(inputString, context);
@@ -20,11 +20,11 @@ public class TokenAssertions {
         assertThat(inputString.currentPosition(), is(expectedEndPosition));
     }
 
-    public static void assertNotParses(Token<Object> token, String input, int position) {
+    public static void assertNotParses(TypedToken<Object, ?> token, String input, int position) {
         assertNotParses(token, input, position, 7);
     }
 
-    public static <T> void assertNotParses(Token<? super T> token, String input, int position, T context) {
+    public static <C> void assertNotParses(TypedToken<? super C, ?>token, String input, int position, C context) {
         InputString inputString = new InputString(input, position);
 
         boolean result = token.tryEat(inputString, context);
