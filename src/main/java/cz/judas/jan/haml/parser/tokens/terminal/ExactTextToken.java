@@ -3,6 +3,8 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
+import java.util.Optional;
+
 public class ExactTextToken implements TypedToken<Object, String> {
     private final String content;
 
@@ -11,7 +13,11 @@ public class ExactTextToken implements TypedToken<Object, String> {
     }
 
     @Override
-    public boolean tryEat(InputString line, Object parsingResult) {
-        return line.startsWith(content);
+    public Optional<String> tryEat2(InputString line, Object parsingResult) {
+        if(line.startsWith(content)) {
+            return Optional.of(content);
+        } else {
+            return Optional.empty();
+        }
     }
 }

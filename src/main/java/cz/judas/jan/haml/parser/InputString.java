@@ -54,6 +54,10 @@ public class InputString {
         return currentPosition;
     }
 
+    public char currentChar() {
+        return input.charAt(currentPosition);
+    }
+
     public boolean startsWith(String prefix) {
         if(input.startsWith(prefix, currentPosition)) {
             currentPosition += prefix.length();

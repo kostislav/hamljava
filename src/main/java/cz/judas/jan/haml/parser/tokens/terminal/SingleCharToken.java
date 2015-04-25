@@ -4,6 +4,8 @@ import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
+import java.util.Optional;
+
 public class SingleCharToken implements TypedToken<Object, Character> {
     private final CharPredicate predicate;
 
@@ -16,12 +18,13 @@ public class SingleCharToken implements TypedToken<Object, Character> {
     }
 
     @Override
-    public boolean tryEat(InputString line, Object parsingResult) {
+    public Optional<Character> tryEat2(InputString line, Object parsingResult) {
         if (line.currentCharIs(predicate)) {
+            char matchingChar = line.currentChar();
             line.advance();
-            return true;
+            return Optional.of(matchingChar);
         } else {
-            return false;
+            return Optional.empty();
         }
     }
 }
