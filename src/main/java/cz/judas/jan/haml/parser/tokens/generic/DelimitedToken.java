@@ -3,6 +3,8 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
+import java.util.Optional;
+
 public class DelimitedToken<C, T> implements TypedToken<C, T> {
     private final char startDelimiter;
     private final TypedToken<? super C, ? extends T> token;
@@ -15,7 +17,15 @@ public class DelimitedToken<C, T> implements TypedToken<C, T> {
     }
 
     @Override
-    public boolean tryEat(InputString line, C parsingResult) {
-        return line.tryParse(inputString -> inputString.advanceIf(startDelimiter) && token.tryEat(inputString, parsingResult) && inputString.advanceIf(endDelimiter));
+    public Optional<T> tryEat2(InputString line, C parsingResult) {
+        return line.tryParse2(inputString -> {
+            if(inputString.advanceIf(startDelimiter)) {
+                Optional<? extends T> result = token.tryEat2(inputString, parsingResult);
+                if(result.isPresent() && inputString.advanceIf(endDelimiter)) {
+                    return (Optional<T>)result;
+                }
+            }
+            return Optional.empty();
+        });
     }
 }

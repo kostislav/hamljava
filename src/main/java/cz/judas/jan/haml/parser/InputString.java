@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.parser;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class InputString {
@@ -79,6 +80,15 @@ public class InputString {
             currentPosition = snapshotPosition;
             return false;
         }
+    }
+
+    public <T> Optional<T> tryParse2(Function<InputString, Optional<T>> consumer) {
+        int snapshotPosition = currentPosition;
+        Optional<T> result = consumer.apply(this);
+        if(!result.isPresent()) {
+            currentPosition = snapshotPosition;
+        }
+        return result;
     }
 
     public Optional<String> tryParseString(Predicate<InputString> consumer) {

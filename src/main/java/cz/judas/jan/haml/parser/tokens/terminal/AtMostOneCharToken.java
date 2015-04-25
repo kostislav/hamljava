@@ -6,7 +6,7 @@ import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
 
-public class AtMostOneCharToken implements TypedToken<Object, Optional<Character>> {
+public class AtMostOneCharToken implements TypedToken<Object, String> {
     private final CharPredicate predicate;
 
     public AtMostOneCharToken(CharPredicate predicate) {
@@ -14,7 +14,7 @@ public class AtMostOneCharToken implements TypedToken<Object, Optional<Character
     }
 
     @Override
-    public boolean tryEat(InputString line, Object parsingResult) {
-        return line.tryGetSubstringIf(predicate, i -> i <= 1).isPresent();
+    public Optional<String> tryEat2(InputString line, Object parsingResult) {
+        return line.tryGetSubstringIf(predicate, i -> i <= 1);
     }
 }

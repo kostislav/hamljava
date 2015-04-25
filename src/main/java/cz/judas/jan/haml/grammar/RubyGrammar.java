@@ -10,7 +10,6 @@ import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRubyExpression;
 
 import java.util.List;
-import java.util.Optional;
 
 import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
@@ -41,7 +40,7 @@ public class RubyGrammar {
 
     private static TypedToken<MutableHash, List<HashEntry>> hashEntries(TypedToken<MutableHashEntry, HashEntry> token) {
         return atLeastOne(
-                GenericTokens.<MutableHash, String, HashEntry, Optional<Character>, HashEntry>relaxedSequence(
+                GenericTokens.<MutableHash, String, HashEntry, String, HashEntry>relaxedSequence(
                         whitespace(),
                         GenericTokens.<MutableHash, MutableHashEntry, HashEntry>contextSwitch(
                                 MutableHashEntry::new,

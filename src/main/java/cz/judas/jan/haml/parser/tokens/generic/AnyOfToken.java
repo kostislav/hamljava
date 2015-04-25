@@ -5,6 +5,7 @@ import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AnyOfToken<C, T> implements TypedToken<C, T> {
     private final List<TypedToken<? super C, ? extends T>> alternatives;
@@ -14,12 +15,13 @@ public class AnyOfToken<C, T> implements TypedToken<C, T> {
     }
 
     @Override
-    public boolean tryEat(InputString line, C parsingResult) {
+    public Optional<T> tryEat2(InputString line, C parsingResult) {
         for (TypedToken<? super C, ? extends T> alternative : alternatives) {
-            if(line.tryParse(inputString -> alternative.tryEat(inputString, parsingResult))) {
-                return true;
+            Optional<? extends T> result = line.tryParse2(inputString -> alternative.tryEat2(inputString, parsingResult));
+            if(result.isPresent()) {
+                return (Optional<T>)result;
             }
         }
-        return false;
+        return Optional.empty();
     }
 }

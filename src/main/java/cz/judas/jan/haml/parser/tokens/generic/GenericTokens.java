@@ -59,7 +59,7 @@ public class GenericTokens {
         return new AtMostOneToken<>(token);
     }
 
-    public static TypedToken<Object, Optional<Character>> atMostOne(char matchingChar) {
+    public static TypedToken<Object, String> atMostOne(char matchingChar) {
         return new AtMostOneCharToken(c -> c ==matchingChar);
     }
 

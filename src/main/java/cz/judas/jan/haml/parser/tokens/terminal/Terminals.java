@@ -2,7 +2,6 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
-import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -20,7 +19,7 @@ public class Terminals {
 
     private static final TypedToken<Object, String> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
 
-    private static final TypedToken<Object, Optional<Character>> END_OF_LINE_TOKEN = new EndOfLineToken();
+    private static final TypedToken<Object, Optional<String>> END_OF_LINE_TOKEN = new EndOfLineToken();
 
     public static TypedToken<Object, String> whitespace() {
         return RELAXED_WHITESPACE_TOKEN;
@@ -34,12 +33,12 @@ public class Terminals {
         return NOT_NEWLINE_PREDICATE;
     }
 
-    public static TypedToken<Object, Optional<Character>> endOfLine() {
+    public static TypedToken<Object, Optional<String>> endOfLine() {
         return END_OF_LINE_TOKEN;
     }
 
     public static <C, T> TypedToken<C, T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super C, String> onEnd, Function<String, ? extends T> transform) {
-        return GenericTokens.<C, Character, String, T>sequence(
+        return sequence(
                 singleChar(leadingChar),
                 onMatch(
                         atLeastOneChar(validChars),

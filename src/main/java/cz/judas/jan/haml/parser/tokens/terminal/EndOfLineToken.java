@@ -5,14 +5,16 @@ import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
 
-public class EndOfLineToken implements TypedToken<Object, Optional<Character>> {
+public class EndOfLineToken implements TypedToken<Object, Optional<String>> {
     @Override
-    public boolean tryEat(InputString line, Object parsingResult) {
-        if(line.currentCharIs('\n') || !line.hasMoreChars()) {
+    public Optional<Optional<String>> tryEat2(InputString line, Object parsingResult) {
+        if (line.currentCharIs('\n')) {
             line.advance();
-            return true;
+            return Optional.of(Optional.of("\n"));
+        } else if (!line.hasMoreChars()) {
+            return Optional.of(Optional.empty());
         } else {
-            return false;
+            return Optional.empty();
         }
     }
 }

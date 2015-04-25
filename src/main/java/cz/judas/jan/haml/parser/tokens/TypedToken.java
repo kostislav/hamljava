@@ -6,7 +6,11 @@ import java.util.Optional;
 
 public interface TypedToken<C, T> {
     default Optional<T> tryEat2(InputString line, C parsingResult) {
-        throw new UnsupportedOperationException("must be implemented");
+        if(tryEat(line, parsingResult)) {
+            return Optional.of((T)new Object());
+        } else {
+            return Optional.empty();
+        }
     }
 
     default boolean tryEat(InputString line, C parsingResult) {

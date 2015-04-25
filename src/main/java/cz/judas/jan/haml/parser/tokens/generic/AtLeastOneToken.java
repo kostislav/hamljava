@@ -1,9 +1,11 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
+import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AtLeastOneToken<C, T> implements TypedToken<C, List<T>> {
     private final TypedToken<? super C, ? extends T> token;
@@ -15,7 +17,14 @@ public class AtLeastOneToken<C, T> implements TypedToken<C, List<T>> {
     }
 
     @Override
-    public boolean tryEat(InputString line, C parsingResult) {
-        return line.tryParse(inputString -> token.tryEat(line, parsingResult)) && restMatcher.tryEat(line, parsingResult);
+    public Optional<List<T>> tryEat2(InputString line, C parsingResult) {
+        Optional<? extends T> result = line.tryParse2(inputString -> token.tryEat2(line, parsingResult));
+        if(result.isPresent()) {
+            List<? extends T> rest = restMatcher.tryEat2(line, parsingResult).get();
+            List<T> results = ImmutableList.<T>builder().add(result.get()).addAll(rest).build();
+            return Optional.of(results);
+        } else {
+            return Optional.empty();
+        }
     }
 }
