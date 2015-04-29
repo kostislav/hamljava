@@ -3,6 +3,7 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public class TransformationToken<C, IT, OT> implements TypedToken<C, OT> {
@@ -15,7 +16,7 @@ public class TransformationToken<C, IT, OT> implements TypedToken<C, OT> {
     }
 
     @Override
-    public boolean tryEat(InputString line, C parsingResult) {
-        return token.tryEat(line, parsingResult);
+    public Optional<OT> tryEat2(InputString line, C parsingResult) {
+        return token.tryEat2(line, parsingResult).map(transform);
     }
 }

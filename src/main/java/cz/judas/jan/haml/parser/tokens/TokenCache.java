@@ -3,10 +3,7 @@ package cz.judas.jan.haml.parser.tokens;
 import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.InputString;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 @SuppressWarnings("UtilityClass")
@@ -123,8 +120,8 @@ public class TokenCache {
         }
 
         @Override
-        public boolean tryEat(InputString line, C parsingResult) {
-            return realToken.tryEat(line, parsingResult);
+        public Optional<T> tryEat2(InputString line, C parsingResult) {
+            return realToken.tryEat2(line, parsingResult);
         }
     }
 }

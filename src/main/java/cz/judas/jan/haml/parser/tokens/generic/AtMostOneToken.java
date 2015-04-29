@@ -24,7 +24,7 @@ public class AtMostOneToken<C, T> implements TypedToken<C, Optional<T>> {
                     return Optional.of((Optional<T>)firstResult);
                 }
             } else {
-                return Optional.of(Optional.empty());
+                return Optional.of(Optional.<T>empty());
             }
         });
     }

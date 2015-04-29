@@ -3,6 +3,8 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
+import java.util.Optional;
+
 public class ThreeItemSequenceToken<C, T1, T2, T3, T> implements TypedToken<C, T> {
     private final TypedToken<? super C, ? extends T1> firstToken;
     private final TypedToken<? super C, ? extends T2> secondToken;
@@ -17,11 +19,17 @@ public class ThreeItemSequenceToken<C, T1, T2, T3, T> implements TypedToken<C, T
     }
 
     @Override
-    public boolean tryEat(InputString line, C parsingResult) {
-        return line.tryParse(
-                inputString -> firstToken.tryEat(inputString, parsingResult)
-                        && secondToken.tryEat(inputString, parsingResult)
-                        && thirdToken.tryEat(inputString, parsingResult)
-        );
+    public Optional<T> tryEat2(InputString line, C parsingResult) {
+        return line.tryParse2(inputString -> {
+            Optional<? extends T1> firstResult = firstToken.tryEat2(inputString, parsingResult);
+            if(firstResult.isPresent()) {
+                Optional<? extends T2> secondResult = secondToken.tryEat2(inputString, parsingResult);
+                if(secondResult.isPresent()) {
+                    Optional<? extends T3> thirdResult = thirdToken.tryEat2(inputString, parsingResult);
+                    return Optional.of(transform.apply(firstResult.get(), secondResult.get(), thirdResult.get()));
+                }
+            }
+            return Optional.<T>empty();
+        });
     }
 }

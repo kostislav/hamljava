@@ -3,6 +3,7 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -18,13 +19,13 @@ public class ContextSwitchToken<IC, OC, T> implements TypedToken<IC, T> {
     }
 
     @Override
-    public boolean tryEat(InputString line, IC parsingResult) {
+    public Optional<T> tryEat2(InputString line, IC parsingResult) {
         OC newContext = contextSupplier.get();
-        if(inner.tryEat(line, newContext)) {
+        Optional<? extends T> result = inner.tryEat2(line, newContext);
+        if(result.isPresent()) {
             onSuccess.accept(parsingResult, newContext);
-            return true;
-        } else {
-            return false;
         }
+
+        return (Optional<T>)result;
     }
 }
