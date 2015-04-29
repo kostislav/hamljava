@@ -87,7 +87,7 @@ public class GenericTokens {
         return new DelimitedToken<>(startDelimiter, token, endDelimiter);
     }
 
-    public static <C, T> TypedToken<C, T> onMatch(TypedToken<? super C, ? extends T> token, BiConsumer<? super C, String> onMatch) {
+    public static <C> TypedToken<C, String> onMatch(TypedToken<? super C, String> token, BiConsumer<? super C, String> onMatch) {
         return new OnMatchToken<>(token, onMatch);
     }
 
@@ -96,18 +96,18 @@ public class GenericTokens {
     }
 
     @SuppressWarnings("UnusedParameters") // class argument is for type inference only
-    public static <C, T> MatchHelper<C, T> match(TypedToken<? super C, ? extends T> token, Class<? extends C> clazz) {
+    public static <C> MatchHelper<C> match(TypedToken<? super C, String> token, Class<? extends C> clazz) {
         return new MatchHelper<>(token);
     }
 
-    public static class MatchHelper<C, T> {
-        private final TypedToken<? super C, ? extends T> token;
+    public static class MatchHelper<C> {
+        private final TypedToken<? super C, String> token;
 
-        public MatchHelper(TypedToken<? super C, ? extends T> token) {
+        public MatchHelper(TypedToken<? super C, String> token) {
             this.token = token;
         }
 
-        public TypedToken<C, T> to(BiConsumer<? super C, String> onMatch) {
+        public TypedToken<C, String> to(BiConsumer<? super C, String> onMatch) {
             return new OnMatchToken<>(token, onMatch);
         }
     }

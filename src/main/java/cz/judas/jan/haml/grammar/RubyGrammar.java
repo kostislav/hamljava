@@ -109,7 +109,7 @@ public class RubyGrammar {
     public static TypedToken<MutableRubyExpression, RubySymbol> symbol() {
         return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, RubySymbol>sequence(
                 singleChar(':'),
-                GenericTokens.<MutableRubyExpression, String>match(variableName(), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubySymbol(value))),
+                match(variableName(), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubySymbol(value))),
                 (ignored, name) -> new RubySymbol(name)
         ));
     }
