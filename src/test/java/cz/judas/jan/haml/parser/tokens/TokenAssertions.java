@@ -2,6 +2,8 @@ package cz.judas.jan.haml.parser.tokens;
 
 import cz.judas.jan.haml.parser.InputString;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -14,9 +16,9 @@ public class TokenAssertions {
     public static <C> void assertParses(TypedToken<? super C, ?> token, String input, int position, C context, int expectedEndPosition) {
         InputString inputString = new InputString(input, position);
 
-        boolean result = token.tryEat(inputString, context);
+        Optional<?> result = token.tryEat(inputString, context);
 
-        assertThat(result, is(true));
+        assertThat(result.isPresent(), is(true));
         assertThat(inputString.currentPosition(), is(expectedEndPosition));
     }
 
@@ -27,8 +29,8 @@ public class TokenAssertions {
     public static <C> void assertNotParses(TypedToken<? super C, ?>token, String input, int position, C context) {
         InputString inputString = new InputString(input, position);
 
-        boolean result = token.tryEat(inputString, context);
+        Optional<?> result = token.tryEat(inputString, context);
 
-        assertThat(result, is(false));
+        assertThat(result.isPresent(), is(false));
     }
 }

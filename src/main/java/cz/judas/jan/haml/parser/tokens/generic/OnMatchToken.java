@@ -16,7 +16,7 @@ public class OnMatchToken<C> implements TypedToken<C, String> {
     }
 
     @Override
-    public Optional<String> tryEat2(InputString line, C parsingResult) {
+    public Optional<String> tryEat(InputString line, C parsingResult) {
         Optional<String> substring = line.tryParseString(inputString -> token.tryEat(inputString, parsingResult));
         if(substring.isPresent()) {
             onMatch.accept(parsingResult, substring.get());

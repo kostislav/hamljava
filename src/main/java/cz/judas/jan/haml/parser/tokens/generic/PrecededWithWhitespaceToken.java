@@ -16,10 +16,10 @@ public class PrecededWithWhitespaceToken<C, T> implements TypedToken<C, T> {
     }
 
     @Override
-    public Optional<T> tryEat2(InputString line, C parsingResult) {
+    public Optional<T> tryEat(InputString line, C parsingResult) {
         return line.tryParse2(inputString -> {
-            if(whitespace.tryEat2(inputString, parsingResult).isPresent()) {
-                return (Optional<T>)token.tryEat2(inputString, parsingResult);
+            if (whitespace.tryEat(inputString, parsingResult).isPresent()) {
+                return (Optional<T>) token.tryEat(inputString, parsingResult);
             } else {
                 return Optional.<T>empty();
             }

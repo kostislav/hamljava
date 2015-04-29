@@ -14,7 +14,7 @@ public class AnyNumberOfCharToken implements TypedToken<Object, String> {
     }
 
     @Override
-    public Optional<String> tryEat2(InputString line, Object parsingResult) {
+    public Optional<String> tryEat(InputString line, Object parsingResult) {
         return line.tryGetSubstringIf(predicate, i -> i >= 0);
     }
 }

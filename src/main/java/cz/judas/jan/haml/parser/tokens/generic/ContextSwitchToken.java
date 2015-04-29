@@ -19,9 +19,9 @@ public class ContextSwitchToken<IC, OC, T> implements TypedToken<IC, T> {
     }
 
     @Override
-    public Optional<T> tryEat2(InputString line, IC parsingResult) {
+    public Optional<T> tryEat(InputString line, IC parsingResult) {
         OC newContext = contextSupplier.get();
-        Optional<? extends T> result = inner.tryEat2(line, newContext);
+        Optional<? extends T> result = inner.tryEat(line, newContext);
         if(result.isPresent()) {
             onSuccess.accept(parsingResult, newContext);
         }

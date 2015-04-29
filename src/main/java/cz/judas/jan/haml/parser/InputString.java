@@ -69,7 +69,7 @@ public class InputString {
     }
 
     public Optional<String> tryGetSubstringIf(CharPredicate predicate, Predicate<Integer> test) {
-        return tryParseString(inputString -> test.test(inputString.matchingCount(predicate)));
+        return tryParseString2(inputString -> test.test(inputString.matchingCount(predicate)));
     }
 
     public boolean tryParse(Predicate<InputString> consumer) {
@@ -91,10 +91,21 @@ public class InputString {
         return result;
     }
 
-    public Optional<String> tryParseString(Predicate<InputString> consumer) {
+    public Optional<String> tryParseString2(Predicate<InputString> consumer) {
         int snapshotPosition = currentPosition;
         if(consumer.test(this)) {
             return Optional.of(input.substring(snapshotPosition, currentPosition));
+        } else {
+            currentPosition = snapshotPosition;
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> tryParseString(Function<InputString, Optional<String>> consumer) {
+        int snapshotPosition = currentPosition;
+        Optional<String> result = consumer.apply(this);
+        if(result.isPresent()) {
+            return result;
         } else {
             currentPosition = snapshotPosition;
             return Optional.empty();
