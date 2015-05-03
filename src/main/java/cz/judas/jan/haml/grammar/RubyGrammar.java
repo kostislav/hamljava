@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.tokens.Token;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.*;
@@ -30,7 +29,7 @@ public class RubyGrammar {
         ));
     }
 
-    private Token<List<HashEntry>> hashEntries(TypedToken<Object, HashEntry> token) {
+    private Token<List<HashEntry>> hashEntries(Token<HashEntry> token) {
         return atLeastOne(
                 relaxedSequence(
                         whitespace(),
