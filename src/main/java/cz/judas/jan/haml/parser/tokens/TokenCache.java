@@ -42,7 +42,7 @@ public class TokenCache {
         } else {
             ProxyToken<C, T> token = new ProxyToken<>();
             tokens.addProxyToken(token);
-            return token;
+            return (TypedToken<C, T>)token;
         }
     }
 
@@ -110,7 +110,7 @@ public class TokenCache {
         }
     }
 
-    private static class ProxyToken<C, T> implements TypedToken<C, T> {
+    private static class ProxyToken<C, T> implements Token<T> {
         private TypedToken<?, T> realToken;
 
         @SuppressWarnings("unchecked")

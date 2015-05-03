@@ -7,11 +7,11 @@ import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class AtLeastOneCharTokenTest {
-    private AtLeastOneCharToken<Object> token;
+    private AtLeastOneCharToken token;
 
     @Before
     public void setUp() throws Exception {
-        token = new AtLeastOneCharToken<>(c -> c == 'b');
+        token = new AtLeastOneCharToken(c -> c == 'b');
     }
 
     @Test

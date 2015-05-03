@@ -66,7 +66,7 @@ public class GenericTokens {
     }
 
     public static TypedToken<Object, String> atLeastOneChar(CharPredicate predicate) {
-        return new AtLeastOneCharToken<>(predicate);
+        return new AtLeastOneCharToken(predicate);
     }
 
     public static <C, T> TypedToken<Object, T> line(TypedToken<? super C, ? extends T> lineContent) {

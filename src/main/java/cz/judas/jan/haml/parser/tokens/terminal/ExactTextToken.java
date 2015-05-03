@@ -1,11 +1,11 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.InputString;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
+import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.Optional;
 
-public class ExactTextToken implements TypedToken<Object, String> {
+public class ExactTextToken implements Token<String> {
     private final String content;
 
     public ExactTextToken(String content) {

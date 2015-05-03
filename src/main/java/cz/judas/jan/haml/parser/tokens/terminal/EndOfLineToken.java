@@ -1,11 +1,11 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.InputString;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
+import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.Optional;
 
-public class EndOfLineToken implements TypedToken<Object, Optional<String>> {
+public class EndOfLineToken implements Token<Optional<String>> {
     @Override
     public Optional<Optional<String>> tryEat(InputString line) {
         if (line.currentCharIs('\n')) {
