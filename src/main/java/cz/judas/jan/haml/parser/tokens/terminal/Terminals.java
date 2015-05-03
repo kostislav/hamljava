@@ -36,7 +36,7 @@ public class Terminals {
         return END_OF_LINE_TOKEN;
     }
 
-    public static <C, T> TypedToken<C, T> leadingChar(char leadingChar, CharPredicate validChars, Function<String, ? extends T> transform) {
+    public static <C, T> TypedToken<Object, T> leadingChar(char leadingChar, CharPredicate validChars, Function<String, ? extends T> transform) {
         return sequence(
                 singleChar(leadingChar),
                 atLeastOneChar(validChars),

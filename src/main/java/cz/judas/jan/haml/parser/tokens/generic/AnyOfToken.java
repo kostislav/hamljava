@@ -7,16 +7,16 @@ import cz.judas.jan.haml.parser.tokens.TypedToken;
 import java.util.List;
 import java.util.Optional;
 
-public class AnyOfToken<C, T> implements TypedToken<C, T> {
-    private final List<TypedToken<? super C, ? extends T>> alternatives;
+public class AnyOfToken<C, T> implements TypedToken<Object, T> {
+    private final List<TypedToken<?, ? extends T>> alternatives;
 
-    public AnyOfToken(Iterable<? extends TypedToken<? super C, ? extends T>> alternatives) {
+    public AnyOfToken(Iterable<? extends TypedToken<?, ? extends T>> alternatives) {
         this.alternatives = ImmutableList.copyOf(alternatives);
     }
 
     @Override
     public Optional<T> tryEat(InputString line) {
-        for (TypedToken<? super C, ? extends T> alternative : alternatives) {
+        for (TypedToken<?, ? extends T> alternative : alternatives) {
             Optional<? extends T> result = line.tryParse2(alternative::tryEat);
             if(result.isPresent()) {
                 return (Optional<T>)result;
