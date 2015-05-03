@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
+import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -14,17 +14,17 @@ public class Terminals {
 
     private static final CharPredicate WHITESPACE_PREDICATE = c -> NOT_NEWLINE_PREDICATE.test(c) && Character.isWhitespace(c);
 
-    private static final TypedToken<Object, String> RELAXED_WHITESPACE_TOKEN = anyNumberOfChars(WHITESPACE_PREDICATE);
+    private static final Token<String> RELAXED_WHITESPACE_TOKEN = anyNumberOfChars(WHITESPACE_PREDICATE);
 
-    private static final TypedToken<Object, String> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
+    private static final Token<String> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
 
-    private static final TypedToken<Object, Optional<String>> END_OF_LINE_TOKEN = new EndOfLineToken();
+    private static final Token<Optional<String>> END_OF_LINE_TOKEN = new EndOfLineToken();
 
-    public static TypedToken<Object, String> whitespace() {
+    public static Token<String> whitespace() {
         return RELAXED_WHITESPACE_TOKEN;
     }
 
-    public static TypedToken<Object, String> strictWhitespace() {
+    public static Token<String> strictWhitespace() {
         return STRICT_WHITESPACE_TOKEN;
     }
 
@@ -32,11 +32,11 @@ public class Terminals {
         return NOT_NEWLINE_PREDICATE;
     }
 
-    public static TypedToken<Object, Optional<String>> endOfLine() {
+    public static Token<Optional<String>> endOfLine() {
         return END_OF_LINE_TOKEN;
     }
 
-    public static <C, T> TypedToken<Object, T> leadingChar(char leadingChar, CharPredicate validChars, Function<String, ? extends T> transform) {
+    public static <T> Token<T> leadingChar(char leadingChar, CharPredicate validChars, Function<String, ? extends T> transform) {
         return sequence(
                 singleChar(leadingChar),
                 atLeastOneChar(validChars),
@@ -44,15 +44,15 @@ public class Terminals {
         );
     }
 
-    public static TypedToken<Object, Character> singleChar(char c) {
+    public static Token<Character> singleChar(char c) {
         return new SingleCharToken(c);
     }
 
-    public static TypedToken<Object, Character> singleChar(CharPredicate predicate) {
+    public static Token<Character> singleChar(CharPredicate predicate) {
         return new SingleCharToken(predicate);
     }
 
-    public static TypedToken<Object, String> exactText(String value) {
+    public static Token<String> exactText(String value) {
         return new ExactTextToken(value);
     }
 }
