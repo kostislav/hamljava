@@ -10,43 +10,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class MutableHtmlNode implements MutableNode {
-    private static final RubySymbol ID_KEY = new RubySymbol("id");
-    private static final RubySymbol CLASS_KEY = new RubySymbol("class");
-
     private String tagName = null;
     private final List<RubyHash> attributes;
     private RubyExpression content = RubyString.EMPTY;
 
     private final List<MutableNode> children = new ArrayList<>();
 
-    public MutableHtmlNode() {
-        attributes = new ArrayList<>();
-    }
-
     public MutableHtmlNode(String tagName, List<RubyHash> attributes, RubyExpression content) {
         this.tagName = tagName;
         this.attributes = ImmutableList.copyOf(attributes);
         this.content = content;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
-
-    public void setContent(RubyExpression content) {
-        this.content = content;
-    }
-
-    public void addAttributes(RubyHash attributes) {
-        this.attributes.add(attributes);
-    }
-
-    public void addClass(String name) {
-        attributes.add(RubyHash.singleEntryHash(CLASS_KEY, new RubyString(name)));
-    }
-
-    public void setId(RubyExpression id) {
-        attributes.add(RubyHash.singleEntryHash(ID_KEY, id));
     }
 
     @Override

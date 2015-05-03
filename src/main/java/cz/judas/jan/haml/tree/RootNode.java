@@ -1,10 +1,8 @@
 package cz.judas.jan.haml.tree;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.VariableMap;
-import cz.judas.jan.haml.tree.mutable.MutableNode;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +18,6 @@ public class RootNode implements Node {
 
     public RootNode(Optional<String> doctype, Iterable<? extends Node> children) {
         this.children = ImmutableList.copyOf(children);
-        this.doctype = doctype;
-    }
-
-    public RootNode(Optional<String> doctype, Iterable<? extends MutableNode> children, int blbost) {
-        this.children = FluentIterable.from(children).transform(mutableNode -> mutableNode.toNode()).toList();
         this.doctype = doctype;
     }
 
