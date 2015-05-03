@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.endOfLine;
 
@@ -71,10 +70,6 @@ public class GenericTokens {
         return new AtLeastOneCharToken<>(predicate);
     }
 
-    public static <IC, OC, T> TypedToken<IC, T> contextSwitch(Supplier<? extends OC> contextSupplier, TypedToken<? super OC, ? extends T> inner, BiConsumer<? super IC, ? super OC> onSuccess) {
-        return new ContextSwitchToken<>(contextSupplier, inner, onSuccess);
-    }
-
     public static <C, T> TypedToken<C, T> line(TypedToken<? super C, ? extends T> lineContent) {
         return sequence(
                 lineContent,
@@ -85,10 +80,6 @@ public class GenericTokens {
 
     public static <C, T> TypedToken<C, T> delimited(char startDelimiter, TypedToken<? super C, ? extends T> token, char endDelimiter) {
         return new DelimitedToken<>(startDelimiter, token, endDelimiter);
-    }
-
-    public static <C> TypedToken<C, String> onMatch(TypedToken<? super C, String> token, BiConsumer<? super C, String> onMatch) {
-        return new OnMatchToken<>(token, onMatch);
     }
 
     public static <C, IT, OT> TypedToken<C, OT> transformation(TypedToken<? super C, ? extends IT> token, Function<IT, OT> transform) {

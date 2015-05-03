@@ -32,7 +32,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         return rule(() -> sequence(
                 exactText("!!!"),
                 whitespace(),
-                match(atLeastOneChar(Character::isLetterOrDigit), MutableRootNode.class).to(MutableRootNode::setDoctype),
+                atLeastOneChar(Character::isLetterOrDigit),
                 (ignored, whitespace, doctype) -> doctype
         ));
     }
