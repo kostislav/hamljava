@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.grammar;
 
-import cz.judas.jan.haml.parser.tokens.TypedToken;
+import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.RubyExpression;
 import cz.judas.jan.haml.tree.RubyHash;
@@ -15,7 +15,7 @@ import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 public class HamlGrammar {
     private final RubyGrammar rubyGrammar = new RubyGrammar();
 
-    public TypedToken<Object, String> doctype() {
+    public Token<String> doctype() {
         return rule(() -> sequence(
                 exactText("!!!"),
                 whitespace(),
@@ -24,11 +24,11 @@ public class HamlGrammar {
         ));
     }
 
-    public TypedToken<Object, String> indent() {
+    public Token<String> indent() {
         return anyNumberOfChars('\t');
     }
 
-    public TypedToken<Object, MutableHtmlNode> lineContent() {
+    public Token<MutableHtmlNode> lineContent() {
         return rule(() -> anyOf(
                 line(escapedPlainText()),
                 line(htmlTag()),
@@ -36,7 +36,7 @@ public class HamlGrammar {
         ));
     }
 
-    private TypedToken<Object, MutableHtmlNode> escapedPlainText() {
+    private Token<MutableHtmlNode> escapedPlainText() {
         return rule(() -> sequence(
                 singleChar('\\'),
                 textContent(),
@@ -44,7 +44,7 @@ public class HamlGrammar {
         ));
     }
 
-    private TypedToken<Object, MutableHtmlNode> htmlTag() {
+    private Token<MutableHtmlNode> htmlTag() {
         return rule(() -> sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
@@ -68,7 +68,7 @@ public class HamlGrammar {
         ));
     }
 
-    private TypedToken<Object, RubyExpression> printExpression() {
+    private Token<RubyExpression> printExpression() {
         return rule(() -> relaxedSequence(
                 singleChar('='),
                 rubyGrammar.expression(),
@@ -76,14 +76,14 @@ public class HamlGrammar {
         ));
     }
 
-    private TypedToken<Object, RubyString> textContent() {
+    private Token<RubyString> textContent() {
         return rule(() -> transformation(
                 anyNumberOfChars(notNewLine()),
                 RubyString::new
         ));
     }
 
-    private TypedToken<Object, String> tagName() {
+    private Token<String> tagName() {
         return rule(() -> leadingChar(
                 '%',
                 Predicates.TAG_NAME_CHAR,
@@ -91,7 +91,7 @@ public class HamlGrammar {
         ));
     }
 
-    private TypedToken<Object, RubyHash> idAttribute() {
+    private Token<RubyHash> idAttribute() {
         return rule(() -> leadingChar(
                 '#',
                 Predicates.ID_OR_CLASS_CHAR,
@@ -99,7 +99,7 @@ public class HamlGrammar {
         ));
     }
 
-    private TypedToken<Object, RubyHash> classAttribute() {
+    private Token<RubyHash> classAttribute() {
         return rule(() -> leadingChar(
                 '.',
                 Predicates.ID_OR_CLASS_CHAR,
