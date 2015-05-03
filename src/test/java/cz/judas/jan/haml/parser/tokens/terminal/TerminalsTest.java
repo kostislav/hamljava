@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
-import cz.judas.jan.haml.parser.tokens.TypedToken;
+import cz.judas.jan.haml.parser.tokens.Token;
 import org.junit.Test;
 
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
@@ -29,14 +29,14 @@ public class TerminalsTest {
 
     @Test
     public void leadingCharSetsValueOnSuccess() throws Exception {
-        TypedToken<Object, String> leadingChar = Terminals.leadingChar('.', c -> c == 'a', str -> str);
+        Token<String> leadingChar = Terminals.leadingChar('.', c -> c == 'a', str -> str);
 
         assertParses(leadingChar, "bh.aab", 2, "aa");
     }
 
     @Test
     public void leadingCharDoesNotAllowWhitespace() throws Exception {
-        TypedToken<Object, ?> leadingChar = Terminals.leadingChar('.', c -> c == 'a', str -> str);
+        Token<String> leadingChar = Terminals.leadingChar('.', c -> c == 'a', str -> str);
 
         assertNotParses(leadingChar, "bh. aab", 2);
     }
