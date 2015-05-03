@@ -18,6 +18,7 @@ import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 
 public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
+    private final RubyGrammar rubyGrammar = new RubyGrammar();
 
     @Override
     public TypedToken<MutableRootNode, Optional<String>> buildRules() {
@@ -71,7 +72,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
                         anyOf(
                                 idAttribute(),
                                 classAttribute(),
-                                RubyGrammar.hash()
+                                rubyGrammar.hash()
                         )
                 ),
                 atMostOne(
@@ -91,7 +92,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
     private TypedToken<Object, RubyExpression> printExpression() {
         return rule(() -> relaxedSequence(
                 singleChar('='),
-                RubyGrammar.expression(),
+                rubyGrammar.expression(),
                 (ignored, expression) -> expression
         ));
     }

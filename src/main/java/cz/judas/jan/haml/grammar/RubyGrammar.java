@@ -13,9 +13,8 @@ import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 import static cz.judas.jan.haml.predicates.Predicates.anyOfChars;
 import static cz.judas.jan.haml.predicates.Predicates.not;
 
-@SuppressWarnings("UtilityClass")
 public class RubyGrammar {
-    public static TypedToken<Object, RubyHash> hash() {
+    public TypedToken<Object, RubyHash> hash() {
         return rule(() -> delimited(
                 '{',
                 sequence(
@@ -30,7 +29,7 @@ public class RubyGrammar {
         ));
     }
 
-    private static TypedToken<Object, List<HashEntry>> hashEntries(TypedToken<Object, HashEntry> token) {
+    private TypedToken<Object, List<HashEntry>> hashEntries(TypedToken<Object, HashEntry> token) {
         return atLeastOne(
                 relaxedSequence(
                         whitespace(),
@@ -41,7 +40,7 @@ public class RubyGrammar {
         );
     }
 
-    private static TypedToken<Object, HashEntry> newStyleHashEntry() {
+    private TypedToken<Object, HashEntry> newStyleHashEntry() {
         return rule(() -> relaxedSequence(
                 whitespace(),
                 newStyleHashKey(),
@@ -50,7 +49,7 @@ public class RubyGrammar {
         ));
     }
 
-    private static TypedToken<Object, RubySymbol> newStyleHashKey() {
+    private TypedToken<Object, RubySymbol> newStyleHashKey() {
         return rule(() -> sequence(
                 atLeastOneChar(Predicates.TAG_NAME_CHAR),
                 singleChar(':'),
@@ -58,7 +57,7 @@ public class RubyGrammar {
         ));
     }
 
-    private static TypedToken<Object, HashEntry> oldStyleHashEntry() {
+    private TypedToken<Object, HashEntry> oldStyleHashEntry() {
         return rule(() -> relaxedSequence(
                 symbol(),
                 exactText("=>"),
@@ -67,14 +66,14 @@ public class RubyGrammar {
         ));
     }
 
-    public static TypedToken<Object, RubyExpression> expression() {
+    public TypedToken<Object, RubyExpression> expression() {
         return rule(() -> anyOf(
                 fieldReference(),
                 singleQuoteString()
         ));
     }
 
-    private static TypedToken<Object, FieldReference> fieldReference() {
+    private TypedToken<Object, FieldReference> fieldReference() {
         return rule(() -> sequence(
                 singleChar('@'),
                 variableName(),
@@ -82,7 +81,7 @@ public class RubyGrammar {
         ));
     }
 
-    public static TypedToken<Object, RubySymbol> symbol() {
+    public TypedToken<Object, RubySymbol> symbol() {
         return rule(() -> sequence(
                 singleChar(':'),
                 variableName(),
@@ -90,7 +89,7 @@ public class RubyGrammar {
         ));
     }
 
-    public static TypedToken<Object, String> variableName() {
+    public TypedToken<Object, String> variableName() {
         return rule(() -> sequence(
                 singleChar(c -> Character.isAlphabetic(c) || c == '$' || c == '_'),
                 anyNumberOf(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_'),
@@ -99,7 +98,7 @@ public class RubyGrammar {
         ));
     }
 
-    private static TypedToken<Object, RubyString> singleQuoteString() {
+    private TypedToken<Object, RubyString> singleQuoteString() {
         return rule(() -> transformation(
                 delimited(
                         '\'',

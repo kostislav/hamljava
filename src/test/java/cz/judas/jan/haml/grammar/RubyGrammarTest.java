@@ -12,6 +12,8 @@ import static org.hamcrest.Matchers.is;
 public class RubyGrammarTest {
     @Test
     public void hashTypesCannotBeCombined() throws Exception {
-        assertThat(RubyGrammar.hash().tryEat(new InputString("{ a: 'gf', :tr => 'hg' }"), new MutableHtmlNode()), is(Optional.empty()));
+        RubyGrammar rubyGrammar = new RubyGrammar();
+
+        assertThat(rubyGrammar.hash().tryEat(new InputString("{ a: 'gf', :tr => 'hg' }"), new MutableHtmlNode()), is(Optional.empty()));
     }
 }
