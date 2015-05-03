@@ -3,8 +3,6 @@ package cz.judas.jan.haml.grammar;
 import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.ContextSwitchToken2;
-import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
-import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.RubyExpression;
 import cz.judas.jan.haml.tree.RubyHash;
@@ -12,7 +10,6 @@ import cz.judas.jan.haml.tree.RubyString;
 import cz.judas.jan.haml.tree.RubySymbol;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
-import cz.judas.jan.haml.tree.mutable.MutableRubyExpression;
 
 import java.util.Optional;
 
@@ -43,8 +40,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
     private static TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
         return rule(() -> sequence(
                 match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
-                new ContextSwitchToken2<MutableRootNode, MutableHtmlNode, MutableHtmlNode>(
-                        MutableHtmlNode::new,
+                new ContextSwitchToken2<>(
                         lineContent(),
                         MutableRootNode::addNode
                 ),
