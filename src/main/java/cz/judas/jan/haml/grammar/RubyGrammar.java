@@ -79,7 +79,7 @@ public class RubyGrammar {
                 fieldReference(),
                 singleChar('.'),
                 variableName(),
-                (field, ignored, methodName) -> new MethodCall(field.getName(), methodName)
+                (field, ignored, methodName) -> new MethodCall(field, methodName)
         ));
     }
 
