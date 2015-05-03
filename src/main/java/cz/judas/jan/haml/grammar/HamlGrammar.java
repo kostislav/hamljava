@@ -25,7 +25,7 @@ public class HamlGrammar {
     }
 
     public TypedToken<Object, String> indent() {
-        return anyNumberOf('\t');
+        return anyNumberOfChars('\t');
     }
 
     public TypedToken<Object, MutableHtmlNode> lineContent() {
@@ -78,7 +78,7 @@ public class HamlGrammar {
 
     private TypedToken<Object, RubyString> textContent() {
         return rule(() -> transformation(
-                anyNumberOf(notNewLine()),
+                anyNumberOfChars(notNewLine()),
                 RubyString::new
         ));
     }

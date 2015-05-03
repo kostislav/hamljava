@@ -92,8 +92,8 @@ public class RubyGrammar {
     public TypedToken<Object, String> variableName() {
         return rule(() -> sequence(
                 singleChar(c -> Character.isAlphabetic(c) || c == '$' || c == '_'),
-                anyNumberOf(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_'),
-                anyNumberOf(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '='),
+                anyNumberOfChars(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_'),
+                anyNumberOfChars(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '='),
                 (firstChar, nextChars, lastChars) -> firstChar + nextChars + lastChars
         ));
     }

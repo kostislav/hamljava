@@ -9,7 +9,6 @@ import cz.judas.jan.haml.parser.tokens.terminal.AtMostOneCharToken;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -21,11 +20,11 @@ public class GenericTokens {
         return new AnyNumberOfToken<>(inner);
     }
 
-    public static TypedToken<Object, String> anyNumberOf(char matchingChar) {
-        return anyNumberOf(c -> c == matchingChar);
+    public static TypedToken<Object, String> anyNumberOfChars(char matchingChar) {
+        return anyNumberOfChars(c -> c == matchingChar);
     }
 
-    public static TypedToken<Object, String> anyNumberOf(CharPredicate predicate) {
+    public static TypedToken<Object, String> anyNumberOfChars(CharPredicate predicate) {
         return new AnyNumberOfCharToken(predicate);
     }
 

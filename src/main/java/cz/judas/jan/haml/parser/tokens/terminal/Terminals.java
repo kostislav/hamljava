@@ -14,7 +14,7 @@ public class Terminals {
 
     private static final CharPredicate WHITESPACE_PREDICATE = c -> NOT_NEWLINE_PREDICATE.test(c) && Character.isWhitespace(c);
 
-    private static final TypedToken<Object, String> RELAXED_WHITESPACE_TOKEN = anyNumberOf(WHITESPACE_PREDICATE);
+    private static final TypedToken<Object, String> RELAXED_WHITESPACE_TOKEN = anyNumberOfChars(WHITESPACE_PREDICATE);
 
     private static final TypedToken<Object, String> STRICT_WHITESPACE_TOKEN = atLeastOneChar(WHITESPACE_PREDICATE);
 
