@@ -43,7 +43,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
     private static TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
         return rule(() -> sequence(
                 match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
-                new ContextSwitchToken2<>(
+                new ContextSwitchToken2<MutableRootNode, MutableHtmlNode, MutableHtmlNode>(
                         MutableHtmlNode::new,
                         lineContent(),
                         MutableRootNode::addNode
@@ -52,15 +52,15 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, MutableHtmlNode> lineContent() {
+    private static TypedToken<Object, MutableHtmlNode> lineContent() {
         return rule(() -> anyOf(
                 line(escapedPlainText()),
                 line(htmlTag()),
-                line(GenericTokens.<MutableHtmlNode, RubyString, MutableHtmlNode>transformation(textContent(), MutableHtmlNode::textNode))
+                line(transformation(textContent(), MutableHtmlNode::textNode))
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, MutableHtmlNode> escapedPlainText() {
+    private static TypedToken<Object, MutableHtmlNode> escapedPlainText() {
         return rule(() -> sequence(
                 singleChar('\\'),
                 textContent(),
@@ -68,7 +68,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, MutableHtmlNode> htmlTag() {
+    private static TypedToken<Object, MutableHtmlNode> htmlTag() {
         return rule(() -> sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
@@ -92,43 +92,39 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, RubyExpression> printExpression() {
+    private static TypedToken<Object, RubyExpression> printExpression() {
         return rule(() -> relaxedSequence(
                 singleChar('='),
-                GenericTokens.<MutableHtmlNode, MutableRubyExpression, RubyExpression>contextSwitch(
-                        MutableRubyExpression::new,
-                        RubyGrammar.expression(),
-                        (node, value) -> node.setContent(value.toExpression())
-                ),
+                RubyGrammar.expression(),
                 (ignored, expression) -> expression
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, RubyString> textContent() {
-        return rule(() -> GenericTokens.<MutableHtmlNode, String, RubyString>transformation(
-                match(anyNumberOf(notNewLine()), MutableHtmlNode.class).to((node, value) -> node.setContent(new RubyString(value))),
+    private static TypedToken<Object, RubyString> textContent() {
+        return rule(() -> transformation(
+                anyNumberOf(notNewLine()),
                 RubyString::new
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, String> tagName() {
-        return rule(() -> Terminals.<MutableHtmlNode, String>leadingChar(
+    private static TypedToken<Object, String> tagName() {
+        return rule(() -> leadingChar(
                 '%',
                 Predicates.TAG_NAME_CHAR,
                 (value) -> value
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, RubyHash> idAttribute() {
-        return rule(() -> Terminals.<MutableHtmlNode, RubyHash>leadingChar(
+    private static TypedToken<Object, RubyHash> idAttribute() {
+        return rule(() -> leadingChar(
                 '#',
                 Predicates.ID_OR_CLASS_CHAR,
                 (value) -> RubyHash.singleEntryHash(new RubySymbol("id"), new RubyString(value))
         ));
     }
 
-    private static TypedToken<MutableHtmlNode, RubyHash> classAttribute() {
-        return rule(() -> Terminals.<MutableHtmlNode, RubyHash>leadingChar(
+    private static TypedToken<Object, RubyHash> classAttribute() {
+        return rule(() -> leadingChar(
                 '.',
                 Predicates.ID_OR_CLASS_CHAR,
                 (value) -> RubyHash.singleEntryHash(new RubySymbol("class"), new RubyString(value))
