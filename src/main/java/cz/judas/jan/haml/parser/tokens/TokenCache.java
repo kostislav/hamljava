@@ -26,13 +26,13 @@ public class TokenCache {
         }
     }
 
-    public static synchronized <C, T> TypedToken<C, T> rule(Supplier<TypedToken<C, T>> tokenSupplier) {
+    public static synchronized <C, T> Token<T> rule(Supplier<Token<T>> tokenSupplier) {
         Caller caller = getCaller();
         SameTokens tokens = UNFINISHED_TOKENS.get(caller);
         if (tokens == null) {
             tokens = new SameTokens();
             UNFINISHED_TOKENS.put(caller, tokens);
-            TypedToken<C, T> token = tokenSupplier.get();
+            Token<T> token = tokenSupplier.get();
             tokens.setRealToken(token);
             if(!BUILDING) {
                 tokens.initializeTokens();
@@ -42,7 +42,7 @@ public class TokenCache {
         } else {
             ProxyToken<C, T> token = new ProxyToken<>();
             tokens.addProxyToken(token);
-            return (TypedToken<C, T>)token;
+            return token;
         }
     }
 
