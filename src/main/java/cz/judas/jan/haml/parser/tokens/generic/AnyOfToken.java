@@ -15,11 +15,11 @@ public class AnyOfToken<T> implements Token<T> {
     }
 
     @Override
-    public Optional<T> tryEat(InputString line) {
+    public Optional<? extends T> tryEat(InputString line) {
         for (Token<? extends T> alternative : alternatives) {
             Optional<? extends T> result = line.tryParse2(alternative::tryEat);
             if(result.isPresent()) {
-                return (Optional<T>)result;
+                return result;
             }
         }
         return Optional.empty();

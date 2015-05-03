@@ -119,7 +119,7 @@ public class TokenCache {
         }
 
         @Override
-        public Optional<T> tryEat(InputString line) {
+        public Optional<? extends T> tryEat(InputString line) {
             return realToken.tryEat(line);
         }
     }

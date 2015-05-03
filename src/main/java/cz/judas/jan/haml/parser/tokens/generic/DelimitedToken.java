@@ -17,12 +17,12 @@ public class DelimitedToken<T> implements Token<T> {
     }
 
     @Override
-    public Optional<T> tryEat(InputString line) {
+    public Optional<? extends T> tryEat(InputString line) {
         return line.tryParse2(inputString -> {
             if(inputString.advanceIf(startDelimiter)) {
                 Optional<? extends T> result = token.tryEat(inputString);
                 if(result.isPresent() && inputString.advanceIf(endDelimiter)) {
-                    return (Optional<T>)result;
+                    return result;
                 }
             }
             return Optional.empty();

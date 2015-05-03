@@ -15,7 +15,7 @@ public class AnyNumberOfToken<T> implements Token<List<T>> {
     }
 
     @Override
-    public Optional<List<T>> tryEat(InputString line) {
+    public Optional<? extends List<T>> tryEat(InputString line) {
         ImmutableList.Builder<T> builder = ImmutableList.builder();
         while(line.hasMoreChars()) {
             Optional<? extends T> result = line.tryParse2(inner::tryEat);
@@ -25,6 +25,6 @@ public class AnyNumberOfToken<T> implements Token<List<T>> {
                 break;
             }
         }
-        return Optional.of((List<T>) builder.build());
+        return Optional.of(builder.build());
     }
 }
