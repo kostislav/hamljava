@@ -13,10 +13,10 @@ public class TokenCache {
     @SuppressWarnings("StaticNonFinalField")
     private static boolean BUILDING = false;
 
-    public static synchronized <C, T> TypedToken<C, T> build(Grammar<C, T> grammar) {
+    public static synchronized <C, T> TypedToken<C, T> build(Supplier<TypedToken<C, T>> rootTokenSupplier) {
         try {
             BUILDING = true;
-            TypedToken<C, T> mainToken = grammar.buildRules();
+            TypedToken<C, T> mainToken = rootTokenSupplier.get();
             for (SameTokens proxyTokens : UNFINISHED_TOKENS.values()) {
                 proxyTokens.initializeTokens();
             }

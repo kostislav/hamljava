@@ -29,7 +29,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         );
     }
 
-    private TypedToken<MutableRootNode, String> doctype() {
+    public TypedToken<MutableRootNode, String> doctype() {
         return rule(() -> sequence(
                 exactText("!!!"),
                 whitespace(),
@@ -38,9 +38,9 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
+    public TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
         return rule(() -> sequence(
-                match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
+                indent(),
                 new ContextSwitchToken2<>(
                         lineContent(),
                         MutableRootNode::addNode
@@ -49,7 +49,11 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private TypedToken<Object, MutableHtmlNode> lineContent() {
+    public TypedToken<Object, String> indent() {
+        return anyNumberOf('\t');
+    }
+
+    public TypedToken<Object, MutableHtmlNode> lineContent() {
         return rule(() -> anyOf(
                 line(escapedPlainText()),
                 line(htmlTag()),
