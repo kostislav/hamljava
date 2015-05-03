@@ -8,14 +8,9 @@ import java.util.*;
 public class MutableRootNode implements MutableNode {
     private final List<MutableNode> children = new ArrayList<>();
     private final Deque<MutableNode> stack = new ArrayDeque<>();
-    private String doctype = null;
 
     public MutableRootNode() {
         stack.push(this);
-    }
-
-    public void setDoctype(String doctype) {
-        this.doctype = doctype;
     }
 
     @Override
@@ -23,7 +18,7 @@ public class MutableRootNode implements MutableNode {
         children.add(child);
     }
 
-    public void addNode(MutableNode node) {
+    public void addNode(MutableHtmlNode node) {
         stack.peekFirst().addChild(node);
         stack.push(node);
     }
@@ -36,6 +31,10 @@ public class MutableRootNode implements MutableNode {
 
     @Override
     public RootNode toNode() {
-        return new RootNode(Optional.ofNullable(doctype), Iterables.transform(children, MutableNode::toNode));
+        throw new UnsupportedOperationException("Use the other toNode method");
+    }
+
+    public RootNode toNode(Optional<String> doctype) {
+        return new RootNode(doctype, Iterables.transform(children, MutableNode::toNode));
     }
 }

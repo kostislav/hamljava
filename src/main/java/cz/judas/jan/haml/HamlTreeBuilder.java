@@ -26,7 +26,6 @@ public class HamlTreeBuilder {
         MutableRootNode context = new MutableRootNode();
         InputString line = new InputString(input);
         Optional<? extends String> doctype = doctypeToken.tryEat(line);
-        doctype.ifPresent(context::setDoctype);
 
         while (line.hasMoreChars()) {
             context.levelUp(indentToken.tryEat(line).get());
@@ -37,6 +36,6 @@ public class HamlTreeBuilder {
                 break;
             }
         }
-        return context.toNode();
+        return context.toNode(doctype.map(str -> str));
     }
 }
