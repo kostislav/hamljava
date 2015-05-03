@@ -85,21 +85,4 @@ public class GenericTokens {
     public static <C, IT, OT> TypedToken<C, OT> transformation(TypedToken<? super C, ? extends IT> token, Function<IT, OT> transform) {
         return new TransformationToken<>(token, transform);
     }
-
-    @SuppressWarnings("UnusedParameters") // class argument is for type inference only
-    public static <C> MatchHelper<C> match(TypedToken<? super C, String> token, Class<? extends C> clazz) {
-        return new MatchHelper<>(token);
-    }
-
-    public static class MatchHelper<C> {
-        private final TypedToken<? super C, String> token;
-
-        public MatchHelper(TypedToken<? super C, String> token) {
-            this.token = token;
-        }
-
-        public TypedToken<C, String> to(BiConsumer<? super C, String> onMatch) {
-            return new OnMatchToken<>(token, onMatch);
-        }
-    }
 }

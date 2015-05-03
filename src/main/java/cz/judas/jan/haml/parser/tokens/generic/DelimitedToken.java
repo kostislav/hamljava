@@ -17,10 +17,10 @@ public class DelimitedToken<C, T> implements TypedToken<C, T> {
     }
 
     @Override
-    public Optional<T> tryEat(InputString line, C parsingResult) {
+    public Optional<T> tryEat(InputString line) {
         return line.tryParse2(inputString -> {
             if(inputString.advanceIf(startDelimiter)) {
-                Optional<? extends T> result = token.tryEat(inputString, parsingResult);
+                Optional<? extends T> result = token.tryEat(inputString);
                 if(result.isPresent() && inputString.advanceIf(endDelimiter)) {
                     return (Optional<T>)result;
                 }

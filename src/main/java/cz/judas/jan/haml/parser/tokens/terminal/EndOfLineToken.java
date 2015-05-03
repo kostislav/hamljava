@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class EndOfLineToken implements TypedToken<Object, Optional<String>> {
     @Override
-    public Optional<Optional<String>> tryEat(InputString line, Object parsingResult) {
+    public Optional<Optional<String>> tryEat(InputString line) {
         if (line.currentCharIs('\n')) {
             line.advance();
             return Optional.of(Optional.of("\n"));

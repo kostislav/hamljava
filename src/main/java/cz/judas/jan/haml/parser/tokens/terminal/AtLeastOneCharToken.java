@@ -14,7 +14,7 @@ public class AtLeastOneCharToken<T> implements TypedToken<T, String> {
     }
 
     @Override
-    public Optional<String> tryEat(InputString line, T parsingResult) {
+    public Optional<String> tryEat(InputString line) {
         return line.tryGetSubstringIf(predicate, i -> i > 0);
     }
 }

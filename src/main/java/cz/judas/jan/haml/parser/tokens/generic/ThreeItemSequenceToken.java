@@ -19,13 +19,13 @@ public class ThreeItemSequenceToken<C, T1, T2, T3, T> implements TypedToken<C, T
     }
 
     @Override
-    public Optional<T> tryEat(InputString line, C parsingResult) {
+    public Optional<T> tryEat(InputString line) {
         return line.tryParse2(inputString -> {
-            Optional<? extends T1> firstResult = firstToken.tryEat(inputString, parsingResult);
+            Optional<? extends T1> firstResult = firstToken.tryEat(inputString);
             if(firstResult.isPresent()) {
-                Optional<? extends T2> secondResult = secondToken.tryEat(inputString, parsingResult);
+                Optional<? extends T2> secondResult = secondToken.tryEat(inputString);
                 if(secondResult.isPresent()) {
-                    Optional<? extends T3> thirdResult = thirdToken.tryEat(inputString, parsingResult);
+                    Optional<? extends T3> thirdResult = thirdToken.tryEat(inputString);
                     return Optional.of(transform.apply(firstResult.get(), secondResult.get(), thirdResult.get()));
                 }
             }

@@ -13,7 +13,7 @@ public class ExactTextToken implements TypedToken<Object, String> {
     }
 
     @Override
-    public Optional<String> tryEat(InputString line, Object parsingResult) {
+    public Optional<String> tryEat(InputString line) {
         if(line.startsWith(content)) {
             return Optional.of(content);
         } else {

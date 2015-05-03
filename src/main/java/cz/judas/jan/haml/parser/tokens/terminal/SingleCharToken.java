@@ -18,7 +18,7 @@ public class SingleCharToken implements TypedToken<Object, Character> {
     }
 
     @Override
-    public Optional<Character> tryEat(InputString line, Object parsingResult) {
+    public Optional<Character> tryEat(InputString line) {
         if (line.currentCharIs(predicate)) {
             char matchingChar = line.currentChar();
             line.advance();

@@ -16,7 +16,7 @@ public class TransformationToken<C, IT, OT> implements TypedToken<C, OT> {
     }
 
     @Override
-    public Optional<OT> tryEat(InputString line, C parsingResult) {
-        return token.tryEat(line, parsingResult).map(transform);
+    public Optional<OT> tryEat(InputString line) {
+        return token.tryEat(line).map(transform);
     }
 }

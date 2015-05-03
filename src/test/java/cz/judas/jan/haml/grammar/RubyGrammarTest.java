@@ -14,6 +14,6 @@ public class RubyGrammarTest {
     public void hashTypesCannotBeCombined() throws Exception {
         RubyGrammar rubyGrammar = new RubyGrammar();
 
-        assertThat(rubyGrammar.hash().tryEat(new InputString("{ a: 'gf', :tr => 'hg' }"), new MutableHtmlNode()), is(Optional.empty()));
+        assertThat(rubyGrammar.hash().tryEat(new InputString("{ a: 'gf', :tr => 'hg' }")), is(Optional.empty()));
     }
 }

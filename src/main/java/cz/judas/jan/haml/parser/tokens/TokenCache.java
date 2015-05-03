@@ -119,8 +119,8 @@ public class TokenCache {
         }
 
         @Override
-        public Optional<T> tryEat(InputString line, C parsingResult) {
-            return realToken.tryEat(line, parsingResult);
+        public Optional<T> tryEat(InputString line) {
+            return realToken.tryEat(line);
         }
     }
 }

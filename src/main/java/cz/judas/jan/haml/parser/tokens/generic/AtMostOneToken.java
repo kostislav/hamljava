@@ -13,11 +13,11 @@ public class AtMostOneToken<C, T> implements TypedToken<C, Optional<T>> {
     }
 
     @Override
-    public Optional<Optional<T>> tryEat(InputString line, C parsingResult) {
+    public Optional<Optional<T>> tryEat(InputString line) {
         return line.tryParse2(inputString -> {
-            Optional<? extends T> firstResult = token.tryEat(inputString, parsingResult);
+            Optional<? extends T> firstResult = token.tryEat(inputString);
             if(firstResult.isPresent()) {
-                Optional<? extends T> secondResult = token.tryEat(inputString, parsingResult);
+                Optional<? extends T> secondResult = token.tryEat(inputString);
                 if(secondResult.isPresent()) {
                     return Optional.empty();
                 } else {

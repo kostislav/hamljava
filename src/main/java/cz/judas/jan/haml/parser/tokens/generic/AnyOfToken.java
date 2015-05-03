@@ -15,9 +15,9 @@ public class AnyOfToken<C, T> implements TypedToken<C, T> {
     }
 
     @Override
-    public Optional<T> tryEat(InputString line, C parsingResult) {
+    public Optional<T> tryEat(InputString line) {
         for (TypedToken<? super C, ? extends T> alternative : alternatives) {
-            Optional<? extends T> result = line.tryParse2(inputString -> alternative.tryEat(inputString, parsingResult));
+            Optional<? extends T> result = line.tryParse2(alternative::tryEat);
             if(result.isPresent()) {
                 return (Optional<T>)result;
             }

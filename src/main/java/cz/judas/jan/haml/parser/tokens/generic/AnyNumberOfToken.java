@@ -15,10 +15,10 @@ public class AnyNumberOfToken<C, T> implements TypedToken<C, List<T>> {
     }
 
     @Override
-    public Optional<List<T>> tryEat(InputString line, C parsingResult) {
+    public Optional<List<T>> tryEat(InputString line) {
         ImmutableList.Builder<T> builder = ImmutableList.builder();
         while(line.hasMoreChars()) {
-            Optional<? extends T> result = line.tryParse2(inputString -> inner.tryEat(inputString, parsingResult));
+            Optional<? extends T> result = line.tryParse2(inner::tryEat);
             if(result.isPresent()) {
                 builder.add(result.get());
             } else {

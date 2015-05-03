@@ -25,12 +25,12 @@ public class HamlTreeBuilder {
     public RootNode buildTreeFrom(String input) {
         MutableRootNode context = new MutableRootNode();
         InputString line = new InputString(input);
-        Optional<String> doctype = doctypeToken.tryEat(line, context);
+        Optional<String> doctype = doctypeToken.tryEat(line);
         doctype.ifPresent(context::setDoctype);
 
         while (line.hasMoreChars()) {
-            context.levelUp(indentToken.tryEat(line, context).get());
-            Optional<MutableHtmlNode> result = lineToken.tryEat(line, context);
+            context.levelUp(indentToken.tryEat(line).get());
+            Optional<MutableHtmlNode> result = lineToken.tryEat(line);
             if (result.isPresent()) {
                 context.addNode(result.get());
             } else {
