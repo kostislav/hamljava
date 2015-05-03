@@ -1,16 +1,12 @@
 package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.tokens.TypedToken;
-import cz.judas.jan.haml.parser.tokens.generic.ContextSwitchToken2;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.RubyExpression;
 import cz.judas.jan.haml.tree.RubyHash;
 import cz.judas.jan.haml.tree.RubyString;
 import cz.judas.jan.haml.tree.RubySymbol;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
-import cz.judas.jan.haml.tree.mutable.MutableRootNode;
-
-import java.util.Optional;
 
 import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
@@ -19,31 +15,12 @@ import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 public class HamlGrammar {
     private final RubyGrammar rubyGrammar = new RubyGrammar();
 
-    public TypedToken<MutableRootNode, Optional<String>> buildRules() {
-        return sequence(
-                atMostOne(line(doctype())),
-                anyNumberOf(indentedLine()),
-                (doctype, children) -> doctype
-        );
-    }
-
-    public TypedToken<MutableRootNode, String> doctype() {
+    public TypedToken<Object, String> doctype() {
         return rule(() -> sequence(
                 exactText("!!!"),
                 whitespace(),
                 atLeastOneChar(Character::isLetterOrDigit),
                 (ignored, whitespace, doctype) -> doctype
-        ));
-    }
-
-    public TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
-        return rule(() -> sequence(
-                indent(),
-                new ContextSwitchToken2<>(
-                        lineContent(),
-                        MutableRootNode::addNode
-                ),
-                (indent, node) -> node
         ));
     }
 

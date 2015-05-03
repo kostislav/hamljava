@@ -11,14 +11,14 @@ import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 import java.util.Optional;
 
 public class HamlTreeBuilder {
-    private final TypedToken<MutableRootNode, String> doctypeToken;
+    private final TypedToken<Object, String> doctypeToken;
     private final TypedToken<Object, String> indentToken;
     private final TypedToken<Object, MutableHtmlNode> lineToken;
 
     public HamlTreeBuilder() {
         HamlGrammar hamlGrammar = new HamlGrammar();
         doctypeToken = hamlGrammar.doctype();
-        indentToken = TokenCache.build(hamlGrammar::indent);
+        indentToken = hamlGrammar.indent();
         lineToken = TokenCache.build(hamlGrammar::lineContent);
     }
 
