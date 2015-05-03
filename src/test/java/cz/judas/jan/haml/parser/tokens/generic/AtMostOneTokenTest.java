@@ -10,7 +10,7 @@ import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class AtMostOneTokenTest {
-    private AtMostOneToken<Object, Character> token;
+    private AtMostOneToken<Character> token;
 
     @Before
     public void setUp() throws Exception {

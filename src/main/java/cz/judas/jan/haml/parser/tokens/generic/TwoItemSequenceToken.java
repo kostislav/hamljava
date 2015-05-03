@@ -1,12 +1,13 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
 import cz.judas.jan.haml.parser.InputString;
+import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-public class TwoItemSequenceToken<C, T1, T2, T> implements TypedToken<C, T> {
+public class TwoItemSequenceToken<T1, T2, T> implements Token<T> {
     private final TypedToken<?, ? extends T1> firstToken;
     private final TypedToken<?, ? extends T2> secondToken;
     private final BiFunction<T1, T2, T> transform;

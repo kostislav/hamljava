@@ -1,12 +1,13 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
 import cz.judas.jan.haml.parser.InputString;
+import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 
 import java.util.Optional;
 
-public class PrecededWithWhitespaceToken<C, T> implements TypedToken<C, T> {
+public class PrecededWithWhitespaceToken<T> implements Token<T> {
     private final TypedToken<?, String> whitespace;
     private final TypedToken<?, ? extends T> token;
 

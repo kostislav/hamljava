@@ -10,7 +10,7 @@ import java.util.Collections;
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
 public class AnyNumberOfTokenTest {
-    private AnyNumberOfToken<Object, Character> token;
+    private AnyNumberOfToken<Character> token;
 
     @Before
     public void setUp() throws Exception {

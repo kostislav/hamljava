@@ -1,11 +1,12 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
 import cz.judas.jan.haml.parser.InputString;
+import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
 
-public class ThreeItemSequenceToken<C, T1, T2, T3, T> implements TypedToken<C, T> {
+public class ThreeItemSequenceToken<T1, T2, T3, T> implements Token<T> {
     private final TypedToken<?, ? extends T1> firstToken;
     private final TypedToken<?, ? extends T2> secondToken;
     private final TypedToken<?, ? extends T3> thirdToken;

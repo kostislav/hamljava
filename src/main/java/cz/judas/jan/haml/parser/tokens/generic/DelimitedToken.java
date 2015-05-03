@@ -1,11 +1,12 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
 import cz.judas.jan.haml.parser.InputString;
+import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
 
-public class DelimitedToken<C, T> implements TypedToken<C, T> {
+public class DelimitedToken<T> implements Token<T> {
     private final char startDelimiter;
     private final TypedToken<?, ? extends T> token;
     private final char endDelimiter;

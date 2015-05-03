@@ -53,7 +53,7 @@ public class GenericTokens {
         return new PrecededWithWhitespaceToken<>(secondToken);
     }
 
-    public static <C, T> TypedToken<C, Optional<T>> atMostOne(TypedToken<? super C, ? extends T> token) {
+    public static <C, T> TypedToken<Object, Optional<T>> atMostOne(TypedToken<? super C, ? extends T> token) {
         return new AtMostOneToken<>(token);
     }
 

@@ -2,12 +2,13 @@ package cz.judas.jan.haml.parser.tokens.generic;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.InputString;
+import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.List;
 import java.util.Optional;
 
-public class AnyNumberOfToken<C, T> implements TypedToken<C, List<T>> {
+public class AnyNumberOfToken<T> implements Token<List<T>> {
     private final TypedToken<?, ? extends T> inner;
 
     public AnyNumberOfToken(TypedToken<?, ? extends T> inner) {
