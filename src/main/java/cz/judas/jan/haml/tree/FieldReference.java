@@ -13,4 +13,8 @@ public class FieldReference implements RubyExpression {
     public Object evaluate(VariableMap variables) {
         return variables.get(name);
     }
+
+    public String getName() {
+        return name;
+    }
 }

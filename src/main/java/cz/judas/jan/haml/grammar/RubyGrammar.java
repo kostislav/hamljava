@@ -68,8 +68,18 @@ public class RubyGrammar {
 
     public Token<RubyExpression> expression() {
         return rule(() -> anyOf(
+                methodCall(),
                 fieldReference(),
                 singleQuoteString()
+        ));
+    }
+
+    private Token<MethodCall> methodCall() {
+        return rule(() -> sequence(
+                fieldReference(),
+                singleChar('.'),
+                variableName(),
+                (field, ignored, methodName) -> new MethodCall(field.getName(), methodName)
         ));
     }
 
