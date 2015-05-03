@@ -28,7 +28,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         );
     }
 
-    private static TypedToken<MutableRootNode, String> doctype() {
+    private TypedToken<MutableRootNode, String> doctype() {
         return rule(() -> sequence(
                 exactText("!!!"),
                 whitespace(),
@@ -37,7 +37,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
+    private TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
         return rule(() -> sequence(
                 match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
                 new ContextSwitchToken2<>(
@@ -48,7 +48,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<Object, MutableHtmlNode> lineContent() {
+    private TypedToken<Object, MutableHtmlNode> lineContent() {
         return rule(() -> anyOf(
                 line(escapedPlainText()),
                 line(htmlTag()),
@@ -56,7 +56,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<Object, MutableHtmlNode> escapedPlainText() {
+    private TypedToken<Object, MutableHtmlNode> escapedPlainText() {
         return rule(() -> sequence(
                 singleChar('\\'),
                 textContent(),
@@ -64,7 +64,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<Object, MutableHtmlNode> htmlTag() {
+    private TypedToken<Object, MutableHtmlNode> htmlTag() {
         return rule(() -> sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
@@ -88,7 +88,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<Object, RubyExpression> printExpression() {
+    private TypedToken<Object, RubyExpression> printExpression() {
         return rule(() -> relaxedSequence(
                 singleChar('='),
                 RubyGrammar.expression(),
@@ -96,14 +96,14 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<Object, RubyString> textContent() {
+    private TypedToken<Object, RubyString> textContent() {
         return rule(() -> transformation(
                 anyNumberOf(notNewLine()),
                 RubyString::new
         ));
     }
 
-    private static TypedToken<Object, String> tagName() {
+    private TypedToken<Object, String> tagName() {
         return rule(() -> leadingChar(
                 '%',
                 Predicates.TAG_NAME_CHAR,
@@ -111,7 +111,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<Object, RubyHash> idAttribute() {
+    private TypedToken<Object, RubyHash> idAttribute() {
         return rule(() -> leadingChar(
                 '#',
                 Predicates.ID_OR_CLASS_CHAR,
@@ -119,7 +119,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         ));
     }
 
-    private static TypedToken<Object, RubyHash> classAttribute() {
+    private TypedToken<Object, RubyHash> classAttribute() {
         return rule(() -> leadingChar(
                 '.',
                 Predicates.ID_OR_CLASS_CHAR,
