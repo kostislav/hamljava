@@ -4,6 +4,8 @@ import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
 import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
 
@@ -17,12 +19,12 @@ public class AtMostOneTokenTest {
 
     @Test
     public void succeedsIfNoMatch() throws Exception {
-        assertParses(token, "aaaa", 2, 2);
+        assertParses(token, "aaaa", 2, Optional.empty());
     }
 
     @Test
     public void matchesSingleInstance() throws Exception {
-        assertParses(token, "aorta", 1, 2);
+        assertParses(token, "aorta", 1, Optional.of('o'));
     }
 
     @Test

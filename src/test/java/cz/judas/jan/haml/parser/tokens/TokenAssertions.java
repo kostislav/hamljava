@@ -10,16 +10,7 @@ import static org.hamcrest.Matchers.is;
 
 @SuppressWarnings("UtilityClass")
 public class TokenAssertions {
-    public static void assertParses(TypedToken<Object, ?> token, String input, int position, int expectedEndPosition) {
-        InputString inputString = new InputString(input, position);
-
-        Optional<?> result = token.tryEat(inputString);
-
-        assertThat(result.isPresent(), is(true));
-        assertThat(inputString.currentPosition(), is(expectedEndPosition));
-    }
-
-    public static <T> void assertParses2(TypedToken<Object, ? extends T> token, String input, int position, T expectedResult) { // TODO
+    public static <T> void assertParses(TypedToken<Object, ? extends T> token, String input, int position, T expectedResult) {
         InputString inputString = new InputString(input, position);
 
         Optional<? extends T> result = token.tryEat(inputString);

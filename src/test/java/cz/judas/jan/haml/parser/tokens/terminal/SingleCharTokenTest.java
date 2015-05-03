@@ -16,7 +16,7 @@ public class SingleCharTokenTest {
 
     @Test
     public void succeedsOnSelectedCharacter() throws Exception {
-        assertParses(token, "yyxe", 2, 3);
+        assertParses(token, "yyxe", 2, 'x');
     }
 
     @Test
@@ -33,7 +33,7 @@ public class SingleCharTokenTest {
     public void predicateVersionEatsOneCharFromPredicate() throws Exception {
         token = new SingleCharToken(c -> c == 'a' || c == 'b');
 
-        assertParses(token, "rhbae", 2, 3);
+        assertParses(token, "rhbae", 2, 'b');
     }
 
     @Test

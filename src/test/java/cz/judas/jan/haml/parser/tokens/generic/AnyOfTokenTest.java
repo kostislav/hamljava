@@ -5,8 +5,7 @@ import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
 
-import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
-import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.*;
 
 public class AnyOfTokenTest {
     private AnyOfToken<Object, Character> token;
@@ -21,12 +20,12 @@ public class AnyOfTokenTest {
 
     @Test
     public void matchesIfFirstTokenMatches() throws Exception {
-        assertParses(token, "podax", 3, 4);
+        assertParses(token, "podax", 3, 'a');
     }
 
     @Test
     public void matchesIfSecondTokenMatches() throws Exception {
-        assertParses(token, "pobx", 2, 3);
+        assertParses(token, "pobx", 2, 'b');
     }
 
     @Test
@@ -36,6 +35,6 @@ public class AnyOfTokenTest {
 
     @Test
     public void onlyEatsOneTokenWorthOfInput() throws Exception {
-        assertParses(token, "podbaba", 3, 4);
+        assertParses(token, "podbaba", 3, 'b');
     }
 }

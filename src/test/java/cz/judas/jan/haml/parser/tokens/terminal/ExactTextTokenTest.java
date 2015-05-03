@@ -21,7 +21,7 @@ public class ExactTextTokenTest {
 
     @Test
     public void matchesIfWholeTextIsFound() throws Exception {
-        assertParses(token, "haaaaa", 1, 4);
+        assertParses(token, "haaaaa", 1, "aaa");
     }
 
     @Test

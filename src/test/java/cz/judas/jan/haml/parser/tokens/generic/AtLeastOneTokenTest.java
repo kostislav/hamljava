@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.parser.tokens.generic;
 
+import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.tokens.terminal.SingleCharToken;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,11 +23,11 @@ public class AtLeastOneTokenTest {
 
     @Test
     public void succeedsOnMatch() throws Exception {
-        assertParses(token, "lkjbgf", 3, 4);
+        assertParses(token, "lkjbgf", 3, ImmutableList.of('b'));
     }
 
     @Test
     public void eatsAllAvailable() throws Exception {
-        assertParses(token, "lkjbbbbbgf", 3, 8);
+        assertParses(token, "lkjbbbbbgf", 3, ImmutableList.of('b', 'b', 'b', 'b', 'b'));
     }
 }

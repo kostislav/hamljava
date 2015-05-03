@@ -21,16 +21,16 @@ public class AtLeastOneCharTokenTest {
 
     @Test
     public void succeedsOnMatch() throws Exception {
-        assertParses(token, "lkjbgf", 3, 4);
+        assertParses(token, "lkjbgf", 3, "b");
     }
 
     @Test
     public void eatsAllAvailable() throws Exception {
-        assertParses(token, "lkjbbbbbgf", 3, 8);
+        assertParses(token, "lkjbbbbbgf", 3, "bbbbb");
     }
 
     @Test
     public void stopsAtEnd() throws Exception {
-        assertParses(token, "lkjbbbbb", 3, 8);
+        assertParses(token, "lkjbbbbb", 3, "bbbbb");
     }
 }

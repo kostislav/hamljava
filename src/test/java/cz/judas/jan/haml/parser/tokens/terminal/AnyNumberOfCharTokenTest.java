@@ -15,16 +15,16 @@ public class AnyNumberOfCharTokenTest {
 
     @Test
     public void eatsAllThatIsAvailable() throws Exception {
-        assertParses(token, "apppper", 1, 5);
+        assertParses(token, "apppper", 1, "pppp");
     }
 
     @Test
     public void succeedsEvenIfNoMatch() throws Exception {
-        assertParses(token, "abc", 1, 1);
+        assertParses(token, "abc", 1, "");
     }
 
     @Test
     public void stopsAtEndOfString() throws Exception {
-        assertParses(token, "appppp", 1, 6);
+        assertParses(token, "appppp", 1, "ppppp");
     }
 }

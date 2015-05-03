@@ -16,12 +16,12 @@ public class AtMostOneCharTokenTest {
 
     @Test
     public void succeedsIfNoMatch() throws Exception {
-        assertParses(token, "aaaa", 2, 2);
+        assertParses(token, "aaaa", 2, "");
     }
 
     @Test
     public void matchesSingleInstance() throws Exception {
-        assertParses(token, "aorta", 1, 2);
+        assertParses(token, "aorta", 1, "o");
     }
 
     @Test
@@ -31,11 +31,11 @@ public class AtMostOneCharTokenTest {
 
     @Test
     public void worksAlmostAtEndOfString() throws Exception {
-        assertParses(token, "oo", 1, 2);
+        assertParses(token, "oo", 1, "o");
     }
 
     @Test
     public void worksAtEndOfString() throws Exception {
-        assertParses(token, "oo", 2, 2);
+        assertParses(token, "oo", 2, "");
     }
 }
