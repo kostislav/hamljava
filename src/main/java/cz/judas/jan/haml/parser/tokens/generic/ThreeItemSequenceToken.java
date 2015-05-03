@@ -2,17 +2,16 @@ package cz.judas.jan.haml.parser.tokens.generic;
 
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
 
 public class ThreeItemSequenceToken<T1, T2, T3, T> implements Token<T> {
-    private final TypedToken<?, ? extends T1> firstToken;
-    private final TypedToken<?, ? extends T2> secondToken;
-    private final TypedToken<?, ? extends T3> thirdToken;
+    private final Token<? extends T1> firstToken;
+    private final Token<? extends T2> secondToken;
+    private final Token<? extends T3> thirdToken;
     private final TriFunction<T1, T2, T3, T> transform;
 
-    public ThreeItemSequenceToken(TypedToken<?, ? extends T1> firstToken, TypedToken<?, ? extends T2> secondToken, TypedToken<?, ? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
+    public ThreeItemSequenceToken(Token<? extends T1> firstToken, Token<? extends T2> secondToken, Token<? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
         this.firstToken = firstToken;
         this.secondToken = secondToken;
         this.thirdToken = thirdToken;

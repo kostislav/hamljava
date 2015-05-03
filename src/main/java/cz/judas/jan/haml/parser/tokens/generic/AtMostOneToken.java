@@ -2,14 +2,13 @@ package cz.judas.jan.haml.parser.tokens.generic;
 
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
 
 public class AtMostOneToken<T> implements Token<Optional<T>> {
-    private final TypedToken<?, ? extends T> token;
+    private final Token<? extends T> token;
 
-    public AtMostOneToken(TypedToken<?, ? extends T> token) {
+    public AtMostOneToken(Token<? extends T> token) {
         this.token = token;
     }
 

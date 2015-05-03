@@ -3,16 +3,15 @@ package cz.judas.jan.haml.parser.tokens.generic;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.parser.InputString;
 import cz.judas.jan.haml.parser.tokens.Token;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.List;
 import java.util.Optional;
 
 public class AtLeastOneToken<T> implements Token<List<T>> {
-    private final TypedToken<?, ? extends T> token;
+    private final Token<? extends T> token;
     private final AnyNumberOfToken<? extends T> restMatcher;
 
-    public AtLeastOneToken(TypedToken<?, ? extends T> token) {
+    public AtLeastOneToken(Token<? extends T> token) {
         this.token = token;
         restMatcher = new AnyNumberOfToken<>(token);
     }
