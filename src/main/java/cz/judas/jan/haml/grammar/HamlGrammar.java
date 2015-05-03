@@ -5,32 +5,33 @@ import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 import cz.judas.jan.haml.predicates.Predicates;
-import cz.judas.jan.haml.tree.*;
+import cz.judas.jan.haml.tree.RubyExpression;
+import cz.judas.jan.haml.tree.RubyHash;
+import cz.judas.jan.haml.tree.RubyString;
+import cz.judas.jan.haml.tree.RubySymbol;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 import cz.judas.jan.haml.tree.mutable.MutableRubyExpression;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 
-public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
+public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
 
     @Override
-    public TypedToken<MutableRootNode, RootNode> buildRules() {
-        return GenericTokens.<MutableRootNode, Optional<String>, List<MutableHtmlNode>, RootNode>sequence(
+    public TypedToken<MutableRootNode, Optional<String>> buildRules() {
+        return sequence(
                 atMostOne(line(doctype())),
                 anyNumberOf(indentedLine()),
-                (doctype, children) -> new RootNode(doctype, children, 6)
+                (doctype, children) -> doctype
         );
     }
 
     private static TypedToken<MutableRootNode, String> doctype() {
-        return rule(() -> GenericTokens.<MutableRootNode, String, String, String, String>sequence(
+        return rule(() -> sequence(
                 exactText("!!!"),
                 whitespace(),
                 match(atLeastOneChar(Character::isLetterOrDigit), MutableRootNode.class).to(MutableRootNode::setDoctype),
@@ -67,10 +68,10 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
     }
 
     private static TypedToken<MutableHtmlNode, MutableHtmlNode> htmlTag() {
-        return rule(() -> GenericTokens.<MutableHtmlNode, Optional<String>, List<RubyHash>, Optional<RubyExpression>, MutableHtmlNode>sequence(
+        return rule(() -> sequence(
                 atMostOne(tagName()),
                 anyNumberOf(
-                        GenericTokens.<MutableHtmlNode, RubyHash>anyOf(
+                        anyOf(
                                 idAttribute(),
                                 classAttribute(),
                                 RubyGrammar.hash()
@@ -86,12 +87,12 @@ public class HamlGrammar implements Grammar<MutableRootNode, RootNode> {
                                 )
                         )
                 ),
-                (tagName, attributes, content) -> new MutableHtmlNode(tagName.orElse(null), attributes, content.orElse(null))
+                (tagName, attributes, content) -> new MutableHtmlNode(tagName.orElse(null), attributes, content.orElse(RubyString.EMPTY))
         ));
     }
 
     private static TypedToken<MutableHtmlNode, RubyExpression> printExpression() {
-        return rule(() -> GenericTokens.<MutableHtmlNode, Character, RubyExpression, RubyExpression>relaxedSequence(
+        return rule(() -> relaxedSequence(
                 singleChar('='),
                 GenericTokens.<MutableHtmlNode, MutableRubyExpression, RubyExpression>contextSwitch(
                         MutableRubyExpression::new,

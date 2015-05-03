@@ -5,10 +5,15 @@ import cz.judas.jan.haml.parser.Parser;
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 
+import java.util.Optional;
+
 public class HamlTreeBuilder {
-    private final Parser<MutableRootNode, RootNode> parser = new Parser<>(new HamlGrammar());
+    private final Parser<MutableRootNode, Optional<String>> parser = new Parser<>(new HamlGrammar());
 
     public RootNode buildTreeFrom(String input) {
-        return parser.parse(input, new MutableRootNode()).toNode();
+        MutableRootNode context = new MutableRootNode();
+        Optional<String> doctype = parser.parse(input, context);
+        doctype.ifPresent(context::setDoctype);
+        return context.toNode();
     }
 }

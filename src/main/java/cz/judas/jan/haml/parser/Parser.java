@@ -10,8 +10,7 @@ public class Parser<C, T> {
         token = TokenCache.build(grammar);
     }
 
-    public C parse(String input, C context) {
-        token.tryEat(new InputString(input), context);
-        return context;
+    public T parse(String input, C context) {
+        return token.tryEat(new InputString(input), context).get();
     }
 }
