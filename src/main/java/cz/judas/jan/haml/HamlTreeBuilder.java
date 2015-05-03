@@ -2,8 +2,8 @@ package cz.judas.jan.haml;
 
 import cz.judas.jan.haml.grammar.HamlGrammar;
 import cz.judas.jan.haml.parser.InputString;
+import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.TokenCache;
-import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 import cz.judas.jan.haml.tree.mutable.MutableRootNode;
@@ -11,9 +11,9 @@ import cz.judas.jan.haml.tree.mutable.MutableRootNode;
 import java.util.Optional;
 
 public class HamlTreeBuilder {
-    private final TypedToken<?, String> doctypeToken;
-    private final TypedToken<?, String> indentToken;
-    private final TypedToken<?, MutableHtmlNode> lineToken;
+    private final Token<String> doctypeToken;
+    private final Token<String> indentToken;
+    private final Token<MutableHtmlNode> lineToken;
 
     public HamlTreeBuilder() {
         HamlGrammar hamlGrammar = new HamlGrammar();

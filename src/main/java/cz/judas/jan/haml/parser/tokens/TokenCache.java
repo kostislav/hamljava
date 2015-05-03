@@ -12,10 +12,10 @@ public class TokenCache {
     @SuppressWarnings("StaticNonFinalField")
     private static boolean BUILDING = false;
 
-    public static synchronized <C, T> TypedToken<C, T> build(Supplier<TypedToken<C, T>> rootTokenSupplier) {
+    public static synchronized <T> Token<T> build(Supplier<Token<T>> rootTokenSupplier) {
         try {
             BUILDING = true;
-            TypedToken<C, T> mainToken = rootTokenSupplier.get();
+            Token<T> mainToken = rootTokenSupplier.get();
             for (SameTokens proxyTokens : UNFINISHED_TOKENS.values()) {
                 proxyTokens.initializeTokens();
             }
@@ -26,7 +26,7 @@ public class TokenCache {
         }
     }
 
-    public static synchronized <C, T> Token<T> rule(Supplier<Token<T>> tokenSupplier) {
+    public static synchronized <T> Token<T> rule(Supplier<Token<T>> tokenSupplier) {
         Caller caller = getCaller();
         SameTokens tokens = UNFINISHED_TOKENS.get(caller);
         if (tokens == null) {
@@ -40,7 +40,7 @@ public class TokenCache {
             }
             return token;
         } else {
-            ProxyToken<C, T> token = new ProxyToken<>();
+            ProxyToken<T> token = new ProxyToken<>();
             tokens.addProxyToken(token);
             return token;
         }
@@ -92,30 +92,30 @@ public class TokenCache {
     }
 
     private static class SameTokens {
-        private final Set<ProxyToken<?, ?>> proxyTokens = new HashSet<>();
-        private TypedToken<?, ?> realToken;
+        private final Set<ProxyToken<?>> proxyTokens = new HashSet<>();
+        private Token<?> realToken;
 
-        public void addProxyToken(ProxyToken<?, ?> proxyToken) {
+        public void addProxyToken(ProxyToken<?> proxyToken) {
             proxyTokens.add(proxyToken);
         }
 
-        public void setRealToken(TypedToken<?, ?> realToken) {
+        public void setRealToken(Token<?> realToken) {
             this.realToken = realToken;
         }
 
         public void initializeTokens() {
-            for (ProxyToken<?, ?> proxyToken : proxyTokens) {
+            for (ProxyToken<?> proxyToken : proxyTokens) {
                 proxyToken.setRealToken(realToken);
             }
         }
     }
 
-    private static class ProxyToken<C, T> implements Token<T> {
-        private TypedToken<?, T> realToken;
+    private static class ProxyToken<T> implements Token<T> {
+        private Token<T> realToken;
 
         @SuppressWarnings("unchecked")
-        private void setRealToken(TypedToken<?, ?> realToken) {
-            this.realToken = (TypedToken<C, T>) realToken;
+        private void setRealToken(Token<?> realToken) {
+            this.realToken = (Token<T>) realToken;
         }
 
         @Override
