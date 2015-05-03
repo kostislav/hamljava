@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.grammar;
 
-import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.ContextSwitchToken2;
 import cz.judas.jan.haml.predicates.Predicates;
@@ -17,10 +16,9 @@ import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 import static cz.judas.jan.haml.parser.tokens.terminal.Terminals.*;
 
-public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
+public class HamlGrammar {
     private final RubyGrammar rubyGrammar = new RubyGrammar();
 
-    @Override
     public TypedToken<MutableRootNode, Optional<String>> buildRules() {
         return sequence(
                 atMostOne(line(doctype())),

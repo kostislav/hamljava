@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.parser.tokens;
 
-import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.InputString;
 
 import java.util.*;
