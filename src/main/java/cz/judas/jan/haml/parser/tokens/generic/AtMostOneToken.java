@@ -6,7 +6,7 @@ import cz.judas.jan.haml.parser.tokens.TypedToken;
 import java.util.Optional;
 
 public class AtMostOneToken<C, T> implements TypedToken<C, Optional<T>> {
-    private final TypedToken<? super C, ? extends T> token;
+    private final TypedToken<?, ? extends T> token;
 
     public AtMostOneToken(TypedToken<? super C, ? extends T> token) {
         this.token = token;

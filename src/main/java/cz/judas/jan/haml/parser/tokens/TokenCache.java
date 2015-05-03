@@ -111,7 +111,7 @@ public class TokenCache {
     }
 
     private static class ProxyToken<C, T> implements TypedToken<C, T> {
-        private TypedToken<C, T> realToken;
+        private TypedToken<?, T> realToken;
 
         @SuppressWarnings("unchecked")
         private void setRealToken(TypedToken<?, ?> realToken) {

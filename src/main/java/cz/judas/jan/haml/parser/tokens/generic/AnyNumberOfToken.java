@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class AnyNumberOfToken<C, T> implements TypedToken<C, List<T>> {
-    private final TypedToken<? super C, ? extends T> inner;
+    private final TypedToken<?, ? extends T> inner;
 
-    public AnyNumberOfToken(TypedToken<? super C, ? extends T> inner) {
+    public AnyNumberOfToken(TypedToken<?, ? extends T> inner) {
         this.inner = inner;
     }
 

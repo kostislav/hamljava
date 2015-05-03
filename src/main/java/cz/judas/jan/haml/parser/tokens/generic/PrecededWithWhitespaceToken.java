@@ -7,10 +7,10 @@ import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 import java.util.Optional;
 
 public class PrecededWithWhitespaceToken<C, T> implements TypedToken<C, T> {
-    private final TypedToken<? super C, String> whitespace;
-    private final TypedToken<? super C, ? extends T> token;
+    private final TypedToken<?, String> whitespace;
+    private final TypedToken<?, ? extends T> token;
 
-    public PrecededWithWhitespaceToken(TypedToken<? super C, ? extends T> token) {
+    public PrecededWithWhitespaceToken(TypedToken<?, ? extends T> token) {
         whitespace = Terminals.whitespace();
         this.token = token;
     }

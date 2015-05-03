@@ -7,10 +7,10 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class TransformationToken<C, IT, OT> implements TypedToken<C, OT> {
-    private final TypedToken<? super C, ? extends IT> token;
+    private final TypedToken<?, ? extends IT> token;
     private final Function<IT, OT> transform;
 
-    public TransformationToken(TypedToken<? super C, ? extends IT> token, Function<IT, OT> transform) {
+    public TransformationToken(TypedToken<?, ? extends IT> token, Function<IT, OT> transform) {
         this.token = token;
         this.transform = transform;
     }

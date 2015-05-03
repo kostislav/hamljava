@@ -6,12 +6,12 @@ import cz.judas.jan.haml.parser.tokens.TypedToken;
 import java.util.Optional;
 
 public class ThreeItemSequenceToken<C, T1, T2, T3, T> implements TypedToken<C, T> {
-    private final TypedToken<? super C, ? extends T1> firstToken;
-    private final TypedToken<? super C, ? extends T2> secondToken;
-    private final TypedToken<? super C, ? extends T3> thirdToken;
+    private final TypedToken<?, ? extends T1> firstToken;
+    private final TypedToken<?, ? extends T2> secondToken;
+    private final TypedToken<?, ? extends T3> thirdToken;
     private final TriFunction<T1, T2, T3, T> transform;
 
-    public ThreeItemSequenceToken(TypedToken<? super C, ? extends T1> firstToken, TypedToken<? super C, ? extends T2> secondToken, TypedToken<? super C, ? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
+    public ThreeItemSequenceToken(TypedToken<?, ? extends T1> firstToken, TypedToken<?, ? extends T2> secondToken, TypedToken<?, ? extends T3> thirdToken, TriFunction<T1, T2, T3, T> transform) {
         this.firstToken = firstToken;
         this.secondToken = secondToken;
         this.thirdToken = thirdToken;
