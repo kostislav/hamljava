@@ -4,10 +4,6 @@ import cz.judas.jan.haml.parser.tokens.TypedToken;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.predicates.Predicates;
 import cz.judas.jan.haml.tree.*;
-import cz.judas.jan.haml.tree.mutable.MutableHash;
-import cz.judas.jan.haml.tree.mutable.MutableHashEntry;
-import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
-import cz.judas.jan.haml.tree.mutable.MutableRubyExpression;
 
 import java.util.List;
 
@@ -19,17 +15,13 @@ import static cz.judas.jan.haml.predicates.Predicates.not;
 
 @SuppressWarnings("UtilityClass")
 public class RubyGrammar {
-    public static TypedToken<MutableHtmlNode, RubyHash> hash() {
+    public static TypedToken<Object, RubyHash> hash() {
         return rule(() -> delimited(
                 '{',
-                GenericTokens.<MutableHtmlNode, List<HashEntry>, String, RubyHash>sequence(
-                        GenericTokens.<MutableHtmlNode, MutableHash, List<HashEntry>>contextSwitch(
-                                MutableHash::new,
-                                GenericTokens.anyOf(
-                                        hashEntries(newStyleHashEntry()),
-                                        hashEntries(oldStyleHashEntry())
-                                ),
-                                (node, attributes) -> node.addAttributes(attributes.toHash())
+                sequence(
+                        GenericTokens.anyOf(
+                                hashEntries(newStyleHashEntry()),
+                                hashEntries(oldStyleHashEntry())
                         ),
                         whitespace(),
                         (entries, ignored) -> new RubyHash(entries)
@@ -38,55 +30,39 @@ public class RubyGrammar {
         ));
     }
 
-    private static TypedToken<MutableHash, List<HashEntry>> hashEntries(TypedToken<MutableHashEntry, HashEntry> token) {
+    private static TypedToken<Object, List<HashEntry>> hashEntries(TypedToken<Object, HashEntry> token) {
         return atLeastOne(
-                GenericTokens.<MutableHash, String, HashEntry, String, HashEntry>relaxedSequence(
+                relaxedSequence(
                         whitespace(),
-                        GenericTokens.<MutableHash, MutableHashEntry, HashEntry>contextSwitch(
-                                MutableHashEntry::new,
-                                token,
-                                (hash, entry) -> hash.addKeyValuePair(entry.toEntry())
-                        ),
+                        token,
                         atMostOne(','),
                         (ignored1, entry, ignored2) -> entry
                 )
         );
     }
 
-    private static TypedToken<MutableHashEntry, HashEntry> newStyleHashEntry() {
-        return rule(() -> GenericTokens.<MutableHashEntry, String, RubyExpression, RubyExpression, HashEntry>relaxedSequence(
+    private static TypedToken<Object, HashEntry> newStyleHashEntry() {
+        return rule(() -> relaxedSequence(
                 whitespace(),
                 newStyleHashKey(),
-                GenericTokens.<MutableHashEntry, MutableRubyExpression, RubyExpression>contextSwitch(
-                        MutableRubyExpression::new,
-                        expression(),
-                        (entry, value) -> entry.setValue(value.toExpression())
-                ),
+                expression(),
                 (ignored, key, value) -> new HashEntry(key, value)
         ));
     }
 
-    private static TypedToken<MutableHashEntry, RubySymbol> newStyleHashKey() {
-        return rule(() -> GenericTokens.<MutableHashEntry, String, Character, RubySymbol>sequence(
-                match(atLeastOneChar(Predicates.TAG_NAME_CHAR), MutableHashEntry.class).to((entry, name) -> entry.setKey(new RubySymbol(name))),
+    private static TypedToken<Object, RubySymbol> newStyleHashKey() {
+        return rule(() -> sequence(
+                atLeastOneChar(Predicates.TAG_NAME_CHAR),
                 singleChar(':'),
                 (key, ignored) -> new RubySymbol(key)
         ));
     }
 
-    private static TypedToken<MutableHashEntry, HashEntry> oldStyleHashEntry() {
-        return rule(() -> GenericTokens.<MutableHashEntry, RubyExpression, String, RubyExpression, HashEntry>relaxedSequence(
-                GenericTokens.<MutableHashEntry, Object, RubyExpression>contextSwitch(
-                        Object::new,
-                        symbol(),
-                        (entry, name) -> {}
-                ),
+    private static TypedToken<Object, HashEntry> oldStyleHashEntry() {
+        return rule(() -> relaxedSequence(
+                symbol(),
                 exactText("=>"),
-                GenericTokens.<MutableHashEntry, Object, RubyExpression>contextSwitch(
-                        Object::new,
-                        expression(),
-                        (entry, value) -> {}
-                ),
+                expression(),
                 (key, ignored, value) -> new HashEntry(key, value)
         ));
     }
@@ -107,7 +83,7 @@ public class RubyGrammar {
     }
 
     public static TypedToken<Object, RubySymbol> symbol() {
-        return rule(() -> GenericTokens.<Object, Character, String, RubySymbol>sequence(
+        return rule(() -> sequence(
                 singleChar(':'),
                 variableName(),
                 (ignored, name) -> new RubySymbol(name)
