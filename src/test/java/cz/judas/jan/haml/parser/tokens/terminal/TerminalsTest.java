@@ -3,10 +3,7 @@ package cz.judas.jan.haml.parser.tokens.terminal;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 import org.junit.Test;
 
-import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertNotParses;
-import static cz.judas.jan.haml.parser.tokens.TokenAssertions.assertParses;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static cz.judas.jan.haml.parser.tokens.TokenAssertions.*;
 
 public class TerminalsTest {
     @Test
@@ -31,19 +28,15 @@ public class TerminalsTest {
 
     @Test
     public void leadingCharSetsValueOnSuccess() throws Exception {
-        StringBuilder stringBuilder = new StringBuilder();
-        TypedToken<StringBuilder, ?> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append, str -> str);
+        TypedToken<Object, String> leadingChar = Terminals.leadingChar('.', c -> c == 'a', str -> str);
 
-        assertParses(leadingChar, "bh.aab", 2, stringBuilder, 5);
-        assertThat(stringBuilder.toString(), is("aa"));
+        assertParses2(leadingChar, "bh.aab", 2, "aa");
     }
 
     @Test
     public void leadingCharDoesNotAllowWhitespace() throws Exception {
-        StringBuilder stringBuilder = new StringBuilder();
-        TypedToken<StringBuilder, ?> leadingChar = Terminals.leadingChar('.', c -> c == 'a', StringBuilder::append, str -> str);
+        TypedToken<Object, ?> leadingChar = Terminals.leadingChar('.', c -> c == 'a', str -> str);
 
-        assertNotParses(leadingChar, "bh. aab", 2, stringBuilder);
-        assertThat(stringBuilder.length(), is(0));
+        assertNotParses(leadingChar, "bh. aab", 2);
     }
 }

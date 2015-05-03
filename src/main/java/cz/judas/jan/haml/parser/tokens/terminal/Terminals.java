@@ -4,7 +4,6 @@ import cz.judas.jan.haml.parser.CharPredicate;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
 
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
@@ -37,13 +36,10 @@ public class Terminals {
         return END_OF_LINE_TOKEN;
     }
 
-    public static <C, T> TypedToken<C, T> leadingChar(char leadingChar, CharPredicate validChars, BiConsumer<? super C, String> onEnd, Function<String, ? extends T> transform) {
+    public static <C, T> TypedToken<C, T> leadingChar(char leadingChar, CharPredicate validChars, Function<String, ? extends T> transform) {
         return sequence(
                 singleChar(leadingChar),
-                onMatch(
-                        atLeastOneChar(validChars),
-                        onEnd
-                ),
+                atLeastOneChar(validChars),
                 (ignored, value) -> transform.apply(value)
         );
     }

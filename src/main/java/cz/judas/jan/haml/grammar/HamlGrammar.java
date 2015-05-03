@@ -2,6 +2,7 @@ package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.Grammar;
 import cz.judas.jan.haml.parser.tokens.TypedToken;
+import cz.judas.jan.haml.parser.tokens.generic.ContextSwitchToken2;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.parser.tokens.terminal.Terminals;
 import cz.judas.jan.haml.predicates.Predicates;
@@ -42,7 +43,7 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
     private static TypedToken<MutableRootNode, MutableHtmlNode> indentedLine() {
         return rule(() -> sequence(
                 match(anyNumberOf('\t'), MutableRootNode.class).to(MutableRootNode::levelUp),
-                GenericTokens.<MutableRootNode, MutableHtmlNode, MutableHtmlNode>contextSwitch(
+                new ContextSwitchToken2<>(
                         MutableHtmlNode::new,
                         lineContent(),
                         MutableRootNode::addNode
@@ -114,7 +115,6 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         return rule(() -> Terminals.<MutableHtmlNode, String>leadingChar(
                 '%',
                 Predicates.TAG_NAME_CHAR,
-                MutableHtmlNode::setTagName,
                 (value) -> value
         ));
     }
@@ -123,7 +123,6 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         return rule(() -> Terminals.<MutableHtmlNode, RubyHash>leadingChar(
                 '#',
                 Predicates.ID_OR_CLASS_CHAR,
-                (node, value) -> node.setId(new RubyString(value)),
                 (value) -> RubyHash.singleEntryHash(new RubySymbol("id"), new RubyString(value))
         ));
     }
@@ -132,7 +131,6 @@ public class HamlGrammar implements Grammar<MutableRootNode, Optional<String>> {
         return rule(() -> Terminals.<MutableHtmlNode, RubyHash>leadingChar(
                 '.',
                 Predicates.ID_OR_CLASS_CHAR,
-                MutableHtmlNode::addClass,
                 (value) -> RubyHash.singleEntryHash(new RubySymbol("class"), new RubyString(value))
         ));
     }
