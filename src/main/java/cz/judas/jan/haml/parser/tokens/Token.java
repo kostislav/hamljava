@@ -1,4 +1,9 @@
 package cz.judas.jan.haml.parser.tokens;
 
-public interface Token<T> extends TypedToken<Object, T> {
+import cz.judas.jan.haml.parser.InputString;
+
+import java.util.Optional;
+
+public interface Token<T> {
+    Optional<T> tryEat(InputString line);
 }
