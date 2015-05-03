@@ -76,46 +76,46 @@ public class RubyGrammar {
 
     private static TypedToken<MutableHashEntry, HashEntry> oldStyleHashEntry() {
         return rule(() -> GenericTokens.<MutableHashEntry, RubyExpression, String, RubyExpression, HashEntry>relaxedSequence(
-                GenericTokens.<MutableHashEntry, MutableRubyExpression, RubyExpression>contextSwitch(
-                        MutableRubyExpression::new,
+                GenericTokens.<MutableHashEntry, Object, RubyExpression>contextSwitch(
+                        Object::new,
                         symbol(),
-                        (entry, name) -> entry.setKey(name.toExpression())
+                        (entry, name) -> {}
                 ),
                 exactText("=>"),
-                GenericTokens.<MutableHashEntry, MutableRubyExpression, RubyExpression>contextSwitch(
-                        MutableRubyExpression::new,
+                GenericTokens.<MutableHashEntry, Object, RubyExpression>contextSwitch(
+                        Object::new,
                         expression(),
-                        (entry, value) -> entry.setValue(value.toExpression())
+                        (entry, value) -> {}
                 ),
                 (key, ignored, value) -> new HashEntry(key, value)
         ));
     }
 
-    public static TypedToken<MutableRubyExpression, RubyExpression> expression() {
+    public static TypedToken<Object, RubyExpression> expression() {
         return rule(() -> anyOf(
                 fieldReference(),
                 singleQuoteString()
         ));
     }
 
-    private static TypedToken<MutableRubyExpression, FieldReference> fieldReference() {
-        return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, FieldReference>sequence(
+    private static TypedToken<Object, FieldReference> fieldReference() {
+        return rule(() -> sequence(
                 singleChar('@'),
-                match(variableName(), MutableRubyExpression.class).to((expression, name) -> expression.setValue(new FieldReference(name))),
+                variableName(),
                 (ignored, name) -> new FieldReference(name)
         ));
     }
 
-    public static TypedToken<MutableRubyExpression, RubySymbol> symbol() {
-        return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, RubySymbol>sequence(
+    public static TypedToken<Object, RubySymbol> symbol() {
+        return rule(() -> GenericTokens.<Object, Character, String, RubySymbol>sequence(
                 singleChar(':'),
-                match(variableName(), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubySymbol(value))),
+                variableName(),
                 (ignored, name) -> new RubySymbol(name)
         ));
     }
 
-    public static TypedToken<MutableRubyExpression, String> variableName() {
-        return rule(() -> GenericTokens.<MutableRubyExpression, Character, String, String, String>sequence(
+    public static TypedToken<Object, String> variableName() {
+        return rule(() -> sequence(
                 singleChar(c -> Character.isAlphabetic(c) || c == '$' || c == '_'),
                 anyNumberOf(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_'),
                 anyNumberOf(c -> Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '!' || c == '?' || c == '='),
@@ -123,11 +123,11 @@ public class RubyGrammar {
         ));
     }
 
-    private static TypedToken<MutableRubyExpression, RubyString> singleQuoteString() {
-        return rule(() -> GenericTokens.<MutableRubyExpression, String, RubyString>transformation(
+    private static TypedToken<Object, RubyString> singleQuoteString() {
+        return rule(() -> transformation(
                 delimited(
                         '\'',
-                        match(atLeastOneChar(not(anyOfChars('\'', '\n'))), MutableRubyExpression.class).to((entry, value) -> entry.setValue(new RubyString(value))),
+                        atLeastOneChar(not(anyOfChars('\'', '\n'))),
                         '\''
                 ),
                 RubyString::new
