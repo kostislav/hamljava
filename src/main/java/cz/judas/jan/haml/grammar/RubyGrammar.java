@@ -3,7 +3,7 @@ package cz.judas.jan.haml.grammar;
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.parser.tokens.generic.GenericTokens;
 import cz.judas.jan.haml.predicates.Predicates;
-import cz.judas.jan.haml.tree.*;
+import cz.judas.jan.haml.tree.ruby.*;
 
 import java.util.List;
 

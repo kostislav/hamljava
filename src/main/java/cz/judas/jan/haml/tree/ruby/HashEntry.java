@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree;
+package cz.judas.jan.haml.tree.ruby;
 
 public class HashEntry {
     private final RubyExpression key;

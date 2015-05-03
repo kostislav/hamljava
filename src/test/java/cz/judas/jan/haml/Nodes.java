@@ -2,6 +2,10 @@ package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.tree.*;
+import cz.judas.jan.haml.tree.ruby.HashEntry;
+import cz.judas.jan.haml.tree.ruby.RubyExpression;
+import cz.judas.jan.haml.tree.ruby.RubyHash;
+import cz.judas.jan.haml.tree.ruby.RubyString;
 
 import java.util.*;
 

@@ -2,6 +2,8 @@ package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.tree.ruby.RubyExpression;
+import cz.judas.jan.haml.tree.ruby.RubyHash;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;

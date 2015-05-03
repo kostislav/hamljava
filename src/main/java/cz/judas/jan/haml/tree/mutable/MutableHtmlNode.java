@@ -4,6 +4,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.tree.*;
+import cz.judas.jan.haml.tree.ruby.RubyExpression;
+import cz.judas.jan.haml.tree.ruby.RubyHash;
+import cz.judas.jan.haml.tree.ruby.RubyString;
 
 import java.util.ArrayList;
 import java.util.Collections;

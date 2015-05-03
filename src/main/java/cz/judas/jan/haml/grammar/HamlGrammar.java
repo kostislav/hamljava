@@ -2,10 +2,10 @@ package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.tokens.Token;
 import cz.judas.jan.haml.predicates.Predicates;
-import cz.judas.jan.haml.tree.RubyExpression;
-import cz.judas.jan.haml.tree.RubyHash;
-import cz.judas.jan.haml.tree.RubyString;
-import cz.judas.jan.haml.tree.RubySymbol;
+import cz.judas.jan.haml.tree.ruby.RubyExpression;
+import cz.judas.jan.haml.tree.ruby.RubyHash;
+import cz.judas.jan.haml.tree.ruby.RubyString;
+import cz.judas.jan.haml.tree.ruby.RubySymbol;
 import cz.judas.jan.haml.tree.mutable.MutableHtmlNode;
 
 import static cz.judas.jan.haml.parser.tokens.TokenCache.rule;

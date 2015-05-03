@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree;
+package cz.judas.jan.haml.tree.ruby;
 
 import cz.judas.jan.haml.VariableMap;
 

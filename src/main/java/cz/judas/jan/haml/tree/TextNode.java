@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.tree;
 
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.tree.ruby.RubyExpression;
 
 public class TextNode implements Node {
     private final RubyExpression content;

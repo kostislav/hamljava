@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.grammar;
 
 import cz.judas.jan.haml.parser.InputString;
-import cz.judas.jan.haml.tree.RubyHash;
+import cz.judas.jan.haml.tree.ruby.RubyHash;
 import org.junit.Test;
 
 import java.util.Optional;
