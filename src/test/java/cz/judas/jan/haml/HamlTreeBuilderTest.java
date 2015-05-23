@@ -3,6 +3,8 @@ package cz.judas.jan.haml;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.tree.ruby.HashEntry;
+import cz.judas.jan.haml.tree.ruby.RubyHash;
 import cz.judas.jan.haml.tree.ruby.RubyString;
 import org.junit.Before;
 import org.junit.Test;
@@ -167,12 +169,15 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void attributesWithColon() throws Exception {
-        assertParses("%html(xml:lang='en'){ :'xml:fang' => 'ren' }", root(
+        assertParses("%html(xml:lang='en'){ :'xml:fang' => 'ren', \"xml:tang\" => \"e\" }", root(
                 node(
                         "html",
                         ImmutableList.of(
                                 hash(symbol("xml:lang"), string("en")),
-                                hash(symbol("xml:fang"), string("ren"))
+                                new RubyHash(ImmutableList.of(
+                                        new HashEntry(symbol("xml:fang"), string("ren")),
+                                        new HashEntry(string("xml:tang"), string("e"))
+                                ))
                         ),
                         RubyString.EMPTY
                 )
