@@ -21,12 +21,12 @@ public class HamlTreeBuilder2Test {
     public void processesRealSimpleHaml() throws Exception {
         assertParses("%html", root(node("html")));
     }
-//
-//    @Test
-//    public void processesNestedTag() throws Exception {
-//        assertParses("%html\n\t%head", root(node("html", node("head"))));
-//    }
-//
+
+    @Test
+    public void processesNestedTag() throws Exception {
+        assertParses("%html\n\t%head", root(node("html", node("head"))));
+    }
+
 //    @Test
 //    public void html5Ddoctype() throws Exception {
 //        assertParses("!!! 5", root("5"));
