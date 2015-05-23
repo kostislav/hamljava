@@ -1,5 +1,6 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.antlr.JavaHamlLexer;
 import cz.judas.jan.haml.antlr.JavaHamlParser;
@@ -12,10 +13,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class HamlTreeBuilder2 {
     public RootNode buildTreeFrom(String input) {
@@ -32,7 +30,7 @@ public class HamlTreeBuilder2 {
         );
     }
 
-    private HtmlNode tag(ParseTree htmlTagContext) {
+    private static HtmlNode tag(ParseTree htmlTagContext) {
         return new HtmlNode(
                 htmlTagContext.getChild(0).getChild(1).getText(),
                 Collections.emptyList(),
@@ -41,14 +39,44 @@ public class HamlTreeBuilder2 {
         );
     }
 
-    private List<Node> childrenOf(ParseTree htmlTagContext) {
-        List<Node> children = new ArrayList<>();
-        for (int i = 1; i < htmlTagContext.getChildCount(); i++) {
-            ParseTree child = htmlTagContext.getChild(i);
-            if (child instanceof JavaHamlParser.HtmlTagContext) {
-                children.add(tag(child));
+    private static List<? extends Node> childrenOf(ParseTree htmlTagContext) {
+        return FluentIterable.from(new ParseTreeChildren(htmlTagContext))
+                .filter(JavaHamlParser.HtmlTagContext.class)
+                .transform(HamlTreeBuilder2::tag)
+                .toList();
+    }
+
+    private static class ParseTreeChildren implements Iterable<ParseTree> {
+        private final ParseTree parent;
+
+        private ParseTreeChildren(ParseTree parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public Iterator<ParseTree> iterator() {
+            return new ParseTreeChildIterator(parent);
+        }
+
+        @SuppressWarnings("InnerClassTooDeeplyNested")
+        private static class ParseTreeChildIterator implements Iterator<ParseTree> {
+            private final ParseTree parent;
+            private int i = 0;
+
+            private ParseTreeChildIterator(ParseTree parent) {
+                this.parent = parent;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return i < parent.getChildCount();
+            }
+
+            @Override
+            public ParseTree next() {
+                i += 1;
+                return parent.getChild(i - 1);
             }
         }
-        return children;
     }
 }
