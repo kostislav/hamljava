@@ -22,7 +22,7 @@ public class HamlTreeBuilder2 {
 
         JavaHamlParser parser = new JavaHamlParser(tokenStream);
 
-        ParseTree htmlTagContext = parser.htmlTag();
+        JavaHamlParser.HtmlTagContext htmlTagContext = parser.htmlTag();
 
         return new RootNode(
                 Optional.empty(),
@@ -30,7 +30,7 @@ public class HamlTreeBuilder2 {
         );
     }
 
-    private static HtmlNode tag(ParseTree htmlTagContext) {
+    private static HtmlNode tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
         return new HtmlNode(
                 htmlTagContext.getChild(0).getChild(1).getText(),
                 Collections.emptyList(),
@@ -39,8 +39,10 @@ public class HamlTreeBuilder2 {
         );
     }
 
-    private static List<? extends Node> childrenOf(ParseTree htmlTagContext) {
+    private static List<? extends Node> childrenOf(JavaHamlParser.HtmlTagContext htmlTagContext) {
         return FluentIterable.from(new ParseTreeChildren(htmlTagContext))
+                .filter(JavaHamlParser.ChildTagsContext.class)
+                .transformAndConcat(ParseTreeChildren::new)
                 .filter(JavaHamlParser.HtmlTagContext.class)
                 .transform(HamlTreeBuilder2::tag)
                 .toList();

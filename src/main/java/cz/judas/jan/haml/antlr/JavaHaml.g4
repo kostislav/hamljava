@@ -19,9 +19,13 @@ tokens { INDENT, DEDENT }
   }
 }
 
-htmlTag: tagName (NL | INDENT htmlTag+ DEDENT);
+htmlTag: tagName (NL | childTags);
 
 tagName : PERCENT WORD;
+
+childTags: INDENT htmlTag+ DEDENT;
+
+
 
 PERCENT : '%';
 
