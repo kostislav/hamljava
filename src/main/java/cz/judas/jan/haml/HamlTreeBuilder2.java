@@ -119,32 +119,44 @@ public class HamlTreeBuilder2 {
     @SuppressWarnings("ChainOfInstanceofChecks")
     private static HashEntry hashEntry(JavaHamlParser.NewStyleHashEntryContext context) {
         String key = null;
-        String value = null;
+        RubyExpression value = null;
 
         for (ParseTree child : context.children) {
             if(child instanceof JavaHamlParser.AttributeKeyContext) {
                 key = child.getChild(0).getText();
-            } else if(child instanceof JavaHamlParser.SingleQuotedStringContext) {
-                value = child.getChild(1).getText();
+            } else if(child instanceof JavaHamlParser.ExpressionContext) {
+                value = expression((ParserRuleContext) child);
             }
         }
 
-        return new HashEntry(new RubySymbol(key), new RubyString(value));
+        return new HashEntry(new RubySymbol(key), value);
     }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
     private static HashEntry hashEntry(JavaHamlParser.OldStyleHashEntryContext context) {
-        String key = null;
-        String value = null;
+        RubyExpression key = null;
+        RubyExpression value = null;
 
         for (ParseTree child : context.children) {
-            if(child instanceof JavaHamlParser.SymbolContext) {
-                key = child.getChild(1).getText();
-            } else if(child instanceof JavaHamlParser.SingleQuotedStringContext) {
-                value = child.getChild(1).getText();
+            if(child instanceof JavaHamlParser.KeyExpressionContext) {
+                key = expression((ParserRuleContext) child.getChild(0));
+            } else if(child instanceof JavaHamlParser.ValueExpressionContext) {
+                value = expression((ParserRuleContext) child.getChild(0));
             }
         }
 
-        return new HashEntry(new RubySymbol(key), new RubyString(value));
+        return new HashEntry(key, value);
+    }
+
+    @SuppressWarnings("ChainOfInstanceofChecks")
+    private static RubyExpression expression(ParserRuleContext context) {
+        for (ParseTree child : context.children) {
+            if(child instanceof JavaHamlParser.SymbolContext) {
+                return new RubySymbol(child.getChild(1).getText());
+            } else if(child instanceof JavaHamlParser.SingleQuotedStringContext) {
+                return new RubyString(child.getChild(1).getText());
+            }
+        }
+        throw new IllegalArgumentException("Unknown expression type");
     }
 }

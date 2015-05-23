@@ -1,5 +1,7 @@
 grammar JavaHaml;
 
+// denter boilerplate
+
 tokens { INDENT, DEDENT }
 
 @lexer::header {
@@ -19,6 +21,8 @@ tokens { INDENT, DEDENT }
   }
 }
 
+// HAML
+
 document: doctype? htmlTag+;
 
 doctype: doctypeStart SPACE WORD NL;
@@ -35,18 +39,6 @@ classAttribute: DOT WORD;
 
 idAttribute: HASH WORD;
 
-attributeHash: LEFT_BRACE whitespace? (newStyleHashEntries | oldStyleHashEntries) whitespace? RIGHT_BRACE;
-
-newStyleHashEntries: (newStyleHashEntry whitespace? COMMA whitespace?)* newStyleHashEntry;
-
-newStyleHashEntry: attributeKey whitespace? singleQuotedString;
-
-oldStyleHashEntries: (oldStyleHashEntry whitespace? COMMA whitespace?)* oldStyleHashEntry;
-
-oldStyleHashEntry: symbol whitespace? FAT_ARROW whitespace singleQuotedString;
-
-attributeKey: WORD COLON;
-
 escapedText: BACKSLASH text;
 
 text: (~NL)+;
@@ -57,6 +49,28 @@ whitespace: SPACE | WHITESPACE;
 
 
 
+
+
+// Ruby
+
+attributeHash: LEFT_BRACE whitespace? (newStyleHashEntries | oldStyleHashEntries) whitespace? RIGHT_BRACE;
+
+newStyleHashEntries: (newStyleHashEntry whitespace? COMMA whitespace?)* newStyleHashEntry;
+
+newStyleHashEntry: attributeKey whitespace? expression;
+
+oldStyleHashEntries: (oldStyleHashEntry whitespace? COMMA whitespace?)* oldStyleHashEntry;
+
+oldStyleHashEntry: keyExpression whitespace? FAT_ARROW whitespace? valueExpression;
+
+keyExpression: expression;
+
+valueExpression: expression;
+
+attributeKey: WORD COLON;
+
+expression: symbol | singleQuotedString;
+
 symbol: COLON WORD;
 
 singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
@@ -65,7 +79,7 @@ singleQuotedStringContent: (~SINGLE_QUOTE)*;
 
 
 
-
+// Lexer rules
 
 EXCLAMATION: '!';
 DOT: '.';
