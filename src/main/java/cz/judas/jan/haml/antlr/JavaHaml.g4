@@ -25,9 +25,11 @@ doctype: doctypeStart SPACE WORD NL;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
-htmlTag: tagName (NL | childTags);
+htmlTag: tagName (SPACE text)? (NL | childTags);
 
 tagName : PERCENT WORD;
+
+text: (~NL)+;
 
 childTags: INDENT htmlTag+ DEDENT;
 

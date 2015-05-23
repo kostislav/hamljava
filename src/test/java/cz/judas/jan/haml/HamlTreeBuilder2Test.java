@@ -4,6 +4,7 @@ import cz.judas.jan.haml.tree.RootNode;
 import org.junit.Before;
 import org.junit.Test;
 
+import static cz.judas.jan.haml.Expressions.string;
 import static cz.judas.jan.haml.Nodes.node;
 import static cz.judas.jan.haml.Nodes.root;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,11 +52,11 @@ public class HamlTreeBuilder2Test {
         assertParses("!!! 5\n%html", root("5", node("html")));
     }
 
-//    @Test
-//    public void tagsCanHaveTextContent() throws Exception {
-//        assertParses("%html\n\t%head\n\t\t%title something", root(node("html", node("head", node("title", string("something"))))));
-//    }
-//
+    @Test
+    public void tagsCanHaveTextContent() throws Exception {
+        assertParses("%html\n\t%head\n\t\t%title something", root(node("html", node("head", node("title", string("something"))))));
+    }
+
 //    @Test
 //    public void implicitClosing() throws Exception {
 //        assertParses("%ul\n\t%li blah\n%p bleh", root(node("ul", node("li", string("blah"))), node("p", string("bleh"))));

@@ -13,7 +13,9 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public class HamlTreeBuilder2 {
     public RootNode buildTreeFrom(String input) {
@@ -26,15 +28,15 @@ public class HamlTreeBuilder2 {
         return new RootNode(
                 doctype(documentContext),
                 FluentIterable.from(documentContext.children)
-                .filter(JavaHamlParser.HtmlTagContext.class)
-                .transform(HamlTreeBuilder2::tag)
-                .toList()
+                        .filter(JavaHamlParser.HtmlTagContext.class)
+                        .transform(HamlTreeBuilder2::tag)
+                        .toList()
         );
     }
 
     private static Optional<String> doctype(ParseTree document) {
         ParseTree firstChild = document.getChild(0);
-        if(firstChild instanceof JavaHamlParser.DoctypeContext) {
+        if (firstChild instanceof JavaHamlParser.DoctypeContext) {
             return Optional.of(firstChild.getChild(2).getText());
         } else {
             return Optional.empty();
@@ -45,7 +47,12 @@ public class HamlTreeBuilder2 {
         return new HtmlNode(
                 htmlTagContext.getChild(0).getChild(1).getText(),
                 Collections.emptyList(),
-                RubyString.EMPTY,
+                FluentIterable.from(htmlTagContext.children)
+                        .filter(JavaHamlParser.TextContext.class)
+                        .first()
+                        .transform(ParserRuleContext::getText)
+                        .transform(RubyString::new)
+                        .or(RubyString.EMPTY),
                 childrenOf(htmlTagContext)
         );
     }
