@@ -6,14 +6,15 @@ import cz.judas.jan.haml.antlr.JavaHamlParser;
 import cz.judas.jan.haml.tree.HtmlNode;
 import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.tree.ruby.RubyHash;
 import cz.judas.jan.haml.tree.ruby.RubyString;
+import cz.judas.jan.haml.tree.ruby.RubySymbol;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,10 @@ public class HamlTreeBuilder2 {
     private static HtmlNode tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
         return new HtmlNode(
                 htmlTagContext.getChild(0).getChild(1).getText(),
-                Collections.emptyList(),
+                FluentIterable.from(htmlTagContext.children)
+                        .filter(JavaHamlParser.ClassAttributeContext.class)
+                        .transform(node -> RubyHash.singleEntryHash(new RubySymbol("class"), new RubyString(node.getChild(1).getText())))
+                        .toList(),
                 FluentIterable.from(htmlTagContext.children)
                         .filter(JavaHamlParser.TextContext.class)
                         .first()

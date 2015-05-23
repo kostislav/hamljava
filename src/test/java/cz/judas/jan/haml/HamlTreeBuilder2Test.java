@@ -1,10 +1,14 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.tree.RootNode;
 import org.junit.Before;
 import org.junit.Test;
 
+import static cz.judas.jan.haml.Expressions.hash;
 import static cz.judas.jan.haml.Expressions.string;
+import static cz.judas.jan.haml.Expressions.symbol;
 import static cz.judas.jan.haml.Nodes.node;
 import static cz.judas.jan.haml.Nodes.root;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -62,21 +66,21 @@ public class HamlTreeBuilder2Test {
         assertParses("%ul\n\t%li blah\n%p bleh", root(node("ul", node("li", string("blah"))), node("p", string("bleh"))));
     }
 
-//    @Test
-//    public void classAttribute() throws Exception {
-//        assertParses("%span.bluh bra bh", root(node("span", ImmutableMap.of(symbol("class"), string("bluh")), string("bra bh"))));
-//    }
-//
-//    @Test
-//    public void classAttributeWithoutContent() throws Exception {
-//        assertParses("%h1.bluh\n\t%span bra bh", root(node("h1", ImmutableMap.of(symbol("class"), string("bluh")), node("span", string("bra bh")))));
-//    }
-//
-//    @Test
-//    public void multipleClassAttributes() throws Exception {
-//        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableList.of(hash(symbol("class"), string("bluh")), hash(symbol("class"), string("lkj"))), string("bra bh"))));
-//    }
-//
+    @Test
+    public void classAttribute() throws Exception {
+        assertParses("%span.bluh bra bh", root(node("span", ImmutableMap.of(symbol("class"), string("bluh")), string("bra bh"))));
+    }
+
+    @Test
+    public void classAttributeWithoutContent() throws Exception {
+        assertParses("%h1.bluh\n\t%span bra bh", root(node("h1", ImmutableMap.of(symbol("class"), string("bluh")), node("span", string("bra bh")))));
+    }
+
+    @Test
+    public void multipleClassAttributes() throws Exception {
+        assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableList.of(hash(symbol("class"), string("bluh")), hash(symbol("class"), string("lkj"))), string("bra bh"))));
+    }
+
 //    @Test
 //    public void idAttribute() throws Exception {
 //        assertParses("%h2#hehe njhg", root(node("h2", ImmutableMap.of(symbol("id"), string("hehe")), string("njhg"))));
