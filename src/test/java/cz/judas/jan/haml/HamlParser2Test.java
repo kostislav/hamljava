@@ -43,34 +43,34 @@ public class HamlParser2Test {
         );
     }
 
-//    @Test
-//    public void combinedIdClassAndOtherAttributes() throws Exception {
-//        assertThat(
-//                parser.process("%span#huhl.blah.bleh{ color: 'red' } text", EMPTY_VARIABLE_MAP),
-//                is("<span id=\"huhl\" class=\"blah bleh\" color=\"red\">text</span>")
-//        );
-//    }
-//
-//    @Test
-//    public void findsBothBareAndGetterProperties() throws Exception {
-//        assertThat(
-//                parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
-//                is("<span class=\"name\">karl</span><span>654</span>")
-//        );
-//    }
-//
-//    private static class Person {
-//        public final String name;
-//        private final int age;
-//
-//        private Person(String name, int age) {
-//            this.name = name;
-//            this.age = age;
-//        }
-//
-//        @SuppressWarnings("UnusedDeclaration")
-//        private int getAge() {
-//            return age;
-//        }
-//    }
+    @Test
+    public void combinedIdClassAndOtherAttributes() throws Exception {
+        assertThat(
+                parser.process("%span#huhl.blah.bleh{ color: 'red' } text", EMPTY_VARIABLE_MAP),
+                is("<span id=\"huhl\" class=\"blah bleh\" color=\"red\">text</span>")
+        );
+    }
+
+    @Test
+    public void findsBothBareAndGetterProperties() throws Exception {
+        assertThat(
+                parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
+                is("<span class=\"name\">karl</span><span>654</span>")
+        );
+    }
+
+    private static class Person {
+        public final String name;
+        private final int age;
+
+        private Person(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        @SuppressWarnings("UnusedDeclaration")
+        private int getAge() {
+            return age;
+        }
+    }
 }

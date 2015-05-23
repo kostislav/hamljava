@@ -165,8 +165,27 @@ public class HamlTreeBuilder2 {
                 return new RubyString(child.getChild(1).getText());
             } else if(child instanceof JavaHamlParser.FieldReferenceContext) {
                 return new FieldReference(child.getChild(1).getText());
+            } else if(child instanceof JavaHamlParser.MethodCallContext) {
+                return methodCall((JavaHamlParser.MethodCallContext) child);
             }
         }
         throw new IllegalArgumentException("Unknown expression type");
+    }
+
+    @SuppressWarnings("ChainOfInstanceofChecks")
+    private static MethodCall methodCall(JavaHamlParser.MethodCallContext context) {
+        RubyExpression target = null;
+        String methodName = null;
+
+        for (ParseTree child : context.children) {
+            if(child instanceof JavaHamlParser.FieldReferenceContext) {
+//                target = expression((ParserRuleContext) child);
+                target = new FieldReference(child.getChild(1).getText());
+            } else if(child instanceof JavaHamlParser.MethodNameContext) {
+                methodName = child.getText();
+            }
+        }
+
+        return new MethodCall(target, methodName);
     }
 }

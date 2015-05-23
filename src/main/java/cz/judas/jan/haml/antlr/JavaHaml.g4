@@ -73,7 +73,7 @@ valueExpression: expression;
 
 attributeKey: WORD COLON;
 
-expression: symbol | singleQuotedString | fieldReference;
+expression: symbol | singleQuotedString | methodCall | fieldReference;
 
 symbol: COLON WORD;
 
@@ -82,6 +82,10 @@ singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
 singleQuotedStringContent: (~SINGLE_QUOTE)*;
 
 fieldReference: AT_SIGN WORD;
+
+methodCall: fieldReference DOT methodName;
+
+methodName: WORD;
 
 
 // Lexer rules
