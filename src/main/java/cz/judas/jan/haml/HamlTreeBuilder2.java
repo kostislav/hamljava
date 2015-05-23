@@ -7,10 +7,7 @@ import cz.judas.jan.haml.antlr.JavaHamlParser;
 import cz.judas.jan.haml.tree.HtmlNode;
 import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
-import cz.judas.jan.haml.tree.ruby.RubyExpression;
-import cz.judas.jan.haml.tree.ruby.RubyHash;
-import cz.judas.jan.haml.tree.ruby.RubyString;
-import cz.judas.jan.haml.tree.ruby.RubySymbol;
+import cz.judas.jan.haml.tree.ruby.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -89,10 +86,21 @@ public class HamlTreeBuilder2 {
 
     @SuppressWarnings("ChainOfInstanceofChecks")
     private static RubyHash attributeHash(JavaHamlParser.AttributeHashContext parseTree) {
+        ImmutableList.Builder<HashEntry> hashEntryBuilder = ImmutableList.builder();
+        for (ParseTree child : parseTree.children) {
+            if(child instanceof JavaHamlParser.HashEntryContext) {
+                hashEntryBuilder.add(hashEntry((JavaHamlParser.HashEntryContext) child));
+            }
+        }
+        return new RubyHash(hashEntryBuilder.build());
+    }
+
+    @SuppressWarnings("ChainOfInstanceofChecks")
+    private static HashEntry hashEntry(JavaHamlParser.HashEntryContext context) {
         String key = null;
         String value = null;
 
-        for (ParseTree child : parseTree.children) {
+        for (ParseTree child : context.children) {
             if(child instanceof JavaHamlParser.AttributeKeyContext) {
                 key = child.getChild(0).getText();
             } else if(child instanceof JavaHamlParser.SingleQuotedStringContext) {
@@ -100,6 +108,6 @@ public class HamlTreeBuilder2 {
             }
         }
 
-        return RubyHash.singleEntryHash(new RubySymbol(key), new RubyString(value));
+        return new HashEntry(new RubySymbol(key), new RubyString(value));
     }
 }

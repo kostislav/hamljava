@@ -35,7 +35,9 @@ classAttribute: DOT WORD;
 
 idAttribute: HASH WORD;
 
-attributeHash: LEFT_BRACE whitespace? attributeKey whitespace? singleQuotedString whitespace? RIGHT_BRACE;
+attributeHash: LEFT_BRACE whitespace? (hashEntry whitespace? COMMA whitespace?)* hashEntry whitespace? RIGHT_BRACE;
+
+hashEntry: attributeKey whitespace? singleQuotedString;
 
 attributeKey: WORD COLON;
 
@@ -52,6 +54,7 @@ whitespace: SPACE | WHITESPACE;
 
 EXCLAMATION: '!';
 DOT: '.';
+COMMA: ',';
 HASH: '#';
 PERCENT : '%';
 LEFT_BRACE: '{';

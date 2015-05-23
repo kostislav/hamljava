@@ -101,11 +101,11 @@ public class HamlTreeBuilder2Test {
         assertParses("%input{ name: 'blah' }", root(node("input", ImmutableMap.of(symbol("name"), string("blah")))));
     }
 
-//    @Test
-//    public void multipleGenericAttributes() throws Exception {
-//        assertParses("%input{ name: 'blah', value: 'bleh'}", root(node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))));
-//    }
-//
+    @Test
+    public void multipleGenericAttributes() throws Exception {
+        assertParses("%input{ name: 'blah', value: 'bleh' }", root(node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))));
+    }
+
 //    @Test
 //    public void textLines() throws Exception {
 //        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode(string("Wow this is cool!"))))));
