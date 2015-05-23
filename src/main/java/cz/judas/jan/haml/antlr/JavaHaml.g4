@@ -79,13 +79,17 @@ valueExpression: expression;
 
 attributeKey: WORD COLON;
 
-expression: symbol | singleQuotedString | methodCall | fieldReference;
+expression: symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference;
 
 symbol: COLON WORD;
 
 singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
 
 singleQuotedStringContent: (~SINGLE_QUOTE)*;
+
+doubleQuotedString: DOUBLE_QUOTE doubleQuotedStringContent DOUBLE_QUOTE;
+
+doubleQuotedStringContent: (~DOUBLE_QUOTE)*;
 
 fieldReference: AT_SIGN WORD;
 
@@ -111,6 +115,7 @@ COLON: ':';
 AT_SIGN: '@';
 EQUALS_SIGN: '=';
 SINGLE_QUOTE: '\'';
+DOUBLE_QUOTE: '"';
 BACKSLASH: '\\';
 FAT_ARROW: '=>';
 WORD : ('a'..'z' | 'A'..'Z' | '0'..'9' | '-')+;

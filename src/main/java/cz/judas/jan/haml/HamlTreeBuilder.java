@@ -184,6 +184,8 @@ public class HamlTreeBuilder {
                 return new RubySymbol(child.getChild(1).getText());
             } else if (child instanceof JavaHamlParser.SingleQuotedStringContext) {
                 return new RubyString(child.getChild(1).getText());
+            } else if (child instanceof JavaHamlParser.DoubleQuotedStringContext) {
+                return new RubyString(child.getChild(1).getText());
             } else if (child instanceof JavaHamlParser.FieldReferenceContext) {
                 return new FieldReference(child.getChild(1).getText());
             } else if (child instanceof JavaHamlParser.MethodCallContext) {

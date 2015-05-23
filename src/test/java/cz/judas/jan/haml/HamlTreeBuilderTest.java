@@ -159,7 +159,14 @@ public class HamlTreeBuilderTest {
         ));
     }
 
-    // TODO double quotes colon attributes
+    @Test
+    public void doubleQuoteValues() throws Exception {
+        assertParses("%input{ name: \"bleh\" }", root(
+                node("input", ImmutableMap.of(symbol("name"), string("bleh")))
+        ));
+    }
+
+    // TODO colon attributes
 
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(input), is(tree));
