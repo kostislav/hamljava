@@ -18,22 +18,30 @@ public class RubyObject {
             try {
                 return getFieldValue(javaObject, name);
             } catch (NoSuchFieldException e) {
-                return callGetter(javaObject, name);
+                try {
+                    return callGetter(javaObject, name);
+                } catch (NoSuchMethodException e1) {
+                    return callMethod(javaObject, name);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException("Could not get value for for property " + javaObject + "." + name);
         }
     }
 
-    private Object getFieldValue(Object field, String name) throws NoSuchFieldException, IllegalAccessException {
-        Field property = field.getClass().getDeclaredField(name);
+    private Object getFieldValue(Object target, String name) throws NoSuchFieldException, IllegalAccessException {
+        Field property = target.getClass().getDeclaredField(name);
         property.setAccessible(true);
-        return property.get(field);
+        return property.get(target);
     }
 
-    private Object callGetter(Object field, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getter = field.getClass().getMethod("get" + StringUtils.capitalize(name));
+    private Object callGetter(Object target, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        return callMethod(target, "get" + StringUtils.capitalize(name));
+    }
+
+    private Object callMethod(Object target, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getter = target.getClass().getMethod(name);
         getter.setAccessible(true);
-        return getter.invoke(field);
+        return getter.invoke(target);
     }
 }

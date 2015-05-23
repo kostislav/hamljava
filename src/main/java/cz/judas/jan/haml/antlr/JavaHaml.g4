@@ -83,7 +83,7 @@ singleQuotedStringContent: (~SINGLE_QUOTE)*;
 
 fieldReference: AT_SIGN WORD;
 
-methodCall: fieldReference DOT methodName;
+methodCall: fieldReference (DOT methodName)+;
 
 methodName: WORD;
 

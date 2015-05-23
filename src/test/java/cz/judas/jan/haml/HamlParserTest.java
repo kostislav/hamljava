@@ -1,5 +1,6 @@
 package cz.judas.jan.haml;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +57,14 @@ public class HamlParserTest {
         assertThat(
                 parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
                 is("<span class=\"name\">karl</span><span>654</span>")
+        );
+    }
+
+    @Test
+    public void chainedMethodCalls() throws Exception {
+        assertThat(
+                parser.process("%span.name= @people.iterator.next", new VariableMap(ImmutableMap.of("people", ImmutableList.of("varl")))),
+                is("<span class=\"name\">varl</span>")
         );
     }
 
