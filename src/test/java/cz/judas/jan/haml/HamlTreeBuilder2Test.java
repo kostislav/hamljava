@@ -46,11 +46,11 @@ public class HamlTreeBuilder2Test {
         ));
     }
 
-//    @Test
-//    public void html5Ddoctype() throws Exception {
-//        assertParses("!!! 5", root("5"));
-//    }
-//
+    @Test
+    public void html5Ddoctype() throws Exception {
+        assertParses("!!! 5\n%html", root("5", node("html")));
+    }
+
 //    @Test
 //    public void tagsCanHaveTextContent() throws Exception {
 //        assertParses("%html\n\t%head\n\t\t%title something", root(node("html", node("head", node("title", string("something"))))));

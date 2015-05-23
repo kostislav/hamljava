@@ -19,6 +19,12 @@ tokens { INDENT, DEDENT }
   }
 }
 
+document: doctype? htmlTag+;
+
+doctype: doctypeStart SPACE WORD NL;
+
+doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
+
 htmlTag: tagName (NL | childTags);
 
 tagName : PERCENT WORD;
@@ -26,9 +32,12 @@ tagName : PERCENT WORD;
 childTags: INDENT htmlTag+ DEDENT;
 
 
+EXCLAMATION: '!';
 
 PERCENT : '%';
 
-WORD : ('a'..'z'|'A'..'Z')+;
+WORD : ('a'..'z' | 'A'..'Z' | '0'..'9')+;
+
+SPACE: ' ';
 
 NL: ('\r'? '\n' (' ' | '\t')*);
