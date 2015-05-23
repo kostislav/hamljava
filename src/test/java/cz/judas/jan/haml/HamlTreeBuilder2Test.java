@@ -9,6 +9,7 @@ import org.junit.Test;
 import static cz.judas.jan.haml.Expressions.*;
 import static cz.judas.jan.haml.Nodes.node;
 import static cz.judas.jan.haml.Nodes.root;
+import static cz.judas.jan.haml.Nodes.textNode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -136,11 +137,11 @@ public class HamlTreeBuilder2Test {
         ));
     }
 
-//    @Test
-//    public void textLines() throws Exception {
-//        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode(string("Wow this is cool!"))))));
-//    }
-//
+    @Test
+    public void textLines() throws Exception {
+        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode(string("Wow this is cool!"))))));
+    }
+
 //    @Test
 //    public void tagsCanBeEscaped() throws Exception {
 //        assertParses("%title\n\t\\= @title", root(node("title", textNode(string("= @title")))));

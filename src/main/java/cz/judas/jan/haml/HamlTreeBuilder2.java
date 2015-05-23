@@ -7,6 +7,7 @@ import cz.judas.jan.haml.antlr.JavaHamlParser;
 import cz.judas.jan.haml.tree.HtmlNode;
 import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.tree.TextNode;
 import cz.judas.jan.haml.tree.ruby.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -14,6 +15,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.util.List;
 import java.util.Optional;
 
 public class HamlTreeBuilder2 {
@@ -43,10 +45,10 @@ public class HamlTreeBuilder2 {
     }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
-    private static HtmlNode tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
+    private static Node tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
         ImmutableList.Builder<RubyHash> attributeBuilder = ImmutableList.builder();
         ImmutableList.Builder<Node> childrenBuilder = ImmutableList.builder();
-        String tagName = "div";
+        String tagName = null;
         RubyExpression content = RubyString.EMPTY;
 
         for (ParseTree parseTree : htmlTagContext.children) {
@@ -76,12 +78,19 @@ public class HamlTreeBuilder2 {
             }
         }
 
-        return new HtmlNode(
-                tagName,
-                attributeBuilder.build(),
-                content,
-                childrenBuilder.build()
-        );
+        List<RubyHash> attributes = attributeBuilder.build();
+        List<Node> children = childrenBuilder.build();
+
+        if(tagName == null &&  attributes.isEmpty() && children.isEmpty()) {
+            return new TextNode(content);
+        } else {
+            return new HtmlNode(
+                    tagName == null ? "div" : tagName,
+                    attributes,
+                    content,
+                    children
+            );
+        }
     }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
