@@ -142,11 +142,11 @@ public class HamlTreeBuilder2Test {
         assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode(string("Wow this is cool!"))))));
     }
 
-//    @Test
-//    public void tagsCanBeEscaped() throws Exception {
-//        assertParses("%title\n\t\\= @title", root(node("title", textNode(string("= @title")))));
-//    }
-//
+    @Test
+    public void tagsCanBeEscaped() throws Exception {
+        assertParses("%title\n\t\\= @title", root(node("title", textNode(string("= @title")))));
+    }
+
 //    @Test
 //    public void oldStyleAttributeHash() throws Exception {
 //        assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))));

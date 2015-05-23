@@ -69,6 +69,8 @@ public class HamlTreeBuilder2 {
                 }
             } else if (parseTree instanceof JavaHamlParser.TextContext) {
                 content = new RubyString(parseTree.getText());
+            } else if (parseTree instanceof JavaHamlParser.EscapedTextContext) {
+                content = new RubyString(parseTree.getChild(1).getText());
             } else if (parseTree instanceof JavaHamlParser.ChildTagsContext) {
                 for (ParseTree child : ((ParserRuleContext) parseTree).children) {
                     if (child instanceof JavaHamlParser.HtmlTagContext) {

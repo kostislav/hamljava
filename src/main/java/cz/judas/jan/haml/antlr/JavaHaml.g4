@@ -25,7 +25,7 @@ doctype: doctypeStart SPACE WORD NL;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
-htmlTag: (tagName? attribute* (SPACE text)? (NL | childTags)) | text NL;
+htmlTag: (tagName? attribute* (SPACE text)? (NL | childTags)) | escapedText NL | text NL;
 
 tagName: PERCENT WORD;
 
@@ -45,6 +45,8 @@ singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
 
 singleQuotedStringContent: (~SINGLE_QUOTE)*;
 
+escapedText: BACKSLASH text;
+
 text: (~NL)+;
 
 childTags: INDENT htmlTag+ DEDENT;
@@ -61,8 +63,11 @@ LEFT_BRACE: '{';
 RIGHT_BRACE: '}';
 COLON: ':';
 SINGLE_QUOTE: '\'';
+BACKSLASH: '\\';
 WORD : ('a'..'z' | 'A'..'Z' | '0'..'9' | '-')+;
 SPACE: ' ';
 WHITESPACE: (' ' | '\t')+;
 
 NL: ('\r'? '\n' (' ' | '\t')*);
+
+UNKNOWN: .;
