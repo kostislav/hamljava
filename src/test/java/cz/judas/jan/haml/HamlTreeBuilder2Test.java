@@ -147,10 +147,10 @@ public class HamlTreeBuilder2Test {
         assertParses("%title\n\t\\= @title", root(node("title", textNode(string("= @title")))));
     }
 
-//    @Test
-//    public void oldStyleAttributeHash() throws Exception {
-//        assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))));
-//    }
+    @Test
+    public void oldStyleAttributeHash() throws Exception {
+        assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))));
+    }
 
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(input), is(tree));

@@ -99,21 +99,47 @@ public class HamlTreeBuilder2 {
     private static RubyHash attributeHash(JavaHamlParser.AttributeHashContext parseTree) {
         ImmutableList.Builder<HashEntry> hashEntryBuilder = ImmutableList.builder();
         for (ParseTree child : parseTree.children) {
-            if(child instanceof JavaHamlParser.HashEntryContext) {
-                hashEntryBuilder.add(hashEntry((JavaHamlParser.HashEntryContext) child));
+            if(child instanceof JavaHamlParser.NewStyleHashEntriesContext) {
+                for (ParseTree grandChild : ((ParserRuleContext) child).children) {
+                    if(grandChild instanceof JavaHamlParser.NewStyleHashEntryContext) {
+                        hashEntryBuilder.add(hashEntry((JavaHamlParser.NewStyleHashEntryContext) grandChild));
+                    }
+                }
+            } else if(child instanceof JavaHamlParser.OldStyleHashEntriesContext) {
+                for (ParseTree grandChild : ((ParserRuleContext) child).children) {
+                    if(grandChild instanceof JavaHamlParser.OldStyleHashEntryContext) {
+                        hashEntryBuilder.add(hashEntry((JavaHamlParser.OldStyleHashEntryContext) grandChild));
+                    }
+                }
             }
         }
         return new RubyHash(hashEntryBuilder.build());
     }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
-    private static HashEntry hashEntry(JavaHamlParser.HashEntryContext context) {
+    private static HashEntry hashEntry(JavaHamlParser.NewStyleHashEntryContext context) {
         String key = null;
         String value = null;
 
         for (ParseTree child : context.children) {
             if(child instanceof JavaHamlParser.AttributeKeyContext) {
                 key = child.getChild(0).getText();
+            } else if(child instanceof JavaHamlParser.SingleQuotedStringContext) {
+                value = child.getChild(1).getText();
+            }
+        }
+
+        return new HashEntry(new RubySymbol(key), new RubyString(value));
+    }
+
+    @SuppressWarnings("ChainOfInstanceofChecks")
+    private static HashEntry hashEntry(JavaHamlParser.OldStyleHashEntryContext context) {
+        String key = null;
+        String value = null;
+
+        for (ParseTree child : context.children) {
+            if(child instanceof JavaHamlParser.SymbolContext) {
+                key = child.getChild(1).getText();
             } else if(child instanceof JavaHamlParser.SingleQuotedStringContext) {
                 value = child.getChild(1).getText();
             }

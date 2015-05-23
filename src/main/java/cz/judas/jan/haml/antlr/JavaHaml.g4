@@ -35,15 +35,17 @@ classAttribute: DOT WORD;
 
 idAttribute: HASH WORD;
 
-attributeHash: LEFT_BRACE whitespace? (hashEntry whitespace? COMMA whitespace?)* hashEntry whitespace? RIGHT_BRACE;
+attributeHash: LEFT_BRACE whitespace? (newStyleHashEntries | oldStyleHashEntries) whitespace? RIGHT_BRACE;
 
-hashEntry: attributeKey whitespace? singleQuotedString;
+newStyleHashEntries: (newStyleHashEntry whitespace? COMMA whitespace?)* newStyleHashEntry;
+
+newStyleHashEntry: attributeKey whitespace? singleQuotedString;
+
+oldStyleHashEntries: (oldStyleHashEntry whitespace? COMMA whitespace?)* oldStyleHashEntry;
+
+oldStyleHashEntry: symbol whitespace? FAT_ARROW whitespace singleQuotedString;
 
 attributeKey: WORD COLON;
-
-singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
-
-singleQuotedStringContent: (~SINGLE_QUOTE)*;
 
 escapedText: BACKSLASH text;
 
@@ -52,6 +54,17 @@ text: (~NL)+;
 childTags: INDENT htmlTag+ DEDENT;
 
 whitespace: SPACE | WHITESPACE;
+
+
+
+symbol: COLON WORD;
+
+singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
+
+singleQuotedStringContent: (~SINGLE_QUOTE)*;
+
+
+
 
 
 EXCLAMATION: '!';
@@ -64,6 +77,7 @@ RIGHT_BRACE: '}';
 COLON: ':';
 SINGLE_QUOTE: '\'';
 BACKSLASH: '\\';
+FAT_ARROW: '=>';
 WORD : ('a'..'z' | 'A'..'Z' | '0'..'9' | '-')+;
 SPACE: ' ';
 WHITESPACE: (' ' | '\t')+;
