@@ -45,13 +45,17 @@ public class HamlTreeBuilder2 {
         }
     }
 
+    @SuppressWarnings("ChainOfInstanceofChecks")
     private static HtmlNode tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
         ImmutableList.Builder<RubyHash> attributeBuilder = ImmutableList.builder();
         ImmutableList.Builder<Node> children = ImmutableList.builder();
+        String tagName = "div";
         RubyExpression content = RubyString.EMPTY;
 
         for (ParseTree parseTree : htmlTagContext.children) {
-            if(parseTree instanceof JavaHamlParser.ClassAttributeContext) {
+            if(parseTree instanceof JavaHamlParser.TagNameContext) {
+                tagName = parseTree.getChild(1).getText();
+            } else if(parseTree instanceof JavaHamlParser.ClassAttributeContext) {
                 attributeBuilder.add(
                         RubyHash.singleEntryHash(new RubySymbol("class"), new RubyString(parseTree.getChild(1).getText()))
                 );
@@ -71,7 +75,7 @@ public class HamlTreeBuilder2 {
         }
 
         return new HtmlNode(
-                htmlTagContext.getChild(0).getChild(1).getText(),
+                tagName,
                 attributeBuilder.build(),
                 content,
                 children.build()
