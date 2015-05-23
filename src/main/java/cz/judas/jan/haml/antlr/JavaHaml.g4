@@ -33,11 +33,17 @@ htmlTag: (tagName? attribute* (plainText | rubyContent)? (NL | childTags)) | esc
 
 tagName: PERCENT WORD;
 
-attribute: idAttribute | classAttribute | attributeHash;
+attribute: idAttribute | classAttribute | attributeHash | htmlAttributes;
 
 classAttribute: DOT WORD;
 
 idAttribute: HASH WORD;
+
+htmlAttributes: LEFT_BRACKET whitespace? (htmlAttributeEntry whitespace)* htmlAttributeEntry whitespace? RIGHT_BRACKET ;
+
+htmlAttributeEntry: htmlAttributeKey EQUALS_SIGN expression;
+
+htmlAttributeKey: WORD;
 
 escapedText: BACKSLASH text;
 
@@ -99,6 +105,8 @@ HASH: '#';
 PERCENT : '%';
 LEFT_BRACE: '{';
 RIGHT_BRACE: '}';
+LEFT_BRACKET: '(';
+RIGHT_BRACKET: ')';
 COLON: ':';
 AT_SIGN: '@';
 EQUALS_SIGN: '=';

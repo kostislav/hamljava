@@ -152,6 +152,15 @@ public class HamlTreeBuilderTest {
         assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))));
     }
 
+    @Test
+    public void htmlStyleAttributes() throws Exception {
+        assertParses("%html(xmlns='http://www.w3.org/1999/xhtml' lang='en')", root(
+                node("html", ImmutableMap.of(symbol("xmlns"), string("http://www.w3.org/1999/xhtml"), symbol("lang"), string("en")))
+        ));
+    }
+
+    // TODO double quotes colon attributes
+
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(input), is(tree));
     }
