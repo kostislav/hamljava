@@ -26,20 +26,6 @@ public class HamlTreeBuilder2 {
 
         JavaHamlParser.HtmlTagContext htmlTagContext = parser.htmlTag();
 
-        List<Node> children = new ArrayList<>();
-        for (int i = 1; i < htmlTagContext.getChildCount(); i++) {
-            ParseTree child = htmlTagContext.getChild(i);
-            if(!(child instanceof JavaHamlParser.ChildTagContext)) {
-                break;
-            }
-            children.add(new HtmlNode(
-                    child.getChild(1).getChild(0).getChild(1).getText(),
-                    Collections.emptyList(),
-                    RubyString.EMPTY,
-                    Collections.emptyList()
-            ));
-        }
-
         return new RootNode(
                 Optional.empty(),
                 ImmutableList.of(
@@ -47,9 +33,25 @@ public class HamlTreeBuilder2 {
                                 htmlTagContext.getChild(0).getChild(1).getText(),
                                 Collections.emptyList(),
                                 RubyString.EMPTY,
-                                children
+                                childrenOf(htmlTagContext)
                         )
                 )
         );
+    }
+
+    private List<Node> childrenOf(ParseTree htmlTagContext) {
+        List<Node> children = new ArrayList<>();
+        for (int i = 1; i < htmlTagContext.getChildCount(); i++) {
+            ParseTree child = htmlTagContext.getChild(i);
+            if (child instanceof JavaHamlParser.HtmlTagContext) {
+                children.add(new HtmlNode(
+                        child.getChild(0).getChild(1).getText(),
+                        Collections.emptyList(),
+                        RubyString.EMPTY,
+                        childrenOf(child)
+                ));
+            }
+        }
+        return children;
     }
 }

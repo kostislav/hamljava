@@ -19,12 +19,31 @@ public class HamlTreeBuilder2Test {
 
     @Test
     public void processesRealSimpleHaml() throws Exception {
-        assertParses("%html", root(node("html")));
+        assertParses("%html", root(
+                node("html")
+        ));
     }
 
     @Test
     public void processesNestedTag() throws Exception {
-        assertParses("%html\n\t%head", root(node("html", node("head"))));
+        assertParses("%html\n\t%head", root(
+                node("html",
+                        node("head")
+                )
+        ));
+    }
+
+    @Test
+    public void recursiveNesting() throws Exception {
+        assertParses("%html\n\t%head\n\t\t%script\n\t\t%title\n\t%body", root(
+                node("html",
+                        node("head",
+                                node("script"),
+                                node("title")
+                        ),
+                        node("body")
+                )
+        ));
     }
 
 //    @Test
