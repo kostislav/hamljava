@@ -81,16 +81,16 @@ public class HamlTreeBuilder2Test {
         assertParses("%span.bluh.lkj bra bh", root(node("span", ImmutableList.of(hash(symbol("class"), string("bluh")), hash(symbol("class"), string("lkj"))), string("bra bh"))));
     }
 
-//    @Test
-//    public void idAttribute() throws Exception {
-//        assertParses("%h2#hehe njhg", root(node("h2", ImmutableMap.of(symbol("id"), string("hehe")), string("njhg"))));
-//    }
-//
-//    @Test
-//    public void idAndClassAttribute() throws Exception {
-//        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableList.of(hash(symbol("id"), string("hehe")), hash(symbol("class"), string("dre"))), string("njhg"))));
-//    }
-//
+    @Test
+    public void idAttribute() throws Exception {
+        assertParses("%h2#hehe njhg", root(node("h2", ImmutableMap.of(symbol("id"), string("hehe")), string("njhg"))));
+    }
+
+    @Test
+    public void idAndClassAttribute() throws Exception {
+        assertParses("%h2#hehe.dre njhg", root(node("h2", ImmutableList.of(hash(symbol("id"), string("hehe")), hash(symbol("class"), string("dre"))), string("njhg"))));
+    }
+
 //    @Test
 //    public void defaultTagIsDiv() throws Exception {
 //        assertParses("#going-to-hell blah", root(node("div", ImmutableMap.of(symbol("id"), string("going-to-hell")), string("blah"))));

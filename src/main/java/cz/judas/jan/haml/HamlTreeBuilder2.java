@@ -55,6 +55,10 @@ public class HamlTreeBuilder2 {
                 attributeBuilder.add(
                         RubyHash.singleEntryHash(new RubySymbol("class"), new RubyString(parseTree.getChild(1).getText()))
                 );
+            } else if(parseTree instanceof JavaHamlParser.IdAttributeContext) {
+                attributeBuilder.add(
+                        RubyHash.singleEntryHash(new RubySymbol("id"), new RubyString(parseTree.getChild(1).getText()))
+                );
             } else if(parseTree instanceof JavaHamlParser.TextContext) {
                 content = new RubyString(parseTree.getText());
             } else if(parseTree instanceof JavaHamlParser.ChildTagsContext) {
