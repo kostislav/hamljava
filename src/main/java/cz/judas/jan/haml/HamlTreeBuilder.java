@@ -18,6 +18,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("ChainOfInstanceofChecks")
 public class HamlTreeBuilder {
     public RootNode buildTreeFrom(String input) {
         JavaHamlLexer lexer = new JavaHamlLexer(new ANTLRInputStream(input));
@@ -30,12 +31,12 @@ public class HamlTreeBuilder {
                 doctype(documentContext),
                 FluentIterable.from(documentContext.children)
                         .filter(JavaHamlParser.HtmlTagContext.class)
-                        .transform(HamlTreeBuilder::tag)
+                        .transform(this::tag)
                         .toList()
         );
     }
 
-    private static Optional<String> doctype(ParseTree document) {
+    private Optional<String> doctype(ParseTree document) {
         ParseTree firstChild = document.getChild(0);
         if (firstChild instanceof JavaHamlParser.DoctypeContext) {
             return Optional.of(firstChild.getChild(2).getText());
@@ -44,8 +45,7 @@ public class HamlTreeBuilder {
         }
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static Node tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
+    private Node tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
         ImmutableList.Builder<RubyHash> attributeBuilder = ImmutableList.builder();
         ImmutableList.Builder<Node> childrenBuilder = ImmutableList.builder();
         String tagName = null;
@@ -103,8 +103,7 @@ public class HamlTreeBuilder {
         }
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static RubyHash attributeHash(JavaHamlParser.AttributeHashContext parseTree) {
+    private RubyHash attributeHash(JavaHamlParser.AttributeHashContext parseTree) {
         ImmutableList.Builder<HashEntry> hashEntryBuilder = ImmutableList.builder();
         for (ParseTree child : parseTree.children) {
             if(child instanceof JavaHamlParser.NewStyleHashEntriesContext) {
@@ -124,8 +123,7 @@ public class HamlTreeBuilder {
         return new RubyHash(hashEntryBuilder.build());
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static HashEntry hashEntry(JavaHamlParser.NewStyleHashEntryContext context) {
+    private HashEntry hashEntry(JavaHamlParser.NewStyleHashEntryContext context) {
         String key = null;
         RubyExpression value = null;
 
@@ -140,8 +138,7 @@ public class HamlTreeBuilder {
         return new HashEntry(new RubySymbol(key), value);
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static HashEntry hashEntry(JavaHamlParser.OldStyleHashEntryContext context) {
+    private HashEntry hashEntry(JavaHamlParser.OldStyleHashEntryContext context) {
         RubyExpression key = null;
         RubyExpression value = null;
 
@@ -156,8 +153,7 @@ public class HamlTreeBuilder {
         return new HashEntry(key, value);
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static RubyExpression expression(ParserRuleContext context) {
+    private RubyExpression expression(ParserRuleContext context) {
         for (ParseTree child : context.children) {
             if(child instanceof JavaHamlParser.SymbolContext) {
                 return new RubySymbol(child.getChild(1).getText());
@@ -172,14 +168,12 @@ public class HamlTreeBuilder {
         throw new IllegalArgumentException("Unknown expression type");
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static MethodCall methodCall(JavaHamlParser.MethodCallContext context) {
+    private MethodCall methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = null;
         String methodName = null;
 
         for (ParseTree child : context.children) {
             if(child instanceof JavaHamlParser.FieldReferenceContext) {
-//                target = expression((ParserRuleContext) child);
                 target = new FieldReference(child.getChild(1).getText());
             } else if(child instanceof JavaHamlParser.MethodNameContext) {
                 methodName = child.getText();
