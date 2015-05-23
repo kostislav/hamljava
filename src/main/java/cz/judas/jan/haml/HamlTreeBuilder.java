@@ -181,7 +181,12 @@ public class HamlTreeBuilder {
     private RubyExpression expression(ParserRuleContext context) {
         for (ParseTree child : context.children) {
             if (child instanceof JavaHamlParser.SymbolContext) {
-                return new RubySymbol(child.getChild(1).getText());
+                ParseTree firstChild = child.getChild(1);
+                if(firstChild instanceof JavaHamlParser.SingleQuotedStringContext) {
+                    return new RubySymbol(firstChild.getChild(1).getText());
+                } else {
+                    return new RubySymbol(firstChild.getText());
+                }
             } else if (child instanceof JavaHamlParser.SingleQuotedStringContext) {
                 return new RubyString(child.getChild(1).getText());
             } else if (child instanceof JavaHamlParser.DoubleQuotedStringContext) {

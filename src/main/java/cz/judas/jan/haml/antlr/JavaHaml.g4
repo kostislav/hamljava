@@ -43,7 +43,7 @@ htmlAttributes: LEFT_BRACKET whitespace? (htmlAttributeEntry whitespace)* htmlAt
 
 htmlAttributeEntry: htmlAttributeKey EQUALS_SIGN expression;
 
-htmlAttributeKey: WORD;
+htmlAttributeKey: WORD | (WORD COLON WORD);
 
 escapedText: BACKSLASH text;
 
@@ -81,7 +81,7 @@ attributeKey: WORD COLON;
 
 expression: symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference;
 
-symbol: COLON WORD;
+symbol: COLON (WORD | singleQuotedString);
 
 singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
 

@@ -3,13 +3,12 @@ package cz.judas.jan.haml;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.tree.ruby.RubyString;
 import org.junit.Before;
 import org.junit.Test;
 
 import static cz.judas.jan.haml.Expressions.*;
-import static cz.judas.jan.haml.Nodes.node;
-import static cz.judas.jan.haml.Nodes.root;
-import static cz.judas.jan.haml.Nodes.textNode;
+import static cz.judas.jan.haml.Nodes.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -166,7 +165,19 @@ public class HamlTreeBuilderTest {
         ));
     }
 
-    // TODO colon attributes
+    @Test
+    public void attributesWithColon() throws Exception {
+        assertParses("%html(xml:lang='en'){ :'xml:fang' => 'ren' }", root(
+                node(
+                        "html",
+                        ImmutableList.of(
+                                hash(symbol("xml:lang"), string("en")),
+                                hash(symbol("xml:fang"), string("ren"))
+                        ),
+                        RubyString.EMPTY
+                )
+        ));
+    }
 
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(input), is(tree));
