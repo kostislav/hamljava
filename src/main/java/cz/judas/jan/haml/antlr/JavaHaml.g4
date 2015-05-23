@@ -29,7 +29,7 @@ doctype: doctypeStart SPACE WORD NL;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
-htmlTag: (tagName? attribute* (SPACE text)? (NL | childTags)) | escapedText NL | text NL;
+htmlTag: (tagName? attribute* ((SPACE text) | rubyContent)? (NL | childTags)) | escapedText NL | rubyContent NL | text NL;
 
 tagName: PERCENT WORD;
 
@@ -42,6 +42,8 @@ idAttribute: HASH WORD;
 escapedText: BACKSLASH text;
 
 text: (~NL)+;
+
+rubyContent: EQUALS_SIGN whitespace? expression;
 
 childTags: INDENT htmlTag+ DEDENT;
 
@@ -69,7 +71,7 @@ valueExpression: expression;
 
 attributeKey: WORD COLON;
 
-expression: symbol | singleQuotedString;
+expression: symbol | singleQuotedString | fieldReference;
 
 symbol: COLON WORD;
 
@@ -77,6 +79,7 @@ singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
 
 singleQuotedStringContent: (~SINGLE_QUOTE)*;
 
+fieldReference: AT_SIGN WORD;
 
 
 // Lexer rules
@@ -89,6 +92,8 @@ PERCENT : '%';
 LEFT_BRACE: '{';
 RIGHT_BRACE: '}';
 COLON: ':';
+AT_SIGN: '@';
+EQUALS_SIGN: '=';
 SINGLE_QUOTE: '\'';
 BACKSLASH: '\\';
 FAT_ARROW: '=>';

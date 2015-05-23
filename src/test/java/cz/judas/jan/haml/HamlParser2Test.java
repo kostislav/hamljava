@@ -35,14 +35,14 @@ public class HamlParser2Test {
         );
     }
 
-//    @Test
-//    public void usesVariables() throws Exception {
-//        assertThat(
-//                parser.process("%title\n\t= @title\n%p= @content", new VariableMap(ImmutableMap.of("title", "MyPage", "content", "blah"))),
-//                is("<title>MyPage</title><p>blah</p>")
-//        );
-//    }
-//
+    @Test
+    public void usesVariables() throws Exception {
+        assertThat(
+                parser.process("%title\n\t= @title\n%p= @content", new VariableMap(ImmutableMap.of("title", "MyPage", "content", "blah"))),
+                is("<title>MyPage</title><p>blah</p>")
+        );
+    }
+
 //    @Test
 //    public void combinedIdClassAndOtherAttributes() throws Exception {
 //        assertThat(

@@ -71,6 +71,12 @@ public class HamlTreeBuilder2 {
                 content = new RubyString(parseTree.getText());
             } else if (parseTree instanceof JavaHamlParser.EscapedTextContext) {
                 content = new RubyString(parseTree.getChild(1).getText());
+            } else if(parseTree instanceof JavaHamlParser.RubyContentContext) {
+                for (ParseTree child : ((ParserRuleContext) parseTree).children) {
+                    if(child instanceof JavaHamlParser.ExpressionContext) {
+                        content = expression((ParserRuleContext) child);
+                    }
+                }
             } else if (parseTree instanceof JavaHamlParser.ChildTagsContext) {
                 for (ParseTree child : ((ParserRuleContext) parseTree).children) {
                     if (child instanceof JavaHamlParser.HtmlTagContext) {
@@ -155,6 +161,8 @@ public class HamlTreeBuilder2 {
                 return new RubySymbol(child.getChild(1).getText());
             } else if(child instanceof JavaHamlParser.SingleQuotedStringContext) {
                 return new RubyString(child.getChild(1).getText());
+            } else if(child instanceof JavaHamlParser.FieldReferenceContext) {
+                return new FieldReference(child.getChild(1).getText());
             }
         }
         throw new IllegalArgumentException("Unknown expression type");
