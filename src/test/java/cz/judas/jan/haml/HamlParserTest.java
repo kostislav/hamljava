@@ -52,7 +52,7 @@ public class HamlParserTest {
     }
 
     @Test
-    public void findsbothBareAndGetterProperties() throws Exception {
+    public void findsBothBareAndGetterProperties() throws Exception {
         assertThat(
                 parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
                 is("<span class=\"name\">karl</span><span>654</span>")

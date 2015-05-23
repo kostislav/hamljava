@@ -3,7 +3,7 @@ package cz.judas.jan.haml;
 import cz.judas.jan.haml.tree.RootNode;
 
 public class HamlParser {
-    private final HamlTreeBuilder treeBuilder = new HamlTreeBuilder();
+    private final HamlTreeBuilder2 treeBuilder = new HamlTreeBuilder2();
 
     public String process(String haml, VariableMap variableMap) {
         RootNode rootNode = treeBuilder.buildTreeFrom(haml);
