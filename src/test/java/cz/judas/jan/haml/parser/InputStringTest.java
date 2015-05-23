@@ -111,7 +111,7 @@ public class InputStringTest {
         assertThat(inputString.currentCharIs(equalTo(c)), is(true));
     }
 
-    private static CharPredicate equalTo(char matchingChar) {
-        return c -> c == matchingChar;
+    private static SetOfCharacters equalTo(char matchingChar) {
+        return SetOfCharacters.single(matchingChar);
     }
 }

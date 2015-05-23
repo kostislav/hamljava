@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.parser.tokens.terminal;
 
 import cz.judas.jan.haml.parser.CharPredicate;
+import cz.judas.jan.haml.parser.SetOfCharacters;
 import cz.judas.jan.haml.parser.tokens.Token;
 
 import java.util.Optional;
@@ -10,7 +11,7 @@ import static cz.judas.jan.haml.parser.tokens.generic.GenericTokens.*;
 
 @SuppressWarnings({"UtilityClass", "unchecked"})
 public class Terminals {
-    private static final CharPredicate NOT_NEWLINE_PREDICATE = c -> c != '\n';
+    private static final SetOfCharacters NOT_NEWLINE_PREDICATE = SetOfCharacters.single('\n').negate();
 
     private static final CharPredicate WHITESPACE_PREDICATE = c -> NOT_NEWLINE_PREDICATE.test(c) && Character.isWhitespace(c);
 
@@ -28,7 +29,7 @@ public class Terminals {
         return STRICT_WHITESPACE_TOKEN;
     }
 
-    public static CharPredicate notNewLine() {
+    public static SetOfCharacters notNewLine() {
         return NOT_NEWLINE_PREDICATE;
     }
 

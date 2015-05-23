@@ -8,11 +8,11 @@ import static org.hamcrest.Matchers.is;
 public class SetOfCharactersTest {
     @Test
     public void rangeContainsAllFromRange() throws Exception {
-        SetOfCharacters range = SetOfCharacters.range('a', 'c');
+        SetOfCharacters range = SetOfCharacters.range('A', 'C');
 
-        assertThat(range.contains('a'), is(true));
-        assertThat(range.contains('b'), is(true));
-        assertThat(range.contains('c'), is(true));
+        assertThat(range.contains('A'), is(true));
+        assertThat(range.contains('B'), is(true));
+        assertThat(range.contains('C'), is(true));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class SetOfCharactersTest {
     public void mergedSetContainsBoth() throws Exception {
         SetOfCharacters set1 = SetOfCharacters.range('a', 'c');
         SetOfCharacters set2 = SetOfCharacters.range('6', '8');
-        SetOfCharacters merged = set1.mergedWith(set2);
+        SetOfCharacters merged = set1.union(set2);
 
         assertThat(merged.contains('a'), is(true));
         assertThat(merged.contains('b'), is(true));
@@ -55,7 +55,7 @@ public class SetOfCharactersTest {
     public void mergedSetDoesNotContainOtherRandomChars() throws Exception {
         SetOfCharacters set1 = SetOfCharacters.range('a', 'c');
         SetOfCharacters set2 = SetOfCharacters.range('6', '8');
-        SetOfCharacters merged = set1.mergedWith(set2);
+        SetOfCharacters merged = set1.union(set2);
 
         assertThat(merged.contains(' '), is(false));
     }

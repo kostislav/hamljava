@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.predicates;
 
 import cz.judas.jan.haml.parser.CharPredicate;
+import cz.judas.jan.haml.parser.SetOfCharacters;
 
 @SuppressWarnings("UtilityClass")
 public class Predicates {
@@ -12,14 +13,7 @@ public class Predicates {
         return c -> !original.test(c);
     }
 
-    public static CharPredicate anyOfChars(char... chars) {
-        return c -> {
-            for (char aChar : chars) {
-                if(aChar == c) {
-                    return true;
-                }
-            }
-            return false;
-        };
+    public static SetOfCharacters anyOfChars(char... chars) {
+        return SetOfCharacters.explicit(chars);
     }
 }

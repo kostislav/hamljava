@@ -1,12 +1,16 @@
 package cz.judas.jan.haml.parser;
 
-public class SetOfCharacters {
+public class SetOfCharacters implements CharPredicate {
+    public static final SetOfCharacters WHITESPACE = whitespace();
+
     private final long containedAsciiLower;
     private final long containedAsciiUpper;
+    private final boolean defaultMatch;
 
-    private SetOfCharacters(long containedAsciiLower, long containedAsciiUpper) {
+    private SetOfCharacters(long containedAsciiLower, long containedAsciiUpper, boolean defaultMatch) {
         this.containedAsciiLower = containedAsciiLower;
         this.containedAsciiUpper = containedAsciiUpper;
+        this.defaultMatch = defaultMatch;
     }
 
     public boolean contains(char c) {
@@ -17,14 +21,36 @@ public class SetOfCharacters {
                 return (containedAsciiUpper & (1 << (c - 64))) != 0;
             }
         } else {
-            return false;
+            return defaultMatch;
         }
     }
 
-    public SetOfCharacters mergedWith(SetOfCharacters other) {
+    public SetOfCharacters union(SetOfCharacters other) {
         return new SetOfCharacters(
                 containedAsciiLower | other.containedAsciiLower,
-                containedAsciiUpper | other.containedAsciiUpper
+                containedAsciiUpper | other.containedAsciiUpper,
+                defaultMatch || other.defaultMatch
+        );
+    }
+
+    public SetOfCharacters intersection(SetOfCharacters other) {
+        return new SetOfCharacters(
+                containedAsciiLower & other.containedAsciiLower,
+                containedAsciiUpper & other.containedAsciiUpper,
+                defaultMatch && other.defaultMatch
+        );
+    }
+
+    @Override
+    public boolean test(char c) {
+        return contains(c);
+    }
+
+    public SetOfCharacters negate() {
+        return new SetOfCharacters(
+                ~containedAsciiLower,
+                ~containedAsciiUpper,
+                !defaultMatch
         );
     }
 
@@ -35,14 +61,25 @@ public class SetOfCharacters {
             lowerMask = addToLower(lowerMask, i);
             upperMask = addToUpper(upperMask, i);
         }
-        return new SetOfCharacters(lowerMask, upperMask);
+        return new SetOfCharacters(lowerMask, upperMask, false);
     }
 
     public static SetOfCharacters single(char c) {
         return new SetOfCharacters(
                 addToLower(0, c),
-                addToUpper(0, c)
+                addToUpper(0, c),
+                false
         );
+    }
+
+    public static SetOfCharacters explicit(char... chars) {
+        long lowerMask = 0;
+        long upperMask = 0;
+        for (char c : chars) {
+            lowerMask = addToLower(lowerMask, c);
+            upperMask = addToUpper(upperMask, c);
+        }
+        return new SetOfCharacters(lowerMask, upperMask, false);
     }
 
     private static long addToLower(long lower, int index) {
@@ -59,5 +96,17 @@ public class SetOfCharacters {
         } else {
             return upper;
         }
+    }
+
+    private static SetOfCharacters whitespace() {
+        long lowerMask = 0;
+        long upperMask = 0;
+        for (int i = 0; i < 128; i++) {
+            if(Character.isWhitespace(i)) {
+                lowerMask = addToLower(lowerMask, i);
+                upperMask = addToUpper(upperMask, i);
+            }
+        }
+        return new SetOfCharacters(lowerMask, upperMask, false);
     }
 }
