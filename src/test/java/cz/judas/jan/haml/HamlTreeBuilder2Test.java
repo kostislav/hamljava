@@ -57,11 +57,11 @@ public class HamlTreeBuilder2Test {
         assertParses("%html\n\t%head\n\t\t%title something", root(node("html", node("head", node("title", string("something"))))));
     }
 
-//    @Test
-//    public void implicitClosing() throws Exception {
-//        assertParses("%ul\n\t%li blah\n%p bleh", root(node("ul", node("li", string("blah"))), node("p", string("bleh"))));
-//    }
-//
+    @Test
+    public void implicitClosing() throws Exception {
+        assertParses("%ul\n\t%li blah\n%p bleh", root(node("ul", node("li", string("blah"))), node("p", string("bleh"))));
+    }
+
 //    @Test
 //    public void classAttribute() throws Exception {
 //        assertParses("%span.bluh bra bh", root(node("span", ImmutableMap.of(symbol("class"), string("bluh")), string("bra bh"))));
