@@ -1,11 +1,13 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.antlr.JavaHamlLexer;
 import cz.judas.jan.haml.antlr.JavaHamlParser;
 import cz.judas.jan.haml.tree.HtmlNode;
 import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHash;
 import cz.judas.jan.haml.tree.ruby.RubyString;
 import cz.judas.jan.haml.tree.ruby.RubySymbol;
@@ -15,7 +17,6 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.util.List;
 import java.util.Optional;
 
 public class HamlTreeBuilder2 {
@@ -45,32 +46,31 @@ public class HamlTreeBuilder2 {
     }
 
     private static HtmlNode tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
+        ImmutableList.Builder<RubyHash> attributeBuilder = ImmutableList.builder();
+        ImmutableList.Builder<Node> children = ImmutableList.builder();
+        RubyExpression content = RubyString.EMPTY;
+
+        for (ParseTree parseTree : htmlTagContext.children) {
+            if(parseTree instanceof JavaHamlParser.ClassAttributeContext) {
+                attributeBuilder.add(
+                        RubyHash.singleEntryHash(new RubySymbol("class"), new RubyString(parseTree.getChild(1).getText()))
+                );
+            } else if(parseTree instanceof JavaHamlParser.TextContext) {
+                content = new RubyString(parseTree.getText());
+            } else if(parseTree instanceof JavaHamlParser.ChildTagsContext) {
+                for (ParseTree child : ((ParserRuleContext) parseTree).children) {
+                    if(child instanceof JavaHamlParser.HtmlTagContext) {
+                        children.add(tag((JavaHamlParser.HtmlTagContext) child));
+                    }
+                }
+            }
+        }
+
         return new HtmlNode(
                 htmlTagContext.getChild(0).getChild(1).getText(),
-                FluentIterable.from(htmlTagContext.children)
-                        .filter(JavaHamlParser.ClassAttributeContext.class)
-                        .transform(node -> RubyHash.singleEntryHash(new RubySymbol("class"), new RubyString(node.getChild(1).getText())))
-                        .toList(),
-                FluentIterable.from(htmlTagContext.children)
-                        .filter(JavaHamlParser.TextContext.class)
-                        .first()
-                        .transform(ParserRuleContext::getText)
-                        .transform(RubyString::new)
-                        .or(RubyString.EMPTY),
-                childrenOf(htmlTagContext)
+                attributeBuilder.build(),
+                content,
+                children.build()
         );
-    }
-
-    private static List<? extends Node> childrenOf(JavaHamlParser.HtmlTagContext htmlTagContext) {
-        return FluentIterable.from(htmlTagContext.children)
-                .filter(JavaHamlParser.ChildTagsContext.class)
-                .transformAndConcat(HamlTreeBuilder2::children)
-                .filter(JavaHamlParser.HtmlTagContext.class)
-                .transform(HamlTreeBuilder2::tag)
-                .toList();
-    }
-
-    private static List<ParseTree> children(ParserRuleContext parseTree) {
-        return parseTree.children;
     }
 }
