@@ -1,9 +1,6 @@
 package cz.judas.jan.haml.tree.ruby;
 
-import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
-import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.tree.HamlNode;
 
-public interface RubyExpression {
-    RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variables);
+public interface RubyExpression extends HamlNode {
 }

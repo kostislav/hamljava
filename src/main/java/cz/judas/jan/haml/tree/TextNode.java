@@ -2,6 +2,8 @@ package cz.judas.jan.haml.tree;
 
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.ruby.Nil;
+import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 
 public class TextNode implements HamlNode {
@@ -12,8 +14,10 @@ public class TextNode implements HamlNode {
     }
 
     @Override
-    public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
         htmlOutput.addUnescaped(content.evaluate(htmlOutput, variableMap));
+
+        return Nil.INSTANCE;
     }
 
     @Override

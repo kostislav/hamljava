@@ -3,6 +3,8 @@ package cz.judas.jan.haml.tree;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.ruby.Nil;
+import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +25,7 @@ public class HtmlNode implements HamlNode {
     }
 
     @Override
-    public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
         htmlOutput.addUnescaped('<', tagName);
 
         for (Map.Entry<String, Object> entry : mergeAttributes(htmlOutput, variableMap).entrySet()) {
@@ -43,6 +45,8 @@ public class HtmlNode implements HamlNode {
             child.evaluate(htmlOutput, variableMap);
         }
         htmlOutput.addUnescaped("</", tagName, '>');
+
+        return Nil.INSTANCE;
     }
 
     private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, VariableMap variableMap) {

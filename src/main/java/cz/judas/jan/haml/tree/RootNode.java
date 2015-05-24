@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.ruby.Nil;
+import cz.judas.jan.haml.ruby.RubyObject;
 
 import java.util.List;
 import java.util.Map;
@@ -23,12 +25,14 @@ public class RootNode implements HamlNode {
     }
 
     @Override
-    public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
         doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addUnescaped('\n'));
 
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, variableMap);
         }
+
+        return Nil.INSTANCE;
     }
 
     public String toHtmlString(VariableMap variableMap) {
