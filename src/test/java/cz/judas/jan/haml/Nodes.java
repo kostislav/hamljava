@@ -19,12 +19,21 @@ public class Nodes {
         return new RootNode(Optional.of(doctype), Arrays.asList(children));
     }
 
-    public static HtmlNode node(String name, Node... children) {
+    public static HtmlNode node(String name) {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
                 RubyString.EMPTY,
-                Arrays.asList(children)
+                Collections.emptyList()
+        );
+    }
+
+    public static HtmlNode node(String name, List<? extends Node> children) {
+        return new HtmlNode(
+                name,
+                Collections.emptyList(),
+                RubyString.EMPTY,
+                children
         );
     }
 

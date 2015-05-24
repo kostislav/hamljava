@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import static cz.judas.jan.haml.Expressions.*;
 import static cz.judas.jan.haml.Nodes.*;
+import static cz.judas.jan.haml.ShortCollections.list;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -32,22 +33,22 @@ public class HamlTreeBuilderTest {
     @Test
     public void processesNestedTag() throws Exception {
         assertParses("%html\n\t%head", root(
-                node("html",
+                node("html", list(
                         node("head")
-                )
+                ))
         ));
     }
 
     @Test
     public void recursiveNesting() throws Exception {
         assertParses("%html\n\t%head\n\t\t%script\n\t\t%title\n\t%body", root(
-                node("html",
-                        node("head",
+                node("html", list(
+                        node("head", list(
                                 node("script"),
                                 node("title")
-                        ),
+                        )),
                         node("body")
-                )
+                ))
         ));
     }
 
@@ -61,21 +62,20 @@ public class HamlTreeBuilderTest {
     @Test
     public void tagsCanHaveTextContent() throws Exception {
         assertParses("%html\n\t%head\n\t\t%title something", root(
-                node("html",
-                        node("head",
-                                node("title", string("something")
-                                )
-                        )
-                )
+                node("html", list(
+                        node("head", list(
+                                node("title", string("something"))
+                        ))
+                ))
         ));
     }
 
     @Test
     public void implicitClosing() throws Exception {
         assertParses("%ul\n\t%li blah\n%p bleh", root(
-                node("ul",
+                node("ul", list(
                         node("li", string("blah"))
-                ),
+                )),
                 node("p", string("bleh"))
         ));
     }
@@ -140,12 +140,22 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void textLines() throws Exception {
-        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(node("gee", node("whiz", textNode(string("Wow this is cool!"))))));
+        assertParses("%gee\n\t%whiz\n\t\tWow this is cool!", root(
+                node("gee", list(
+                        node("whiz", list(
+                                textNode(string("Wow this is cool!"))
+                        ))
+                ))
+        ));
     }
 
     @Test
     public void tagsCanBeEscaped() throws Exception {
-        assertParses("%title\n\t\\= @title", root(node("title", textNode(string("= @title")))));
+        assertParses("%title\n\t\\= @title", root(
+                node("title", list(
+                        textNode(string("= @title"))
+                ))
+        ));
     }
 
     @Test
