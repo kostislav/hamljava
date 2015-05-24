@@ -25,7 +25,7 @@ tokens { INDENT, DEDENT }
 
 document: doctype? htmlTag+;
 
-doctype: doctypeStart SPACE WORD NL;
+doctype: doctypeStart SPACE (WORD | NUMBER) NL;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
@@ -79,7 +79,7 @@ valueExpression: expression;
 
 attributeKey: WORD COLON;
 
-expression: symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference;
+expression: symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference | intValue;
 
 symbol: COLON (WORD | singleQuotedString);
 
@@ -91,9 +91,13 @@ doubleQuotedString: DOUBLE_QUOTE doubleQuotedStringContent DOUBLE_QUOTE;
 
 doubleQuotedStringContent: (~DOUBLE_QUOTE)*;
 
+intValue: NUMBER;
+
 fieldReference: AT_SIGN WORD;
 
-methodCall: fieldReference (DOT methodName)+;
+methodCall: fieldReference (DOT methodName)+ methodParameters?;
+
+methodParameters: LEFT_BRACKET whitespace? expression whitespace? RIGHT_BRACKET;
 
 methodName: WORD;
 
@@ -118,6 +122,7 @@ SINGLE_QUOTE: '\'';
 DOUBLE_QUOTE: '"';
 BACKSLASH: '\\';
 FAT_ARROW: '=>';
+NUMBER: ('0'..'9')+;
 WORD : ('a'..'z' | 'A'..'Z' | '0'..'9' | '-')+;
 SPACE: ' ';
 WHITESPACE: (' ' | '\t')+;

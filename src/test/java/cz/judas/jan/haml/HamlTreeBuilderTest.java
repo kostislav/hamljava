@@ -52,7 +52,7 @@ public class HamlTreeBuilderTest {
     }
 
     @Test
-    public void html5Ddoctype() throws Exception {
+    public void html5Doctype() throws Exception {
         assertParses("!!! 5\n%html", root("5",
                 node("html")
         ));

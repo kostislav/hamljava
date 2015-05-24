@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -195,6 +196,8 @@ public class HamlTreeBuilder {
                 return new FieldReferenceExpression(child.getChild(1).getText());
             } else if (child instanceof JavaHamlParser.MethodCallContext) {
                 return methodCall((JavaHamlParser.MethodCallContext) child);
+            } else if(child instanceof JavaHamlParser.IntValueContext) {
+                return new RubyStringExpression(child.getText()); // TODO
             }
         }
         throw new IllegalArgumentException("Unknown expression type");
@@ -203,6 +206,7 @@ public class HamlTreeBuilder {
     private MethodCallExpression methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = null;
         String methodName = null;
+        List<RubyExpression> arguments = new ArrayList<>();
 
         for (ParseTree child : context.children) {
             if (child instanceof JavaHamlParser.FieldReferenceContext) {
@@ -210,12 +214,24 @@ public class HamlTreeBuilder {
             } else if (child instanceof JavaHamlParser.MethodNameContext) {
                 String newMethodName = child.getText();
                 if (methodName != null) {
-                    target = new MethodCallExpression(target, methodName);
+                    target = new MethodCallExpression(target, methodName, arguments);
+                    arguments.clear();
                 }
                 methodName = newMethodName;
+            } else if(child instanceof JavaHamlParser.MethodParametersContext) {
+                arguments.add(methodArgument((ParserRuleContext)child));
             }
         }
 
-        return new MethodCallExpression(target, methodName);
+        return new MethodCallExpression(target, methodName, arguments);
+    }
+
+    private RubyExpression methodArgument(ParserRuleContext context) {
+        for (ParseTree child : context.children) {
+            if(child instanceof JavaHamlParser.ExpressionContext) {
+                return expression((ParserRuleContext)child);
+            }
+        }
+        throw new IllegalArgumentException("Method argument not found");
     }
 }
