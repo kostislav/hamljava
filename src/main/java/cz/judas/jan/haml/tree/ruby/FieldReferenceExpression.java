@@ -3,10 +3,10 @@ package cz.judas.jan.haml.tree.ruby;
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 
-public class FieldReference implements RubyExpression {
+public class FieldReferenceExpression implements RubyExpression {
     private final String name;
 
-    public FieldReference(String name) {
+    public FieldReferenceExpression(String name) {
         this.name = name;
     }
 

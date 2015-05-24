@@ -8,10 +8,10 @@ import cz.judas.jan.haml.VariableMap;
 import java.util.List;
 import java.util.Map;
 
-public class RubyHash implements RubyExpression {
+public class RubyHashExpression implements RubyExpression {
     private final List<HashEntry> entries;
 
-    public RubyHash(Iterable<? extends HashEntry> entries) {
+    public RubyHashExpression(Iterable<? extends HashEntry> entries) {
         this.entries = ImmutableList.copyOf(entries);
     }
 
@@ -24,8 +24,8 @@ public class RubyHash implements RubyExpression {
         return builder.build();
     }
 
-    public static RubyHash singleEntryHash(RubyExpression key, RubyExpression value) {
-        return new RubyHash(ImmutableList.of(new HashEntry(key, value)));
+    public static RubyHashExpression singleEntryHash(RubyExpression key, RubyExpression value) {
+        return new RubyHashExpression(ImmutableList.of(new HashEntry(key, value)));
     }
 
     @Override
@@ -37,9 +37,9 @@ public class RubyHash implements RubyExpression {
             return false;
         }
 
-        RubyHash rubyHash = (RubyHash) o;
+        RubyHashExpression that = (RubyHashExpression) o;
 
-        return entries.equals(rubyHash.entries);
+        return entries.equals(that.entries);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class RubyHash implements RubyExpression {
 
     @Override
     public String toString() {
-        return "RubyHash{" +
+        return "RubyHashExpression{" +
                 "entries=" + entries +
                 '}';
     }

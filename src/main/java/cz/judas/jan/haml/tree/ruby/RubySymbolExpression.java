@@ -3,12 +3,10 @@ package cz.judas.jan.haml.tree.ruby;
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 
-public class RubyString implements RubyExpression {
-    public static final RubyString EMPTY = new RubyString("");
-
+public class RubySymbolExpression implements RubyExpression {
     private final String value;
 
-    public RubyString(String value) {
+    public RubySymbolExpression(String value) {
         this.value = value;
     }
 
@@ -26,7 +24,7 @@ public class RubyString implements RubyExpression {
             return false;
         }
 
-        RubyString that = (RubyString) o;
+        RubySymbolExpression that = (RubySymbolExpression) o;
 
         return value.equals(that.value);
     }
@@ -38,7 +36,7 @@ public class RubyString implements RubyExpression {
 
     @Override
     public String toString() {
-        return "RubyString{" +
+        return "RubySymbolExpression{" +
                 "value='" + value + '\'' +
                 '}';
     }

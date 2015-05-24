@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.tree.*;
 import cz.judas.jan.haml.tree.ruby.HashEntry;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
-import cz.judas.jan.haml.tree.ruby.RubyHash;
-import cz.judas.jan.haml.tree.ruby.RubyString;
+import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
+import cz.judas.jan.haml.tree.ruby.RubyStringExpression;
 
 import java.util.*;
 
@@ -23,7 +23,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
-                RubyString.EMPTY,
+                RubyStringExpression.EMPTY,
                 Collections.emptyList()
         );
     }
@@ -32,7 +32,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
-                RubyString.EMPTY,
+                RubyStringExpression.EMPTY,
                 children
         );
     }
@@ -41,7 +41,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 mapToHash(attributes),
-                RubyString.EMPTY,
+                RubyStringExpression.EMPTY,
                 Arrays.asList(children)
         );
     }
@@ -55,7 +55,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, List<RubyHash> attributes, RubyExpression content) {
+    public static HtmlNode node(String name, List<RubyHashExpression> attributes, RubyExpression content) {
         return new HtmlNode(
                 name,
                 attributes,
@@ -77,11 +77,11 @@ public class Nodes {
         return new TextNode(content);
     }
 
-    private static List<RubyHash> mapToHash(Map<RubyExpression, RubyExpression> map) {
+    private static List<RubyHashExpression> mapToHash(Map<RubyExpression, RubyExpression> map) {
         ImmutableList.Builder<HashEntry> builder = ImmutableList.builder();
         for (Map.Entry<RubyExpression, RubyExpression> entry : map.entrySet()) {
             builder.add(new HashEntry(entry.getKey(), entry.getValue()));
         }
-        return ImmutableList.of(new RubyHash(builder.build()));
+        return ImmutableList.of(new RubyHashExpression(builder.build()));
     }
 }

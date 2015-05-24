@@ -2,8 +2,8 @@ package cz.judas.jan.haml;
 
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.ruby.HashEntry;
-import cz.judas.jan.haml.tree.ruby.RubyHash;
-import cz.judas.jan.haml.tree.ruby.RubyString;
+import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
+import cz.judas.jan.haml.tree.ruby.RubyStringExpression;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -183,12 +183,12 @@ public class HamlTreeBuilderTest {
                         "html",
                         list(
                                 hash(symbol("xml:lang"), string("en")),
-                                new RubyHash(list(
+                                new RubyHashExpression(list(
                                         new HashEntry(symbol("xml:fang"), string("ren")),
                                         new HashEntry(string("xml:tang"), string("e"))
                                 ))
                         ),
-                        RubyString.EMPTY
+                        RubyStringExpression.EMPTY
                 )
         ));
     }

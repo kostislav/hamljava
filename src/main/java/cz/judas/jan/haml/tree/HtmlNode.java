@@ -4,18 +4,18 @@ import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
-import cz.judas.jan.haml.tree.ruby.RubyHash;
+import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
 public class HtmlNode implements HamlNode {
     private final String tagName;
-    private final List<RubyHash> attributes;
+    private final List<RubyHashExpression> attributes;
     private final RubyExpression textContent;
     private final List<HamlNode> children;
 
-    public HtmlNode(String tagName, List<RubyHash> attributes, RubyExpression textContent, Iterable<? extends HamlNode> children) {
+    public HtmlNode(String tagName, List<RubyHashExpression> attributes, RubyExpression textContent, Iterable<? extends HamlNode> children) {
         this.tagName = tagName;
         this.attributes = ImmutableList.copyOf(attributes);
         this.textContent = textContent;
@@ -47,7 +47,7 @@ public class HtmlNode implements HamlNode {
 
     private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, VariableMap variableMap) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
-        for (RubyHash hash : attributes) {
+        for (RubyHashExpression hash : attributes) {
             for (Map.Entry<Object, Object> entry : hash.evaluate(htmlOutput, variableMap).entrySet()) {
                 String attributeName = entry.getKey().toString();
                 Object attributeValue = entry.getValue();
