@@ -1,7 +1,6 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.ruby.HashEntry;
 import cz.judas.jan.haml.tree.ruby.RubyHash;
@@ -12,6 +11,7 @@ import org.junit.Test;
 import static cz.judas.jan.haml.Expressions.*;
 import static cz.judas.jan.haml.Nodes.*;
 import static cz.judas.jan.haml.ShortCollections.list;
+import static cz.judas.jan.haml.ShortCollections.map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -83,14 +83,14 @@ public class HamlTreeBuilderTest {
     @Test
     public void classAttribute() throws Exception {
         assertParses("%span.bluh bra bh", root(
-                node("span", ImmutableMap.of(symbol("class"), string("bluh")), string("bra bh"))
+                node("span", map(symbol("class"), string("bluh")), string("bra bh"))
         ));
     }
 
     @Test
     public void classAttributeWithoutContent() throws Exception {
         assertParses("%h1.bluh\n\t%span bra bh", root(
-                node("h1", ImmutableMap.of(symbol("class"), string("bluh")),
+                node("h1", map(symbol("class"), string("bluh")),
                         node("span", string("bra bh"))
                 )
         ));
@@ -106,7 +106,7 @@ public class HamlTreeBuilderTest {
     @Test
     public void idAttribute() throws Exception {
         assertParses("%h2#hehe njhg", root(
-                node("h2", ImmutableMap.of(symbol("id"), string("hehe")), string("njhg"))
+                node("h2", map(symbol("id"), string("hehe")), string("njhg"))
         ));
     }
 
@@ -120,21 +120,21 @@ public class HamlTreeBuilderTest {
     @Test
     public void defaultTagIsDiv() throws Exception {
         assertParses("#going-to-hell blah", root(
-                node("div", ImmutableMap.of(symbol("id"), string("going-to-hell")), string("blah"))
+                node("div", map(symbol("id"), string("going-to-hell")), string("blah"))
         ));
     }
 
     @Test
     public void oneGenericAttribute() throws Exception {
         assertParses("%input{ name: 'blah' }", root(
-                node("input", ImmutableMap.of(symbol("name"), string("blah")))
+                node("input", map(symbol("name"), string("blah")))
         ));
     }
 
     @Test
     public void multipleGenericAttributes() throws Exception {
         assertParses("%input{ name: 'blah', value: 'bleh'}", root(
-                node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))
+                node("input", map(symbol("name"), string("blah"), symbol("value"), string("bleh")))
         ));
     }
 
@@ -160,20 +160,20 @@ public class HamlTreeBuilderTest {
 
     @Test
     public void oldStyleAttributeHash() throws Exception {
-        assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", ImmutableMap.of(symbol("name"), string("blah"), symbol("value"), string("bleh")))));
+        assertParses("%input{ :name => 'blah', :value => 'bleh'}", root(node("input", map(symbol("name"), string("blah"), symbol("value"), string("bleh")))));
     }
 
     @Test
     public void htmlStyleAttributes() throws Exception {
         assertParses("%html(xmlns='http://www.w3.org/1999/xhtml' lang='en')", root(
-                node("html", ImmutableMap.of(symbol("xmlns"), string("http://www.w3.org/1999/xhtml"), symbol("lang"), string("en")))
+                node("html", map(symbol("xmlns"), string("http://www.w3.org/1999/xhtml"), symbol("lang"), string("en")))
         ));
     }
 
     @Test
     public void doubleQuoteValues() throws Exception {
         assertParses("%input{ name: \"bleh\" }", root(
-                node("input", ImmutableMap.of(symbol("name"), string("bleh")))
+                node("input", map(symbol("name"), string("bleh")))
         ));
     }
 
