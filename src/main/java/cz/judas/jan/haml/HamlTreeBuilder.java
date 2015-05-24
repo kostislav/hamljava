@@ -202,22 +202,20 @@ public class HamlTreeBuilder {
 
     private MethodCallExpression methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = null;
-        MethodCallExpression result = null;
+        String methodName = null;
 
         for (ParseTree child : context.children) {
             if (child instanceof JavaHamlParser.FieldReferenceContext) {
                 target = new FieldReferenceExpression(child.getChild(1).getText());
             } else if (child instanceof JavaHamlParser.MethodNameContext) {
-                String methodName = child.getText();
-
-                if (result == null) {
-                    result = new MethodCallExpression(target, methodName);
-                } else {
-                    result = new MethodCallExpression(result, methodName);
+                String newMethodName = child.getText();
+                if (methodName != null) {
+                    target = new MethodCallExpression(target, methodName);
                 }
+                methodName = newMethodName;
             }
         }
 
-        return result;
+        return new MethodCallExpression(target, methodName);
     }
 }
