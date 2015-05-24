@@ -18,6 +18,11 @@ public class RubySymbol implements RubyObject {
     }
 
     @Override
+    public Object asJavaObject() {
+        return javaObject;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

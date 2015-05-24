@@ -203,7 +203,7 @@ public class HamlTreeBuilder {
             } else if (child instanceof JavaHamlParser.MethodCallContext) {
                 return methodCall((JavaHamlParser.MethodCallContext) child);
             } else if(child instanceof JavaHamlParser.IntValueContext) {
-                return ConstantRubyExpression.string(child.getText()); // TODO
+                return ConstantRubyExpression.integer(Integer.parseInt(child.getText()));
             }
         }
         throw new IllegalArgumentException("Unknown expression type");

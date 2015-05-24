@@ -24,6 +24,11 @@ public class RubyObjectBase implements RubyObject {
         return javaObject.toString();
     }
 
+    @Override
+    public Object asJavaObject() {
+        return javaObject;
+    }
+
     private Object callJavaMethod(String name) {
         try {
             try {

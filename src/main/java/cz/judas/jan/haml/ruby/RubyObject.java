@@ -4,4 +4,6 @@ public interface RubyObject {
     RubyObject callMethod(String name);
 
     String asString();
+
+    Object asJavaObject();
 }

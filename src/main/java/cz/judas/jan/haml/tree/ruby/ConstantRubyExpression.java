@@ -2,6 +2,7 @@ package cz.judas.jan.haml.tree.ruby;
 
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.ruby.RubyInteger;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.RubyString;
 import cz.judas.jan.haml.ruby.RubySymbol;
@@ -48,5 +49,9 @@ public class ConstantRubyExpression implements RubyExpression {
 
     public static ConstantRubyExpression symbol(String value) {
         return new ConstantRubyExpression(new RubySymbol(value));
+    }
+
+    public static ConstantRubyExpression integer(int value) {
+        return new ConstantRubyExpression(new RubyInteger(value));
     }
 }

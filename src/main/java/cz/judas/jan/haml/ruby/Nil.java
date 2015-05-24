@@ -12,4 +12,9 @@ public class Nil implements RubyObject {
     public String asString() {
         return "nil";
     }
+
+    @Override
+    public Object asJavaObject() {
+        return null;
+    }
 }
