@@ -224,7 +224,7 @@ public class HamlTreeBuilder {
                     arguments.clear();
                 }
                 methodName = newMethodName;
-            } else if(child instanceof JavaHamlParser.MethodParametersContext) {
+            } else if(child instanceof JavaHamlParser.MethodParametersContext || child instanceof JavaHamlParser.MethodParametersWithoutBracketsContext) {
                 arguments.addAll(methodArgument((ParserRuleContext) child));
             }
         }

@@ -84,6 +84,14 @@ public class HamlParserTest {
         );
     }
 
+    @Test
+    public void methodCallWithoutBrackets() throws Exception {
+        assertThat(
+                parser.process("%span= @person.getFakeName 'mike', \"oldfield\"", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
+                is("<span>mike oldfield</span>")
+        );
+    }
+
     private static class Person {
         public final String name;
         private final int age;

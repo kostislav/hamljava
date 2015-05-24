@@ -95,9 +95,13 @@ intValue: NUMBER;
 
 fieldReference: AT_SIGN WORD;
 
-methodCall: fieldReference (DOT methodName)+ methodParameters?;
+methodCall: fieldReference (DOT methodName)+ whitespace? (methodParameters | emptyMethodParameters | methodParametersWithoutBrackets)?;
 
-methodParameters: LEFT_BRACKET whitespace? ((methodParameter whitespace? COMMA whitespace?)* methodParameter whitespace?)? RIGHT_BRACKET;
+emptyMethodParameters: LEFT_BRACKET whitespace? RIGHT_BRACKET;
+
+methodParameters: LEFT_BRACKET whitespace? (methodParameter whitespace? COMMA whitespace?)* methodParameter whitespace? RIGHT_BRACKET;
+
+methodParametersWithoutBrackets: (methodParameter whitespace? COMMA whitespace?)* methodParameter;
 
 methodParameter: expression;
 
