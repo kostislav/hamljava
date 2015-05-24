@@ -1,5 +1,7 @@
 package cz.judas.jan.haml.ruby;
 
+import java.util.List;
+
 public class RubySymbol implements RubyObject {
     private final String javaObject;
 
@@ -8,7 +10,7 @@ public class RubySymbol implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments) {
         throw new IllegalArgumentException("Method " + name + " does not exist");
     }
 

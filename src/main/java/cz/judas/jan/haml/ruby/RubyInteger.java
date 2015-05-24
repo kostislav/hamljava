@@ -1,5 +1,7 @@
 package cz.judas.jan.haml.ruby;
 
+import java.util.List;
+
 public class RubyInteger implements RubyObject {
     private final Integer javaObject;
 
@@ -8,7 +10,7 @@ public class RubyInteger implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments) {
         throw new IllegalArgumentException("Method " + name + " does not exist");
     }
 

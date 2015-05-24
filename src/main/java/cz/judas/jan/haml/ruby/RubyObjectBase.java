@@ -1,11 +1,14 @@
 package cz.judas.jan.haml.ruby;
 
+import com.google.common.collect.FluentIterable;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.List;
 
 public class RubyObjectBase implements RubyObject {
     private final Object javaObject;
@@ -15,8 +18,8 @@ public class RubyObjectBase implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name) {
-        return new RubyObjectBase(callJavaMethod(name));
+    public RubyObject callMethod(String name, List<RubyObject> arguments) {
+        return new RubyObjectBase(callJavaMethod(name, arguments));
     }
 
     @Override
@@ -29,7 +32,7 @@ public class RubyObjectBase implements RubyObject {
         return javaObject;
     }
 
-    private Object callJavaMethod(String name) {
+    private Object callJavaMethod(String name, List<RubyObject> arguments) {
         try {
             try {
                 return getFieldValue(javaObject, name);
@@ -37,17 +40,17 @@ public class RubyObjectBase implements RubyObject {
                 try {
                     return callGetter(javaObject, name);
                 } catch (NoSuchMethodException | IllegalAccessException e1) {
-                    return callMethod(javaObject, name);
+                    return callMethod(javaObject, name, arguments);
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Could not get value for for property " + javaObject + "." + name);
+            throw new RuntimeException("Could not get value for for property " + javaObject + "." + name, e);
         }
     }
 
     private Object getFieldValue(Object target, String name) throws NoSuchFieldException, IllegalAccessException {
         Field property = target.getClass().getDeclaredField(name);
-        if(!Modifier.isPublic(property.getModifiers())) {
+        if (!Modifier.isPublic(property.getModifiers())) {
             throw new IllegalAccessException("Field " + name + " is not public");
         }
         property.setAccessible(true);
@@ -55,15 +58,21 @@ public class RubyObjectBase implements RubyObject {
     }
 
     private Object callGetter(Object target, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        return callMethod(target, "get" + StringUtils.capitalize(name));
+        return callMethod(target, "get" + StringUtils.capitalize(name), Collections.emptyList());
     }
 
-    private Object callMethod(Object target, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = target.getClass().getMethod(name);
-        if(!Modifier.isPublic(method.getModifiers())) {
-            throw new IllegalAccessException("Method " + name + " is not public");
+    private Object callMethod(Object target, String name, List<RubyObject> arguments) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        for (Method method : target.getClass().getMethods()) {
+            if (Modifier.isPublic(method.getModifiers()) && method.getName().equals(name) && method.getParameterCount() == arguments.size()) {
+                method.setAccessible(true);
+                return method.invoke(
+                        target,
+                        FluentIterable.from(arguments)
+                                .transform(RubyObject::asJavaObject)
+                                .toArray(Object.class)
+                );
+            }
         }
-        method.setAccessible(true);
-        return method.invoke(target);
+        throw new NoSuchMethodException("Method " + name + " not found");
     }
 }
