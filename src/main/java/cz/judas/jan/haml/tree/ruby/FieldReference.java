@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.tree.ruby;
 
+import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 
 public class FieldReference implements RubyExpression {
@@ -10,7 +11,7 @@ public class FieldReference implements RubyExpression {
     }
 
     @Override
-    public Object evaluate(VariableMap variables) {
+    public Object evaluate(HtmlOutput htmlOutput, VariableMap variables) {
         return variables.get(name);
     }
 }

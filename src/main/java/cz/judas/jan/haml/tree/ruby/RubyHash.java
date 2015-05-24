@@ -2,6 +2,7 @@ package cz.judas.jan.haml.tree.ruby;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 
 import java.util.List;
@@ -15,10 +16,10 @@ public class RubyHash implements RubyExpression {
     }
 
     @Override
-    public Map<Object, Object> evaluate(VariableMap variables) {
+    public Map<Object, Object> evaluate(HtmlOutput htmlOutput, VariableMap variables) {
         ImmutableMap.Builder<Object, Object> builder = ImmutableMap.builder();
         for (HashEntry entry : entries) {
-            builder.put(entry.getKey().evaluate(variables), entry.getValue().evaluate(variables));
+            builder.put(entry.getKey().evaluate(htmlOutput, variables), entry.getValue().evaluate(htmlOutput, variables));
         }
         return builder.build();
     }

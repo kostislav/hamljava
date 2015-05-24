@@ -26,7 +26,7 @@ public class HtmlNode implements Node {
     public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
         htmlOutput.addUnescaped('<', tagName);
 
-        for (Map.Entry<String, Object> entry : mergeAttributes(variableMap).entrySet()) {
+        for (Map.Entry<String, Object> entry : mergeAttributes(htmlOutput, variableMap).entrySet()) {
             String attributeName = entry.getKey();
             Object attributeValue;
             if(attributeName.equals("class")) {
@@ -38,17 +38,17 @@ public class HtmlNode implements Node {
         }
 
         htmlOutput.addUnescaped('>');
-        htmlOutput.addUnescaped(textContent.evaluate(variableMap));
+        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, variableMap));
         for (Node child : children) {
             child.evaluate(htmlOutput, variableMap);
         }
         htmlOutput.addUnescaped("</", tagName, '>');
     }
 
-    private Map<String, Object> mergeAttributes(VariableMap variableMap) {
+    private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, VariableMap variableMap) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
         for (RubyHash hash : attributes) {
-            for (Map.Entry<Object, Object> entry : hash.evaluate(variableMap).entrySet()) {
+            for (Map.Entry<Object, Object> entry : hash.evaluate(htmlOutput, variableMap).entrySet()) {
                 String attributeName = entry.getKey().toString();
                 Object attributeValue = entry.getValue();
                 if(attributeName.equals("class")) {

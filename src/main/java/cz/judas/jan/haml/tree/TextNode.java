@@ -13,7 +13,7 @@ public class TextNode implements Node {
 
     @Override
     public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
-        htmlOutput.addUnescaped(content.evaluate(variableMap));
+        htmlOutput.addUnescaped(content.evaluate(htmlOutput, variableMap));
     }
 
     @Override

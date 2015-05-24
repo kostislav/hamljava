@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.tree.ruby;
 
+import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 
 public class MethodCall implements RubyExpression {
@@ -12,7 +13,7 @@ public class MethodCall implements RubyExpression {
     }
 
     @Override
-    public Object evaluate(VariableMap variables) {
-        return target.evaluateAsRuby(variables).callMethod(methodName);
+    public Object evaluate(HtmlOutput htmlOutput, VariableMap variables) {
+        return target.evaluateAsRuby(htmlOutput, variables).callMethod(methodName);
     }
 }
