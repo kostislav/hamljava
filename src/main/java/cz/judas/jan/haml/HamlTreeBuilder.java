@@ -4,6 +4,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.antlr.JavaHamlLexer;
 import cz.judas.jan.haml.antlr.JavaHamlParser;
+import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.tree.*;
 import cz.judas.jan.haml.tree.ruby.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -219,7 +220,7 @@ public class HamlTreeBuilder {
             } else if (child instanceof JavaHamlParser.MethodNameContext) {
                 String newMethodName = child.getText();
                 if (methodName != null) {
-                    target = new MethodCallExpression(target, methodName, arguments);
+                    target = new MethodCallExpression(target, methodName, arguments, RubyBlock.EMPTY);
                     arguments.clear();
                 }
                 methodName = newMethodName;
@@ -228,7 +229,7 @@ public class HamlTreeBuilder {
             }
         }
 
-        return new MethodCallExpression(target, methodName, arguments);
+        return new MethodCallExpression(target, methodName, arguments, RubyBlock.EMPTY);
     }
 
     private List<RubyExpression> methodArgument(ParserRuleContext context) {

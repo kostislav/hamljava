@@ -12,7 +12,7 @@ public class RubyString implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block) {
         throw new IllegalArgumentException("Method " + name + " does not exist");
     }
 

@@ -3,10 +3,10 @@ package cz.judas.jan.haml.ruby;
 import java.util.List;
 
 public class Nil implements RubyObject {
-    public static Nil INSTANCE = new Nil();
+    public static final Nil INSTANCE = new Nil();
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block) {
         return INSTANCE;
     }
 

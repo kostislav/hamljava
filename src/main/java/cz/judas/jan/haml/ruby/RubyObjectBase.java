@@ -18,7 +18,7 @@ public class RubyObjectBase implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block) {
         return new RubyObjectBase(callJavaMethod(name, arguments));
     }
 
