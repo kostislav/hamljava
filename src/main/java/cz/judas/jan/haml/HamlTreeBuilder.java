@@ -57,9 +57,9 @@ public class HamlTreeBuilder {
                 tagName = parseTree.getChild(1).getText();
             } else if (parseTree instanceof JavaHamlParser.AttributeContext) {
                 attributeBuilder.add(attributeHash(parseTree.getChild(0)));
-            } else if (parseTree instanceof JavaHamlParser.TextContext) {
-                content = ConstantRubyExpression.string(parseTree.getText());
             } else if (parseTree instanceof JavaHamlParser.PlainTextContext) {
+                content = ConstantRubyExpression.string(parseTree.getText());
+            } else if (parseTree instanceof JavaHamlParser.TextContentContext) {
                 content = ConstantRubyExpression.string(parseTree.getChild(1).getText());
             } else if (parseTree instanceof JavaHamlParser.EscapedTextContext) {
                 content = ConstantRubyExpression.string(parseTree.getChild(1).getText());

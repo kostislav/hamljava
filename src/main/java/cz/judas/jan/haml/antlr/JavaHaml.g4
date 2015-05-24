@@ -29,7 +29,7 @@ doctype: doctypeStart SPACE (WORD | NUMBER) NL;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
-htmlTag: (tagName? attribute* (plainText | rubyContent)? (NL | childTags)) | escapedText NL | rubyContent NL | text NL;
+htmlTag: (tagName? attribute* (textContent | rubyContent)? (NL | childTags)) | escapedText NL | rubyContent NL | plainText NL;
 
 tagName: PERCENT WORD;
 
@@ -47,7 +47,9 @@ htmlAttributeKey: WORD | (WORD COLON WORD);
 
 escapedText: BACKSLASH text;
 
-plainText: SPACE text;
+textContent: SPACE text;
+
+plainText: ~(BACKSLASH | EQUALS_SIGN) text;
 
 text: (~NL)+;
 

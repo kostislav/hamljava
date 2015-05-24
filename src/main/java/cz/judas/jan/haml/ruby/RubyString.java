@@ -3,7 +3,7 @@ package cz.judas.jan.haml.ruby;
 import java.util.List;
 
 public class RubyString implements RubyObject {
-    public static RubyString EMPTY = new RubyString("");
+    public static final RubyString EMPTY = new RubyString("");
 
     private final String javaObject;
 
@@ -28,8 +28,12 @@ public class RubyString implements RubyObject {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         RubyString that = (RubyString) o;
 
@@ -39,5 +43,12 @@ public class RubyString implements RubyObject {
     @Override
     public int hashCode() {
         return javaObject.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "RubyString{" +
+                "javaObject='" + javaObject + '\'' +
+                '}';
     }
 }
