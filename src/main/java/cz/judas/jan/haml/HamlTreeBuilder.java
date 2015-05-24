@@ -4,7 +4,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.antlr.JavaHamlLexer;
 import cz.judas.jan.haml.antlr.JavaHamlParser;
-import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.tree.*;
 import cz.judas.jan.haml.tree.ruby.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -62,7 +61,15 @@ public class HamlTreeBuilder {
             } else if (parseTree instanceof JavaHamlParser.EscapedTextContext) {
                 content = ConstantRubyExpression.string(parseTree.getChild(1).getText());
             } else if (parseTree instanceof JavaHamlParser.CodeContext) {
-                return new CodeNode(expression((ParserRuleContext)parseTree.getChild(2)));
+                RubyExpression expression = expression((ParserRuleContext) parseTree.getChild(2));
+                if(parseTree.getChildCount() == 5) {
+                    expression = ((MethodCallExpression)expression).withBlock(
+                            new BlockExpression(
+                                children((ParserRuleContext)parseTree.getChild(4).getChild(1))
+                            )
+                    );
+                }
+                return new CodeNode(expression);
             } else if (parseTree instanceof JavaHamlParser.RubyContentContext) {
                 for (ParseTree child : ((ParserRuleContext) parseTree).children) {
                     if (child instanceof JavaHamlParser.ExpressionContext) {
@@ -70,11 +77,7 @@ public class HamlTreeBuilder {
                     }
                 }
             } else if (parseTree instanceof JavaHamlParser.ChildTagsContext) {
-                for (ParseTree child : ((ParserRuleContext) parseTree).children) {
-                    if (child instanceof JavaHamlParser.HtmlTagContext) {
-                        childrenBuilder.add(tag((JavaHamlParser.HtmlTagContext) child));
-                    }
-                }
+                childrenBuilder.addAll(children((ParserRuleContext) parseTree));
             }
         }
 
@@ -91,6 +94,16 @@ public class HamlTreeBuilder {
                     children
             );
         }
+    }
+
+    private List<HamlNode> children(ParserRuleContext context) {
+        ImmutableList.Builder<HamlNode> childrenBuilder = ImmutableList.builder();
+        for (ParseTree child : context.children) {
+            if (child instanceof JavaHamlParser.HtmlTagContext) {
+                childrenBuilder.add(tag((JavaHamlParser.HtmlTagContext) child));
+            }
+        }
+        return childrenBuilder.build();
     }
 
     private RubyHashExpression attributeHash(ParseTree node) {
@@ -220,7 +233,7 @@ public class HamlTreeBuilder {
             } else if (child instanceof JavaHamlParser.MethodNameContext) {
                 String newMethodName = child.getText();
                 if (methodName != null) {
-                    target = new MethodCallExpression(target, methodName, arguments, RubyBlock.EMPTY);
+                    target = new MethodCallExpression(target, methodName, arguments);
                     arguments.clear();
                 }
                 methodName = newMethodName;
@@ -229,7 +242,7 @@ public class HamlTreeBuilder {
             }
         }
 
-        return new MethodCallExpression(target, methodName, arguments, RubyBlock.EMPTY);
+        return new MethodCallExpression(target, methodName, arguments);
     }
 
     private List<RubyExpression> methodArgument(ParserRuleContext context) {

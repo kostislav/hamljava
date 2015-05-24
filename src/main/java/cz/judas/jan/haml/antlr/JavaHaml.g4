@@ -29,7 +29,7 @@ doctype: doctypeStart SPACE (WORD | NUMBER) NL;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
-htmlTag: (tagName? attribute* (textContent | rubyContent)? (NL | childTags)) | code NL | escapedText NL | rubyContent NL | plainText NL;
+htmlTag: (tagName? attribute* (textContent | rubyContent)? (NL | childTags)) | code | escapedText NL | rubyContent NL | plainText NL;
 
 tagName: PERCENT WORD;
 
@@ -55,7 +55,7 @@ text: (~NL)+;
 
 rubyContent: EQUALS_SIGN whitespace? expression;
 
-code: DASH whitespace expression;
+code: DASH whitespace expression ((whitespace block) | NL);
 
 childTags: INDENT htmlTag+ DEDENT;
 
@@ -111,6 +111,8 @@ methodParameter: expression;
 
 methodName: WORD;
 
+block: DO childTags;
+
 
 
 
@@ -134,6 +136,7 @@ DASH: '-';
 BACKSLASH: '\\';
 FAT_ARROW: '=>';
 NUMBER: ('0'..'9')+;
+DO: 'do';
 WORD : ('a'..'z' | 'A'..'Z' | '0'..'9' | '-')+;
 SPACE: ' ';
 WHITESPACE: (' ' | '\t')+;

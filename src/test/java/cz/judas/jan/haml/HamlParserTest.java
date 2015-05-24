@@ -2,7 +2,6 @@ package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -93,7 +92,7 @@ public class HamlParserTest {
         );
     }
 
-    @Test @Ignore
+    @Test
     public void simpleForeach() throws Exception {
         assertThat(
                 parser.process("%div\n\t- @values.each do\n\t\t%span blah", new VariableMap(map("values", map("a", 4, "b", 6)))),

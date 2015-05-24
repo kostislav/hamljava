@@ -15,6 +15,10 @@ public class MethodCallExpression implements RubyExpression {
     private final RubyExpression target;
     private final List<RubyExpression> arguments;
 
+    public MethodCallExpression(RubyExpression target, String methodName, List<RubyExpression> arguments) {
+        this(target, methodName, arguments, RubyBlock.EMPTY);
+    }
+
     public MethodCallExpression(RubyExpression target, String methodName, List<RubyExpression> arguments, RubyBlock block) {
         this.target = target;
         this.methodName = methodName;
@@ -28,5 +32,9 @@ public class MethodCallExpression implements RubyExpression {
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
                 .toList();
         return target.evaluate(htmlOutput, variables).callMethod(methodName, evaluatedArgs, block, htmlOutput, variables);
+    }
+
+    public MethodCallExpression withBlock(RubyBlock block) {
+        return new MethodCallExpression(target, methodName, arguments, block);
     }
 }
