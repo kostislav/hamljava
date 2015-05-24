@@ -2,6 +2,7 @@ package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 
 import java.util.List;
@@ -22,18 +23,18 @@ public class RootNode implements Node {
     }
 
     @Override
-    public void appendTo(StringBuilder stringBuilder, VariableMap variableMap) {
-        doctype.ifPresent(doctype -> stringBuilder.append(DOCTYPES.get(doctype)).append('\n'));
+    public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+        doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addUnescaped('\n'));
 
         for (Node child : children) {
-            child.appendTo(stringBuilder, variableMap);
+            child.evaluate(htmlOutput, variableMap);
         }
     }
 
     public String toHtmlString(VariableMap variableMap) {
-        StringBuilder stringBuilder = new StringBuilder();
-        appendTo(stringBuilder, variableMap);
-        return stringBuilder.toString();
+        HtmlOutput htmlOutput = new HtmlOutput();
+        evaluate(htmlOutput, variableMap);
+        return htmlOutput.build();
     }
 
     @Override

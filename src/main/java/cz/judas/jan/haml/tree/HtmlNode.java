@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHash;
@@ -22,9 +23,8 @@ public class HtmlNode implements Node {
     }
 
     @Override
-    public void appendTo(StringBuilder stringBuilder, VariableMap variableMap) {
-        stringBuilder
-                .append('<').append(tagName);
+    public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+        htmlOutput.addUnescaped('<', tagName);
 
         for (Map.Entry<String, Object> entry : mergeAttributes(variableMap).entrySet()) {
             String attributeName = entry.getKey();
@@ -34,15 +34,15 @@ public class HtmlNode implements Node {
             } else {
                 attributeValue = entry.getValue();
             }
-            stringBuilder.append(' ').append(attributeName).append("=\"").append(attributeValue).append('"');
+            htmlOutput.addUnescaped(' ', attributeName, "=\"", attributeValue, '"');
         }
 
-        stringBuilder.append('>');
-        stringBuilder.append(textContent.evaluate(variableMap));
+        htmlOutput.addUnescaped('>');
+        htmlOutput.addUnescaped(textContent.evaluate(variableMap));
         for (Node child : children) {
-            child.appendTo(stringBuilder, variableMap);
+            child.evaluate(htmlOutput, variableMap);
         }
-        stringBuilder.append("</").append(tagName).append('>');
+        htmlOutput.addUnescaped("</", tagName, '>');
     }
 
     private Map<String, Object> mergeAttributes(VariableMap variableMap) {

@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.tree;
 
+import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 
@@ -11,8 +12,8 @@ public class TextNode implements Node {
     }
 
     @Override
-    public void appendTo(StringBuilder stringBuilder, VariableMap variableMap) {
-        stringBuilder.append(content.evaluate(variableMap));
+    public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+        htmlOutput.addUnescaped(content.evaluate(variableMap));
     }
 
     @Override
