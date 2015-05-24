@@ -56,7 +56,7 @@ public class HamlParserTest {
     public void findsBothBareAndGetterProperties() throws Exception {
         assertThat(
                 parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
-                is("<span class=\"name\">karl</span><span>654</span>")
+                is("<span class=\"name\">karl</span><span>655</span>")
         );
     }
 
@@ -78,8 +78,8 @@ public class HamlParserTest {
         }
 
         @SuppressWarnings("UnusedDeclaration")
-        private int getAge() {
-            return age;
+        public int getAge() {
+            return age + 1;
         }
     }
 }

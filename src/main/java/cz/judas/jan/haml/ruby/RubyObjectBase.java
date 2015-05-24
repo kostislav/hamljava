@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public class RubyObjectBase implements RubyObject {
     private final Object javaObject;
@@ -27,10 +28,10 @@ public class RubyObjectBase implements RubyObject {
         try {
             try {
                 return getFieldValue(javaObject, name);
-            } catch (NoSuchFieldException e) {
+            } catch (NoSuchFieldException | IllegalAccessException e) {
                 try {
                     return callGetter(javaObject, name);
-                } catch (NoSuchMethodException e1) {
+                } catch (NoSuchMethodException | IllegalAccessException e1) {
                     return callMethod(javaObject, name);
                 }
             }
@@ -41,6 +42,9 @@ public class RubyObjectBase implements RubyObject {
 
     private Object getFieldValue(Object target, String name) throws NoSuchFieldException, IllegalAccessException {
         Field property = target.getClass().getDeclaredField(name);
+        if(!Modifier.isPublic(property.getModifiers())) {
+            throw new IllegalAccessException("Field " + name + " is not public");
+        }
         property.setAccessible(true);
         return property.get(target);
     }
@@ -50,8 +54,11 @@ public class RubyObjectBase implements RubyObject {
     }
 
     private Object callMethod(Object target, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getter = target.getClass().getMethod(name);
-        getter.setAccessible(true);
-        return getter.invoke(target);
+        Method method = target.getClass().getMethod(name);
+        if(!Modifier.isPublic(method.getModifiers())) {
+            throw new IllegalAccessException("Method " + name + " is not public");
+        }
+        method.setAccessible(true);
+        return method.invoke(target);
     }
 }
