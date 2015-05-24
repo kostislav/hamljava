@@ -225,19 +225,20 @@ public class HamlTreeBuilder {
                 }
                 methodName = newMethodName;
             } else if(child instanceof JavaHamlParser.MethodParametersContext) {
-                arguments.add(methodArgument((ParserRuleContext)child));
+                arguments.addAll(methodArgument((ParserRuleContext) child));
             }
         }
 
         return new MethodCallExpression(target, methodName, arguments);
     }
 
-    private RubyExpression methodArgument(ParserRuleContext context) {
+    private List<RubyExpression> methodArgument(ParserRuleContext context) {
+        List<RubyExpression> arguments = new ArrayList<>();
         for (ParseTree child : context.children) {
-            if(child instanceof JavaHamlParser.ExpressionContext) {
-                return expression((ParserRuleContext)child);
+            if(child instanceof JavaHamlParser.MethodParameterContext) {
+                arguments.add(expression((ParserRuleContext)(child.getChild(0))));
             }
         }
-        throw new IllegalArgumentException("Method argument not found");
+        return arguments;
     }
 }

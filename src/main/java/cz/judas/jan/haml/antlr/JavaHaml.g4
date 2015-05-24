@@ -97,7 +97,9 @@ fieldReference: AT_SIGN WORD;
 
 methodCall: fieldReference (DOT methodName)+ methodParameters?;
 
-methodParameters: LEFT_BRACKET whitespace? expression whitespace? RIGHT_BRACKET;
+methodParameters: LEFT_BRACKET whitespace? ((methodParameter whitespace? COMMA whitespace?)* methodParameter whitespace?)? RIGHT_BRACKET;
+
+methodParameter: expression;
 
 methodName: WORD;
 

@@ -76,6 +76,14 @@ public class HamlParserTest {
         );
     }
 
+    @Test
+    public void methodCallWithMultipleParameters() throws Exception {
+        assertThat(
+                parser.process("%span= @person.getFakeName('bob', \"dylan\")", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
+                is("<span>bob dylan</span>")
+        );
+    }
+
     private static class Person {
         public final String name;
         private final int age;
@@ -93,6 +101,11 @@ public class HamlParserTest {
         @SuppressWarnings("UnusedDeclaration")
         public int getFakeAge(int fakeValue) {
             return fakeValue;
+        }
+
+        @SuppressWarnings("UnusedDeclaration")
+        public String getFakeName(String fakeFirstName, String fakeLastName) {
+            return fakeFirstName + " " + fakeLastName;
         }
     }
 }
