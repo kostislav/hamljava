@@ -1,11 +1,7 @@
 package cz.judas.jan.haml.ruby;
 
-public class Nil extends RubyObject {
+public class Nil implements RubyObject {
     public static Nil INSTANCE = new Nil();
-
-    public Nil() {
-        super(null);
-    }
 
     @Override
     public RubyObject callMethod(String name) {

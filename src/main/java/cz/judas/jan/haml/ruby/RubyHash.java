@@ -3,7 +3,7 @@ package cz.judas.jan.haml.ruby;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class RubyHash extends RubyObject {
+public class RubyHash extends RubyObjectBase {
     private final Map<RubyObject, RubyObject> javaObject;
 
     public RubyHash(Map<RubyObject, RubyObject> javaObject) {
