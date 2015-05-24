@@ -47,21 +47,20 @@ public class HtmlNode implements HamlNode {
 
     private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, VariableMap variableMap) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
-        for (RubyHashExpression hash : attributes) {
-            for (Map.Entry<Object, Object> entry : hash.evaluate(htmlOutput, variableMap).entrySet()) {
-                String attributeName = entry.getKey().toString();
-                Object attributeValue = entry.getValue();
+        for (RubyHashExpression hashExpression : attributes) {
+            hashExpression.evaluate(htmlOutput, variableMap).each((key, value) -> {
+                String attributeName = key.toString();
                 if(attributeName.equals("class")) {
                     List<Object> classes = (List<Object>)mergedAttributes.get("class");
                     if(classes == null) {
                         classes = new ArrayList<>();
                         mergedAttributes.put("class", classes);
                     }
-                    classes.add(attributeValue.toString());
+                    classes.add(value.toString());
                 } else {
-                    mergedAttributes.put(attributeName, attributeValue.toString());
+                    mergedAttributes.put(attributeName, value.toString());
                 }
-            }
+            });
         }
         return mergedAttributes;
     }

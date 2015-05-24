@@ -4,9 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.ruby.RubyHash;
+import cz.judas.jan.haml.ruby.RubyObject;
 
 import java.util.List;
-import java.util.Map;
 
 public class RubyHashExpression implements RubyExpression {
     private final List<HashEntry> entries;
@@ -16,12 +17,12 @@ public class RubyHashExpression implements RubyExpression {
     }
 
     @Override
-    public Map<Object, Object> evaluate(HtmlOutput htmlOutput, VariableMap variables) {
-        ImmutableMap.Builder<Object, Object> builder = ImmutableMap.builder();
+    public RubyHash evaluate(HtmlOutput htmlOutput, VariableMap variables) {
+        ImmutableMap.Builder<RubyObject, RubyObject> builder = ImmutableMap.builder();
         for (HashEntry entry : entries) {
             builder.put(entry.getKey().evaluate(htmlOutput, variables), entry.getValue().evaluate(htmlOutput, variables));
         }
-        return builder.build();
+        return new RubyHash(builder.build());
     }
 
     public static RubyHashExpression singleEntryHash(RubyExpression key, RubyExpression value) {

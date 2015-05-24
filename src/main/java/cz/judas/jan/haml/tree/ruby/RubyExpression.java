@@ -5,9 +5,5 @@ import cz.judas.jan.haml.VariableMap;
 import cz.judas.jan.haml.ruby.RubyObject;
 
 public interface RubyExpression {
-    Object evaluate(HtmlOutput htmlOutput, VariableMap variables);
-
-    default RubyObject evaluateAsRuby(HtmlOutput htmlOutput, VariableMap variables) {
-        return new RubyObject(evaluate(htmlOutput, variables));
-    }
+    RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variables);
 }

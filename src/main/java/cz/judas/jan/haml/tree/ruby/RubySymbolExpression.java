@@ -2,6 +2,7 @@ package cz.judas.jan.haml.tree.ruby;
 
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.ruby.RubyObject;
 
 public class RubySymbolExpression implements RubyExpression {
     private final String value;
@@ -11,8 +12,8 @@ public class RubySymbolExpression implements RubyExpression {
     }
 
     @Override
-    public Object evaluate(HtmlOutput htmlOutput, VariableMap variables) {
-        return value;
+    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variables) {
+        return new RubyObject(value);
     }
 
     @Override

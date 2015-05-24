@@ -12,6 +12,10 @@ public class VariableMap {
     }
 
     public Object get(String name) {
-        return values.get(name);
+        Object value = values.get(name);
+        if(value == null && !values.containsKey(name)) {
+            throw new IllegalArgumentException("Field " + name + " does not exist");
+        }
+        return value;
     }
 }

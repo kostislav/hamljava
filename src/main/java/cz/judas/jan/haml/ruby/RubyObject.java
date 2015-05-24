@@ -13,7 +13,16 @@ public class RubyObject {
         this.javaObject = javaObject;
     }
 
-    public Object callMethod(String name) {
+    public RubyObject callMethod(String name) {
+        return new RubyObject(callJavaMethod(name));
+    }
+
+    @Override
+    public String toString() {
+        return javaObject.toString();
+    }
+
+    private Object callJavaMethod(String name) {
         try {
             try {
                 return getFieldValue(javaObject, name);
