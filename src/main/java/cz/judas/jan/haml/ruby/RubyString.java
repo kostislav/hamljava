@@ -15,7 +15,7 @@ public class RubyString implements RubyObject {
     }
 
     @Override
-    public String toString() {
+    public String asString() {
         return javaObject;
     }
 

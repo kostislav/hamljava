@@ -20,7 +20,7 @@ public class RubyObjectBase implements RubyObject {
     }
 
     @Override
-    public String toString() {
+    public String asString() {
         return javaObject.toString();
     }
 

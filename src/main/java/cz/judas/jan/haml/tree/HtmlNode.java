@@ -40,7 +40,7 @@ public class HtmlNode implements HamlNode {
         }
 
         htmlOutput.addUnescaped('>');
-        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, variableMap));
+        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, variableMap).asString());
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, variableMap);
         }
@@ -53,16 +53,16 @@ public class HtmlNode implements HamlNode {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
         for (RubyHashExpression hashExpression : attributes) {
             hashExpression.evaluate(htmlOutput, variableMap).each((key, value) -> {
-                String attributeName = key.toString();
+                String attributeName = key.asString();
                 if(attributeName.equals("class")) {
                     List<Object> classes = (List<Object>)mergedAttributes.get("class");
                     if(classes == null) {
                         classes = new ArrayList<>();
                         mergedAttributes.put("class", classes);
                     }
-                    classes.add(value.toString());
+                    classes.add(value.asString());
                 } else {
-                    mergedAttributes.put(attributeName, value.toString());
+                    mergedAttributes.put(attributeName, value.asString());
                 }
             });
         }
