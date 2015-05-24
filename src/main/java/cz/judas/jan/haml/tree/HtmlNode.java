@@ -57,9 +57,9 @@ public class HtmlNode implements HamlNode {
                         classes = new ArrayList<>();
                         mergedAttributes.put("class", classes);
                     }
-                    classes.add(attributeValue);
+                    classes.add(attributeValue.toString());
                 } else {
-                    mergedAttributes.put(attributeName, attributeValue);
+                    mergedAttributes.put(attributeName, attributeValue.toString());
                 }
             }
         }
