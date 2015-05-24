@@ -27,6 +27,6 @@ public class MethodCallExpression implements RubyExpression {
         ImmutableList<RubyObject> evaluatedArgs = FluentIterable.from(arguments)
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
                 .toList();
-        return target.evaluate(htmlOutput, variables).callMethod(methodName, evaluatedArgs, block);
+        return target.evaluate(htmlOutput, variables).callMethod(methodName, evaluatedArgs, block, variables);
     }
 }

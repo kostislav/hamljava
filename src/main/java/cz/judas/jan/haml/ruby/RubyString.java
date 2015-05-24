@@ -1,5 +1,7 @@
 package cz.judas.jan.haml.ruby;
 
+import cz.judas.jan.haml.VariableMap;
+
 import java.util.List;
 
 public class RubyString implements RubyObject {
@@ -12,7 +14,7 @@ public class RubyString implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, VariableMap variableMap) {
         throw new IllegalArgumentException("Method " + name + " does not exist");
     }
 
