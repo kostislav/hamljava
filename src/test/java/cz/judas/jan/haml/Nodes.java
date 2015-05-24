@@ -2,10 +2,7 @@ package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.tree.*;
-import cz.judas.jan.haml.tree.ruby.HashEntry;
-import cz.judas.jan.haml.tree.ruby.RubyExpression;
-import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
-import cz.judas.jan.haml.tree.ruby.RubyStringExpression;
+import cz.judas.jan.haml.tree.ruby.*;
 
 import java.util.*;
 
@@ -23,7 +20,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
-                RubyStringExpression.EMPTY,
+                ConstantRubyExpression.EMPTY_STRING,
                 Collections.emptyList()
         );
     }
@@ -32,7 +29,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
-                RubyStringExpression.EMPTY,
+                ConstantRubyExpression.EMPTY_STRING,
                 children
         );
     }
@@ -41,7 +38,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 mapToHash(attributes),
-                RubyStringExpression.EMPTY,
+                ConstantRubyExpression.EMPTY_STRING,
                 Arrays.asList(children)
         );
     }

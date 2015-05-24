@@ -1,9 +1,9 @@
 package cz.judas.jan.haml;
 
 import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.tree.ruby.ConstantRubyExpression;
 import cz.judas.jan.haml.tree.ruby.HashEntry;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
-import cz.judas.jan.haml.tree.ruby.RubyStringExpression;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -188,7 +188,7 @@ public class HamlTreeBuilderTest {
                                         new HashEntry(string("xml:tang"), string("e"))
                                 ))
                         ),
-                        RubyStringExpression.EMPTY
+                        ConstantRubyExpression.EMPTY_STRING
                 )
         ));
     }

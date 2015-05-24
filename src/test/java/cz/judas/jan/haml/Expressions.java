@@ -1,18 +1,17 @@
 package cz.judas.jan.haml;
 
+import cz.judas.jan.haml.tree.ruby.ConstantRubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
-import cz.judas.jan.haml.tree.ruby.RubyStringExpression;
-import cz.judas.jan.haml.tree.ruby.RubySymbolExpression;
 
 @SuppressWarnings("UtilityClass")
 public class Expressions {
     public static RubyExpression string(String value) {
-        return new RubyStringExpression(value);
+        return ConstantRubyExpression.string(value);
     }
 
     public static RubyExpression symbol(String value) {
-        return new RubySymbolExpression(value);
+        return ConstantRubyExpression.symbol(value);
     }
 
     public static RubyHashExpression hash(RubyExpression key, RubyExpression value) {
