@@ -1,6 +1,5 @@
 package cz.judas.jan.haml;
 
-import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.ruby.HashEntry;
 import cz.judas.jan.haml.tree.ruby.RubyHash;
@@ -99,7 +98,7 @@ public class HamlTreeBuilderTest {
     @Test
     public void multipleClassAttributes() throws Exception {
         assertParses("%span.bluh.lkj bra bh", root(
-                node("span", ImmutableList.of(hash(symbol("class"), string("bluh")), hash(symbol("class"), string("lkj"))), string("bra bh"))
+                node("span", list(hash(symbol("class"), string("bluh")), hash(symbol("class"), string("lkj"))), string("bra bh"))
         ));
     }
 
@@ -113,7 +112,7 @@ public class HamlTreeBuilderTest {
     @Test
     public void idAndClassAttribute() throws Exception {
         assertParses("%h2#hehe.dre njhg", root(
-                node("h2", ImmutableList.of(hash(symbol("id"), string("hehe")), hash(symbol("class"), string("dre"))), string("njhg"))
+                node("h2", list(hash(symbol("id"), string("hehe")), hash(symbol("class"), string("dre"))), string("njhg"))
         ));
     }
 
@@ -182,9 +181,9 @@ public class HamlTreeBuilderTest {
         assertParses("%html(xml:lang='en'){ :'xml:fang' => 'ren', \"xml:tang\" => \"e\" }", root(
                 node(
                         "html",
-                        ImmutableList.of(
+                        list(
                                 hash(symbol("xml:lang"), string("en")),
-                                new RubyHash(ImmutableList.of(
+                                new RubyHash(list(
                                         new HashEntry(symbol("xml:fang"), string("ren")),
                                         new HashEntry(string("xml:tang"), string("e"))
                                 ))
