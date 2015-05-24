@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
+import static cz.judas.jan.haml.ShortCollections.list;
 import static cz.judas.jan.haml.ShortCollections.map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -95,7 +96,7 @@ public class HamlParserTest {
     @Test
     public void simpleForeach() throws Exception {
         assertThat(
-                parser.process("%div\n\t- @values.each do\n\t\t%span blah", new VariableMap(map("values", map("a", 4, "b", 6)))),
+                parser.process("%div\n\t- @values.each do\n\t\t%span blah", new VariableMap(map("values", list("a", "b")))),
                 is("<div><span>blah</span><span>blah</span></div>")
         );
     }
