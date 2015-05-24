@@ -11,11 +11,11 @@ import java.util.*;
 
 @SuppressWarnings("UtilityClass")
 public class Nodes {
-    public static RootNode root(Node... children) {
+    public static RootNode root(HamlNode... children) {
         return new RootNode(Optional.empty(), Arrays.asList(children));
     }
 
-    public static RootNode root(String doctype, Node... children) {
+    public static RootNode root(String doctype, HamlNode... children) {
         return new RootNode(Optional.of(doctype), Arrays.asList(children));
     }
 
@@ -28,7 +28,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, List<? extends Node> children) {
+    public static HtmlNode node(String name, List<? extends HamlNode> children) {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
@@ -37,7 +37,7 @@ public class Nodes {
         );
     }
 
-    public static HtmlNode node(String name, Map<RubyExpression, RubyExpression> attributes, Node... children) {
+    public static HtmlNode node(String name, Map<RubyExpression, RubyExpression> attributes, HamlNode... children) {
         return new HtmlNode(
                 name,
                 mapToHash(attributes),

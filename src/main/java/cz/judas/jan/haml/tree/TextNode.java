@@ -4,7 +4,7 @@ import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.VariableMap;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 
-public class TextNode implements Node {
+public class TextNode implements HamlNode {
     private final RubyExpression content;
 
     public TextNode(RubyExpression content) {

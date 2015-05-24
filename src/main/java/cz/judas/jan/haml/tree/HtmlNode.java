@@ -9,13 +9,13 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
-public class HtmlNode implements Node {
+public class HtmlNode implements HamlNode {
     private final String tagName;
     private final List<RubyHash> attributes;
     private final RubyExpression textContent;
-    private final List<Node> children;
+    private final List<HamlNode> children;
 
-    public HtmlNode(String tagName, List<RubyHash> attributes, RubyExpression textContent, Iterable<? extends Node> children) {
+    public HtmlNode(String tagName, List<RubyHash> attributes, RubyExpression textContent, Iterable<? extends HamlNode> children) {
         this.tagName = tagName;
         this.attributes = ImmutableList.copyOf(attributes);
         this.textContent = textContent;
@@ -39,7 +39,7 @@ public class HtmlNode implements Node {
 
         htmlOutput.addUnescaped('>');
         htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, variableMap));
-        for (Node child : children) {
+        for (HamlNode child : children) {
             child.evaluate(htmlOutput, variableMap);
         }
         htmlOutput.addUnescaped("</", tagName, '>');

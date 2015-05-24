@@ -4,8 +4,8 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.antlr.JavaHamlLexer;
 import cz.judas.jan.haml.antlr.JavaHamlParser;
+import cz.judas.jan.haml.tree.HamlNode;
 import cz.judas.jan.haml.tree.HtmlNode;
-import cz.judas.jan.haml.tree.Node;
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.TextNode;
 import cz.judas.jan.haml.tree.ruby.*;
@@ -45,9 +45,9 @@ public class HamlTreeBuilder {
         }
     }
 
-    private Node tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
+    private HamlNode tag(JavaHamlParser.HtmlTagContext htmlTagContext) {
         ImmutableList.Builder<RubyHash> attributeBuilder = ImmutableList.builder();
-        ImmutableList.Builder<Node> childrenBuilder = ImmutableList.builder();
+        ImmutableList.Builder<HamlNode> childrenBuilder = ImmutableList.builder();
         String tagName = null;
         RubyExpression content = RubyString.EMPTY;
 
@@ -78,7 +78,7 @@ public class HamlTreeBuilder {
         }
 
         List<RubyHash> attributes = attributeBuilder.build();
-        List<Node> children = childrenBuilder.build();
+        List<HamlNode> children = childrenBuilder.build();
 
         if (tagName == null && attributes.isEmpty() && children.isEmpty()) {
             return new TextNode(content);

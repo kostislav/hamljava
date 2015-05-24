@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class RootNode implements Node {
+public class RootNode implements HamlNode {
     private static final Map<String, String> DOCTYPES = ImmutableMap.of(
             "5", "<!DOCTYPE html>"
     );
 
     private final Optional<String> doctype;
-    private final List<Node> children;
+    private final List<HamlNode> children;
 
-    public RootNode(Optional<String> doctype, Iterable<? extends Node> children) {
+    public RootNode(Optional<String> doctype, Iterable<? extends HamlNode> children) {
         this.children = ImmutableList.copyOf(children);
         this.doctype = doctype;
     }
@@ -26,7 +26,7 @@ public class RootNode implements Node {
     public void evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
         doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addUnescaped('\n'));
 
-        for (Node child : children) {
+        for (HamlNode child : children) {
             child.evaluate(htmlOutput, variableMap);
         }
     }
