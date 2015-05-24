@@ -1,5 +1,11 @@
 package cz.judas.jan.haml.ruby;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import cz.judas.jan.haml.HtmlOutput;
+import cz.judas.jan.haml.VariableMap;
+
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -8,7 +14,17 @@ public class RubyHash extends RubyObjectBase {
 
     public RubyHash(Map<RubyObject, RubyObject> javaObject) {
         super(javaObject);
-        this.javaObject = javaObject;
+        this.javaObject = ImmutableMap.copyOf(javaObject);
+    }
+
+    @Override
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, VariableMap variableMap) {
+        if (name.equals("each")) {
+            javaObject.forEach((key, value) -> block.invoke(ImmutableList.of(key, value), RubyBlock.EMPTY, htmlOutput, variableMap));
+            return Nil.INSTANCE;
+        } else {
+            return super.callMethod(name, arguments, block, htmlOutput, variableMap);
+        }
     }
 
     public void each(BiConsumer<RubyObject, RubyObject> block) {
