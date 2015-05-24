@@ -30,4 +30,10 @@ public class RubyHash extends RubyObjectBase {
     public void each(BiConsumer<RubyObject, RubyObject> block) {
         javaObject.forEach(block);
     }
+
+    public static RubyHash fromJava(Map<?, ?> javaMap) {
+        ImmutableMap.Builder<RubyObject, RubyObject> builder = ImmutableMap.builder();
+        javaMap.forEach((key, value) -> builder.put(RubyObject.wrap(key), RubyObject.wrap(value)));
+        return new RubyHash(builder.build());
+    }
 }

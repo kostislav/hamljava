@@ -1,12 +1,13 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
 
+import static cz.judas.jan.haml.ShortCollections.map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -39,7 +40,7 @@ public class HamlParserTest {
     @Test
     public void usesVariables() throws Exception {
         assertThat(
-                parser.process("%title\n\t= @title\n%p= @content", new VariableMap(ImmutableMap.of("title", "MyPage", "content", "blah"))),
+                parser.process("%title\n\t= @title\n%p= @content", new VariableMap(map("title", "MyPage", "content", "blah"))),
                 is("<title>MyPage</title><p>blah</p>")
         );
     }
@@ -55,7 +56,7 @@ public class HamlParserTest {
     @Test
     public void findsBothBareAndGetterProperties() throws Exception {
         assertThat(
-                parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
+                parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(map("person", new Person("karl", 654)))),
                 is("<span class=\"name\">karl</span><span>655</span>")
         );
     }
@@ -63,7 +64,7 @@ public class HamlParserTest {
     @Test
     public void chainedMethodCalls() throws Exception {
         assertThat(
-                parser.process("%span.name= @people.iterator.next", new VariableMap(ImmutableMap.of("people", ImmutableList.of("varl")))),
+                parser.process("%span.name= @people.iterator.next", new VariableMap(map("people", ImmutableList.of("varl")))),
                 is("<span class=\"name\">varl</span>")
         );
     }
@@ -71,7 +72,7 @@ public class HamlParserTest {
     @Test
     public void methodCallWithParameter() throws Exception {
         assertThat(
-                parser.process("%span= @person.getFakeAge(54)", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
+                parser.process("%span= @person.getFakeAge(54)", new VariableMap(map("person", new Person("karl", 654)))),
                 is("<span>54</span>")
         );
     }
@@ -79,7 +80,7 @@ public class HamlParserTest {
     @Test
     public void methodCallWithMultipleParameters() throws Exception {
         assertThat(
-                parser.process("%span= @person.getFakeName('bob', \"dylan\")", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
+                parser.process("%span= @person.getFakeName('bob', \"dylan\")", new VariableMap(map("person", new Person("karl", 654)))),
                 is("<span>bob dylan</span>")
         );
     }
@@ -87,8 +88,16 @@ public class HamlParserTest {
     @Test
     public void methodCallWithoutBrackets() throws Exception {
         assertThat(
-                parser.process("%span= @person.getFakeName 'mike', \"oldfield\"", new VariableMap(ImmutableMap.of("person", new Person("karl", 654)))),
+                parser.process("%span= @person.getFakeName 'mike', \"oldfield\"", new VariableMap(map("person", new Person("karl", 654)))),
                 is("<span>mike oldfield</span>")
+        );
+    }
+
+    @Test @Ignore
+    public void simpleForeach() throws Exception {
+        assertThat(
+                parser.process("%div\n\t- @values.each do\n\t\t%span blah", new VariableMap(map("values", map("a", 4, "b", 6)))),
+                is("<div><span>blah</span><span>blah</span></div>")
         );
     }
 
