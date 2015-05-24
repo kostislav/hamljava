@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree.ruby;
+package cz.judas.jan.haml.ruby;
 
 import org.apache.commons.lang.StringUtils;
 
