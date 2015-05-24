@@ -74,6 +74,10 @@ public class Nodes {
         return new TextNode(content);
     }
 
+    public static CodeNode codeNode(RubyExpression code) {
+        return new CodeNode(code);
+    }
+
     private static List<RubyHashExpression> mapToHash(Map<RubyExpression, RubyExpression> map) {
         ImmutableList.Builder<HashEntry> builder = ImmutableList.builder();
         for (Map.Entry<RubyExpression, RubyExpression> entry : map.entrySet()) {

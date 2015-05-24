@@ -29,7 +29,7 @@ doctype: doctypeStart SPACE (WORD | NUMBER) NL;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
-htmlTag: (tagName? attribute* (textContent | rubyContent)? (NL | childTags)) | escapedText NL | rubyContent NL | plainText NL;
+htmlTag: (tagName? attribute* (textContent | rubyContent)? (NL | childTags)) | code NL | escapedText NL | rubyContent NL | plainText NL;
 
 tagName: PERCENT WORD;
 
@@ -39,7 +39,7 @@ classAttribute: DOT WORD;
 
 idAttribute: HASH WORD;
 
-htmlAttributes: LEFT_BRACKET whitespace? (htmlAttributeEntry whitespace)* htmlAttributeEntry whitespace? RIGHT_BRACKET ;
+htmlAttributes: LEFT_BRACKET whitespace? (htmlAttributeEntry whitespace?)* htmlAttributeEntry whitespace? RIGHT_BRACKET ;
 
 htmlAttributeEntry: htmlAttributeKey EQUALS_SIGN expression;
 
@@ -49,15 +49,17 @@ escapedText: BACKSLASH text;
 
 textContent: SPACE text;
 
-plainText: ~(BACKSLASH | EQUALS_SIGN) text;
+plainText: ~(BACKSLASH | EQUALS_SIGN | DASH) text;
 
 text: (~NL)+;
 
 rubyContent: EQUALS_SIGN whitespace? expression;
 
+code: DASH whitespace expression;
+
 childTags: INDENT htmlTag+ DEDENT;
 
-whitespace: SPACE | WHITESPACE;
+whitespace: SPACE+ | WHITESPACE;
 
 
 
@@ -128,6 +130,7 @@ AT_SIGN: '@';
 EQUALS_SIGN: '=';
 SINGLE_QUOTE: '\'';
 DOUBLE_QUOTE: '"';
+DASH: '-';
 BACKSLASH: '\\';
 FAT_ARROW: '=>';
 NUMBER: ('0'..'9')+;

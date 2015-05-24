@@ -16,4 +16,30 @@ public class FieldReferenceExpression implements RubyExpression {
     public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variables) {
         return new RubyObjectBase(variables.get(name));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FieldReferenceExpression that = (FieldReferenceExpression) o;
+
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "FieldReferenceExpression{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package cz.judas.jan.haml;
 
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.ruby.ConstantRubyExpression;
+import cz.judas.jan.haml.tree.ruby.FieldReferenceExpression;
 import cz.judas.jan.haml.tree.ruby.HashEntry;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import org.junit.Before;
@@ -190,6 +191,13 @@ public class HamlTreeBuilderTest {
                         ),
                         ConstantRubyExpression.EMPTY_STRING
                 )
+        ));
+    }
+
+    @Test
+    public void uselessCodeNode() throws Exception {
+        assertParses("- @something", root(
+                codeNode(new FieldReferenceExpression("something"))
         ));
     }
 
