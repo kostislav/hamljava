@@ -1,13 +1,13 @@
 package cz.judas.jan.haml.ruby;
 
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 
 import java.util.List;
 import java.util.Map;
 
 public interface RubyObject {
-    RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, VariableMap variableMap);
+    RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext);
 
     String asString();
 

@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.tree;
 
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 
@@ -13,8 +13,8 @@ public class CodeNode implements HamlNode {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
-        return code.evaluate(htmlOutput, variableMap);
+    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+        return code.evaluate(htmlOutput, templateContext);
     }
 
     @Override

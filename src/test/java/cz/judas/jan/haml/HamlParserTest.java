@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class HamlParserTest {
-    private static final VariableMap EMPTY_VARIABLE_MAP = new VariableMap(Collections.emptyMap());
+    private static final TemplateContext EMPTY_VARIABLE_MAP = new TemplateContext(Collections.emptyMap());
 
     private HamlParser parser;
 
@@ -40,7 +40,7 @@ public class HamlParserTest {
     @Test
     public void usesVariables() throws Exception {
         assertThat(
-                parser.process("%title\n\t= @title\n%p= @content", new VariableMap(map("title", "MyPage", "content", "blah"))),
+                parser.process("%title\n\t= @title\n%p= @content", new TemplateContext(map("title", "MyPage", "content", "blah"))),
                 is("<title>MyPage</title><p>blah</p>")
         );
     }
@@ -56,7 +56,7 @@ public class HamlParserTest {
     @Test
     public void findsBothBareAndGetterProperties() throws Exception {
         assertThat(
-                parser.process("%span.name= @person.name\n%span= @person.age", new VariableMap(map("person", new Person("karl", 654)))),
+                parser.process("%span.name= @person.name\n%span= @person.age", new TemplateContext(map("person", new Person("karl", 654)))),
                 is("<span class=\"name\">karl</span><span>655</span>")
         );
     }
@@ -64,7 +64,7 @@ public class HamlParserTest {
     @Test
     public void chainedMethodCalls() throws Exception {
         assertThat(
-                parser.process("%span.name= @people.iterator.next", new VariableMap(map("people", ImmutableList.of("varl")))),
+                parser.process("%span.name= @people.iterator.next", new TemplateContext(map("people", ImmutableList.of("varl")))),
                 is("<span class=\"name\">varl</span>")
         );
     }
@@ -72,7 +72,7 @@ public class HamlParserTest {
     @Test
     public void methodCallWithParameter() throws Exception {
         assertThat(
-                parser.process("%span= @person.getFakeAge(54)", new VariableMap(map("person", new Person("karl", 654)))),
+                parser.process("%span= @person.getFakeAge(54)", new TemplateContext(map("person", new Person("karl", 654)))),
                 is("<span>54</span>")
         );
     }
@@ -80,7 +80,7 @@ public class HamlParserTest {
     @Test
     public void methodCallWithMultipleParameters() throws Exception {
         assertThat(
-                parser.process("%span= @person.getFakeName('bob', \"dylan\")", new VariableMap(map("person", new Person("karl", 654)))),
+                parser.process("%span= @person.getFakeName('bob', \"dylan\")", new TemplateContext(map("person", new Person("karl", 654)))),
                 is("<span>bob dylan</span>")
         );
     }
@@ -88,7 +88,7 @@ public class HamlParserTest {
     @Test
     public void methodCallWithoutBrackets() throws Exception {
         assertThat(
-                parser.process("%span= @person.getFakeName 'mike', \"oldfield\"", new VariableMap(map("person", new Person("karl", 654)))),
+                parser.process("%span= @person.getFakeName 'mike', \"oldfield\"", new TemplateContext(map("person", new Person("karl", 654)))),
                 is("<span>mike oldfield</span>")
         );
     }
@@ -96,7 +96,7 @@ public class HamlParserTest {
     @Test
     public void simpleForeach() throws Exception {
         assertThat(
-                parser.process("%div\n\t- @values.each do\n\t\t%span blah", new VariableMap(map("values", list("a", "b")))),
+                parser.process("%div\n\t- @values.each do\n\t\t%span blah", new TemplateContext(map("values", list("a", "b")))),
                 is("<div><span>blah</span><span>blah</span></div>")
         );
     }

@@ -2,7 +2,7 @@ package cz.judas.jan.haml.ruby;
 
 import com.google.common.collect.FluentIterable;
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
@@ -20,7 +20,7 @@ public class RubyObjectBase implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         return new RubyObjectBase(callJavaMethod(name, arguments));
     }
 

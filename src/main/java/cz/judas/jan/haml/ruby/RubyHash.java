@@ -3,7 +3,7 @@ package cz.judas.jan.haml.ruby;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 
 import java.util.List;
 import java.util.Map;
@@ -18,12 +18,12 @@ public class RubyHash extends RubyObjectBase {
     }
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         if (name.equals("each")) {
-            javaObject.forEach((key, value) -> block.invoke(ImmutableList.of(key, value), RubyBlock.EMPTY, htmlOutput, variableMap));
+            javaObject.forEach((key, value) -> block.invoke(ImmutableList.of(key, value), RubyBlock.EMPTY, htmlOutput, templateContext));
             return Nil.INSTANCE;
         } else {
-            return super.callMethod(name, arguments, block, htmlOutput, variableMap);
+            return super.callMethod(name, arguments, block, htmlOutput, templateContext);
         }
     }
 

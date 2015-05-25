@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.tree;
 
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
@@ -14,8 +14,8 @@ public class TextNode implements HamlNode {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
-        htmlOutput.addUnescaped(content.evaluate(htmlOutput, variableMap).asString());
+    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+        htmlOutput.addUnescaped(content.evaluate(htmlOutput, templateContext).asString());
 
         return Nil.INSTANCE;
     }

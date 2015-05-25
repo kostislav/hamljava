@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.tree.ruby;
 
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.RubyInteger;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.RubyString;
@@ -17,14 +17,18 @@ public class ConstantRubyExpression implements RubyExpression {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         return value;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ConstantRubyExpression that = (ConstantRubyExpression) o;
 

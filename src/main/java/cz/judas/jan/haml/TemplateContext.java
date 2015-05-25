@@ -4,10 +4,10 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
-public class VariableMap {
+public class TemplateContext {
     private final Map<String, Object> fieldValues;
 
-    public VariableMap(Map<String, ?> fieldValues) {
+    public TemplateContext(Map<String, ?> fieldValues) {
         this.fieldValues = ImmutableMap.copyOf(fieldValues);
     }
 

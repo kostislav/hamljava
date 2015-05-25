@@ -3,7 +3,7 @@ package cz.judas.jan.haml.ruby;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 
 import java.util.List;
 
@@ -16,14 +16,14 @@ public class RubyIterable extends RubyObjectBase {
     }
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         if (name.equals("each")) {
             for (RubyObject o : javaObject) {
-                block.invoke(ImmutableList.of(o), RubyBlock.EMPTY, htmlOutput, variableMap);
+                block.invoke(ImmutableList.of(o), RubyBlock.EMPTY, htmlOutput, templateContext);
             }
             return Nil.INSTANCE;
         } else {
-            return super.callMethod(name, arguments, block, htmlOutput, variableMap);
+            return super.callMethod(name, arguments, block, htmlOutput, templateContext);
         }
     }
 

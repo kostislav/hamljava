@@ -3,7 +3,7 @@ package cz.judas.jan.haml.tree.ruby;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.RubyObject;
 
@@ -27,7 +27,7 @@ public class MethodCallExpression implements RubyExpression {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variables) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
         ImmutableList<RubyObject> evaluatedArgs = FluentIterable.from(arguments)
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
                 .toList();

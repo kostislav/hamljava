@@ -3,7 +3,7 @@ package cz.judas.jan.haml.tree;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
 
@@ -25,19 +25,19 @@ public class RootNode implements HamlNode {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addUnescaped('\n'));
 
         for (HamlNode child : children) {
-            child.evaluate(htmlOutput, variableMap);
+            child.evaluate(htmlOutput, templateContext);
         }
 
         return Nil.INSTANCE;
     }
 
-    public String toHtmlString(VariableMap variableMap) {
+    public String toHtmlString(TemplateContext templateContext) {
         HtmlOutput htmlOutput = new HtmlOutput();
-        evaluate(htmlOutput, variableMap);
+        evaluate(htmlOutput, templateContext);
         return htmlOutput.build();
     }
 

@@ -2,7 +2,7 @@ package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
@@ -25,10 +25,10 @@ public class HtmlNode implements HamlNode {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variableMap) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         htmlOutput.addUnescaped('<', tagName);
 
-        for (Map.Entry<String, Object> entry : mergeAttributes(htmlOutput, variableMap).entrySet()) {
+        for (Map.Entry<String, Object> entry : mergeAttributes(htmlOutput, templateContext).entrySet()) {
             String attributeName = entry.getKey();
             Object attributeValue;
             if(attributeName.equals("class")) {
@@ -40,19 +40,19 @@ public class HtmlNode implements HamlNode {
         }
 
         htmlOutput.addUnescaped('>');
-        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, variableMap).asString());
+        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, templateContext).asString());
         for (HamlNode child : children) {
-            child.evaluate(htmlOutput, variableMap);
+            child.evaluate(htmlOutput, templateContext);
         }
         htmlOutput.addUnescaped("</", tagName, '>');
 
         return Nil.INSTANCE;
     }
 
-    private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, VariableMap variableMap) {
+    private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
         for (RubyHashExpression hashExpression : attributes) {
-            hashExpression.evaluate(htmlOutput, variableMap).each((key, value) -> {
+            hashExpression.evaluate(htmlOutput, templateContext).each((key, value) -> {
                 String attributeName = key.asString();
                 if(attributeName.equals("class")) {
                     List<Object> classes = (List<Object>)mergedAttributes.get("class");

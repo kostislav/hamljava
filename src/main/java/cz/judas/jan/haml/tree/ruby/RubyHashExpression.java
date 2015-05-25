@@ -3,7 +3,7 @@ package cz.judas.jan.haml.tree.ruby;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.VariableMap;
+import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.RubyHash;
 import cz.judas.jan.haml.ruby.RubyObject;
 
@@ -17,7 +17,7 @@ public class RubyHashExpression implements RubyExpression {
     }
 
     @Override
-    public RubyHash evaluate(HtmlOutput htmlOutput, VariableMap variables) {
+    public RubyHash evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
         ImmutableMap.Builder<RubyObject, RubyObject> builder = ImmutableMap.builder();
         for (HashEntry entry : entries) {
             builder.put(entry.getKey().evaluate(htmlOutput, variables), entry.getValue().evaluate(htmlOutput, variables));
