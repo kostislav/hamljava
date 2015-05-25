@@ -15,13 +15,15 @@ public interface RubyObject {
 
     @SuppressWarnings("ChainOfInstanceofChecks")
     static RubyObject wrap(Object javaObject) {
-        if(javaObject instanceof Map) {
+        if (javaObject instanceof RubyObject) {
+            return (RubyObject) javaObject;
+        } else if (javaObject instanceof Map) {
             return RubyHash.fromJava((Map<?, ?>) javaObject);
-        } else if(javaObject instanceof Iterable) {
+        } else if (javaObject instanceof Iterable) {
             return RubyIterable.fromJava((Iterable<?>) javaObject);
-        } else if(javaObject instanceof String) {
+        } else if (javaObject instanceof String) {
             return new RubyString((String) javaObject);
-        } else if(javaObject instanceof Integer) {
+        } else if (javaObject instanceof Integer) {
             return new RubyInteger((Integer) javaObject);
         } else {
             return new RubyObjectBase(javaObject);

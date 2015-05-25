@@ -2,9 +2,13 @@ package cz.judas.jan.haml.ruby;
 
 import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.TemplateContext;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
+@EqualsAndHashCode
+@ToString
 public class RubyString implements RubyObject {
     public static final RubyString EMPTY = new RubyString("");
 
@@ -27,31 +31,5 @@ public class RubyString implements RubyObject {
     @Override
     public Object asJavaObject() {
         return javaObject;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        RubyString that = (RubyString) o;
-
-        return javaObject.equals(that.javaObject);
-    }
-
-    @Override
-    public int hashCode() {
-        return javaObject.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "RubyString{" +
-                "javaObject='" + javaObject + '\'' +
-                '}';
     }
 }

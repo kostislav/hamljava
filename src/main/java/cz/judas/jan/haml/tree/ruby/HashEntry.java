@@ -1,5 +1,10 @@
 package cz.judas.jan.haml.tree.ruby;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@EqualsAndHashCode
+@ToString
 public class HashEntry {
     private final RubyExpression key;
     private final RubyExpression value;
@@ -15,35 +20,5 @@ public class HashEntry {
 
     public RubyExpression getValue() {
         return value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        HashEntry hashEntry = (HashEntry) o;
-
-        return key.equals(hashEntry.key)
-                && value.equals(hashEntry.value);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = key.hashCode();
-        result = 31 * result + value.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "HashEntry{" +
-                "key=" + key +
-                ", value=" + value +
-                '}';
     }
 }

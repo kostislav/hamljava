@@ -7,10 +7,14 @@ import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
+@EqualsAndHashCode
+@ToString
 public class HtmlNode implements HamlNode {
     private final String tagName;
     private final List<RubyHashExpression> attributes;
@@ -67,38 +71,5 @@ public class HtmlNode implements HamlNode {
             });
         }
         return mergedAttributes;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        HtmlNode htmlNode = (HtmlNode) o;
-
-        return attributes.equals(htmlNode.attributes) && children.equals(htmlNode.children) && tagName.equals(htmlNode.tagName) && textContent.equals(htmlNode.textContent);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = tagName.hashCode();
-        result = 31 * result + attributes.hashCode();
-        result = 31 * result + textContent.hashCode();
-        result = 31 * result + children.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "HtmlNode{" +
-                "tagName='" + tagName + '\'' +
-                ", attributes=" + attributes +
-                ", textContent='" + textContent + '\'' +
-                ", children=" + children +
-                '}';
     }
 }

@@ -6,11 +6,15 @@ import cz.judas.jan.haml.HtmlOutput;
 import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@EqualsAndHashCode
+@ToString
 public class RootNode implements HamlNode {
     private static final Map<String, String> DOCTYPES = ImmutableMap.of(
             "5", "<!DOCTYPE html>"
@@ -39,35 +43,5 @@ public class RootNode implements HamlNode {
         HtmlOutput htmlOutput = new HtmlOutput();
         evaluate(htmlOutput, templateContext);
         return htmlOutput.build();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        RootNode rootNode = (RootNode) o;
-
-        return children.equals(rootNode.children)
-                && doctype.equals(rootNode.doctype);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = doctype.hashCode();
-        result = 31 * result + children.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "RootNode{" +
-                "doctype=" + doctype +
-                ", children=" + children +
-                '}';
     }
 }

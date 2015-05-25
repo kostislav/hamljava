@@ -5,7 +5,11 @@ import cz.judas.jan.haml.TemplateContext;
 import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode
+@ToString
 public class TextNode implements HamlNode {
     private final RubyExpression content;
 
@@ -18,31 +22,5 @@ public class TextNode implements HamlNode {
         htmlOutput.addUnescaped(content.evaluate(htmlOutput, templateContext).asString());
 
         return Nil.INSTANCE;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        TextNode textNode = (TextNode) o;
-
-        return content.equals(textNode.content);
-    }
-
-    @Override
-    public int hashCode() {
-        return content.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "TextNode{" +
-                "content='" + content + '\'' +
-                '}';
     }
 }
