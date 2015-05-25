@@ -13,7 +13,7 @@ public class FieldReferenceExpression implements RubyExpression {
 
     @Override
     public RubyObject evaluate(HtmlOutput htmlOutput, VariableMap variables) {
-        return RubyObject.wrap(variables.get(name));
+        return RubyObject.wrap(variables.getField(name));
     }
 
     @Override

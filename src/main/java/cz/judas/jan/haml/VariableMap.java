@@ -5,15 +5,15 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
 public class VariableMap {
-    private final Map<String, Object> values;
+    private final Map<String, Object> fieldValues;
 
-    public VariableMap(Map<String, ?> values) {
-        this.values = ImmutableMap.copyOf(values);
+    public VariableMap(Map<String, ?> fieldValues) {
+        this.fieldValues = ImmutableMap.copyOf(fieldValues);
     }
 
-    public Object get(String name) {
-        Object value = values.get(name);
-        if(value == null && !values.containsKey(name)) {
+    public Object getField(String name) {
+        Object value = fieldValues.get(name);
+        if(value == null && !fieldValues.containsKey(name)) {
             throw new IllegalArgumentException("Field " + name + " does not exist");
         }
         return value;
