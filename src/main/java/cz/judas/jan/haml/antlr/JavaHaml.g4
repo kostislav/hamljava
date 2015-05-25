@@ -25,7 +25,9 @@ tokens { INDENT, DEDENT }
 
 document: doctype? htmlTag+;
 
-doctype: doctypeStart SPACE (WORD | NUMBER) NL;
+doctype: doctypeStart SPACE actualDoctype NL;
+
+actualDoctype: WORD | NUMBER;
 
 doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
 
@@ -103,7 +105,7 @@ methodCall: fieldReference (DOT methodName)+ whitespace? (methodParameters | emp
 
 emptyMethodParameters: LEFT_BRACKET whitespace? RIGHT_BRACKET;
 
-methodParameters: LEFT_BRACKET whitespace? (methodParameter whitespace? COMMA whitespace?)* methodParameter whitespace? RIGHT_BRACKET;
+methodParameters: LEFT_BRACKET whitespace? methodParametersWithoutBrackets whitespace? RIGHT_BRACKET;
 
 methodParametersWithoutBrackets: (methodParameter whitespace? COMMA whitespace?)* methodParameter;
 
