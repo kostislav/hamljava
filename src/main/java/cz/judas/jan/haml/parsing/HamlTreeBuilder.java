@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.parsing;
 
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.antlr.JavaHamlLexer;
 import cz.judas.jan.haml.antlr.JavaHamlParser;
@@ -45,9 +46,7 @@ public class HamlTreeBuilder {
 
     private HamlNode realHtmlTag(JavaHamlParser.RealHtmlTagContext context) {
         String tagName = tagName(context.tagName());
-        List<RubyHashExpression> attributes = FluentIterable.from(context.attribute())
-                .transform(this::attributeHash)
-                .toList();
+        List<RubyHashExpression> attributes = attributes(context.attribute());
         List<HamlNode> children = childTags(context);
         RubyExpression content = tagContent(context.tagContent());
 
@@ -61,6 +60,10 @@ public class HamlTreeBuilder {
                     children
             );
         }
+    }
+
+    private ImmutableList<RubyHashExpression> attributes(List<JavaHamlParser.AttributeContext> context) {
+        return FluentIterable.from(context).transform(this::attributeHash).toList();
     }
 
     private RubyExpression tagContent(JavaHamlParser.TagContentContext context) {
@@ -148,15 +151,17 @@ public class HamlTreeBuilder {
 
     private Iterable<HashEntry> hashEntries(JavaHamlParser.AttributeHashContext parseTree) {
         return Alternatives
-                .either(parseTree.newStyleHashEntries(), hashEntries -> Iterables.transform(
-                        hashEntries.newStyleHashEntry(),
-                        this::hashEntry
-                ))
-                .or(parseTree.oldStyleHashEntries(), hashEntries -> Iterables.transform(
-                        hashEntries.oldStyleHashEntry(),
-                        this::hashEntry
-                ))
+                .either(parseTree.newStyleHashEntries(), this::newStyleHashEntries)
+                .or(parseTree.oldStyleHashEntries(), this::oldStyleHashEntries)
                 .orException();
+    }
+
+    private Iterable<HashEntry> newStyleHashEntries(JavaHamlParser.NewStyleHashEntriesContext context) {
+        return Iterables.transform(context.newStyleHashEntry(), this::hashEntry);
+    }
+
+    private Iterable<HashEntry> oldStyleHashEntries(JavaHamlParser.OldStyleHashEntriesContext hashEntries) {
+        return Iterables.transform(hashEntries.oldStyleHashEntry(), this::hashEntry);
     }
 
     private HashEntry hashEntry(JavaHamlParser.NewStyleHashEntryContext context) {
