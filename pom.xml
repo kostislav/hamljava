@@ -75,7 +75,8 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.5</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
+                    <sourceDirectory>${basedir}/src/main/resources/</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/target/generated-sources/</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
