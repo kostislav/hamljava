@@ -101,6 +101,14 @@ public class HamlParserTest {
         );
     }
 
+    @Test // TODO use local variable
+    public void foreachWithParameter() throws Exception {
+        assertThat(
+                parser.process("%div\n\t- @values.each do |value|\n\t\t%span= @blbost", new TemplateContext(map("values", list("a", "b"), "blbost", "e"))),
+                is("<div><span>e</span><span>e</span></div>")
+        );
+    }
+
     private static class Person {
         public final String name;
         private final int age;

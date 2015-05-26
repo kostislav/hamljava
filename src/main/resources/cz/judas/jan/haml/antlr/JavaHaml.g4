@@ -105,6 +105,8 @@ fieldReference: AT_SIGN WORD;
 
 methodCall: fieldReference singleMethodCall+;
 
+localVariable: WORD;
+
 singleMethodCall: DOT methodName (whitespace? methodParameters)?;
 
 methodParameters: methodParametersWithBrackets | emptyMethodParameters | methodParametersWithoutBrackets;
@@ -117,9 +119,9 @@ methodParametersWithoutBrackets: (expression whitespace? COMMA whitespace?)* exp
 
 methodName: WORD;
 
-block: DO childTags;
+block: DO (whitespace? PIPE whitespace? blockArguments whitespace? PIPE)? childTags;
 
-
+blockArguments: (localVariable whitespace? COMMA whitespace?)* localVariable;
 
 
 // Lexer rules
@@ -139,6 +141,7 @@ EQUALS_SIGN: '=';
 SINGLE_QUOTE: '\'';
 DOUBLE_QUOTE: '"';
 DASH: '-';
+PIPE: '|';
 BACKSLASH: '\\';
 FAT_ARROW: '=>';
 NUMBER: ('0'..'9')+;
