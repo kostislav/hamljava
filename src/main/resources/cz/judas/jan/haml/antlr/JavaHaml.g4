@@ -87,7 +87,7 @@ valueExpression: expression;
 
 attributeKey: WORD COLON;
 
-expression: symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference | intValue;
+expression: localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference | intValue;
 
 symbol: COLON (WORD | singleQuotedString);
 

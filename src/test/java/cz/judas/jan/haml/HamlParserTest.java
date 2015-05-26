@@ -101,11 +101,11 @@ public class HamlParserTest {
         );
     }
 
-    @Test // TODO use local variable
+    @Test
     public void foreachWithParameter() throws Exception {
         assertThat(
-                parser.process("%div\n\t- @values.each do |value|\n\t\t%span= @blbost", new TemplateContext(map("values", list("a", "b"), "blbost", "e"))),
-                is("<div><span>e</span><span>e</span></div>")
+                parser.process("%div\n\t- @values.each do |value|\n\t\t%span= value", new TemplateContext(map("values", list("a", "b"), "blbost", "e"))),
+                is("<div><span>a</span><span>b</span></div>")
         );
     }
 

@@ -10,6 +10,7 @@ import cz.judas.jan.haml.tree.ruby.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.Collections;
 import java.util.List;
@@ -98,13 +99,24 @@ public class HamlTreeBuilder {
         JavaHamlParser.BlockContext blockContext = codeContext.block();
         if (blockContext != null) {
             MethodCallExpression methodCallExpression = (MethodCallExpression) expression;
-            return methodCallExpression.withBlock(
-                    new BlockExpression(
-                            children(blockContext.childTags())
-                    )
-            );
+            return methodCallExpression.withBlock(block(blockContext));
         } else {
             return expression;
+        }
+    }
+
+    private BlockExpression block(JavaHamlParser.BlockContext context) {
+        return new BlockExpression(
+                children(context.childTags()),
+                blockArguments(context.blockArguments())
+        );
+    }
+
+    private Iterable<String> blockArguments(JavaHamlParser.BlockArgumentsContext context) {
+        if (context == null) {
+            return Collections.emptyList();
+        } else {
+            return Iterables.transform(context.localVariable(), ParseTree::getText);
         }
     }
 
@@ -186,6 +198,7 @@ public class HamlTreeBuilder {
                 .or(context.fieldReference(), this::fieldReference)
                 .or(context.methodCall(), this::methodCall)
                 .or(context.intValue(), value -> ConstantRubyExpression.integer(Integer.parseInt(value.getText())))
+                .or(context.localVariable(), variable -> new LocalVariableExpression(variable.getText()))
                 .orException();
     }
 
