@@ -1,4 +1,4 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.parsing;
 
 import cz.judas.jan.haml.tree.RootNode;
 import cz.judas.jan.haml.tree.ruby.ConstantRubyExpression;
