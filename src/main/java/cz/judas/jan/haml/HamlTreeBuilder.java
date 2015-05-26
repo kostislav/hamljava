@@ -66,10 +66,10 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression tagContent(JavaHamlParser.TagContentContext context) {
-        if(context != null) {
-            if(context.rubyContent() != null) {
+        if (context != null) {
+            if (context.rubyContent() != null) {
                 return expression(context.rubyContent().expression());
-            } else if(context.textContent() != null) {
+            } else if (context.textContent() != null) {
                 return ConstantRubyExpression.string(context.textContent().text().getText());
             }
         }
@@ -77,7 +77,7 @@ public class HamlTreeBuilder {
     }
 
     private List<HamlNode> childTags(JavaHamlParser.RealHtmlTagContext context) {
-        if(context.childTags() != null) {
+        if (context.childTags() != null) {
             return children(context.childTags());
         } else {
             return Collections.emptyList();
@@ -114,21 +114,18 @@ public class HamlTreeBuilder {
     }
 
     private RubyHashExpression attributeHash(JavaHamlParser.AttributeContext context) {
-        if (context.classAttribute() != null) {
-            return RubyHashExpression.singleEntryHash(
-                    ConstantRubyExpression.symbol("class"),
-                    ConstantRubyExpression.string(context.classAttribute().WORD().getText())
-            );
-        } else if (context.idAttribute() != null) {
-            return RubyHashExpression.singleEntryHash(
-                    ConstantRubyExpression.symbol("id"),
-                    ConstantRubyExpression.string(context.idAttribute().WORD().getText())
-            );
-        } else if (context.attributeHash() != null) {
-            return rubyAttributeHash(context.attributeHash());
-        } else {
-            return htmlStyleAttributes(context.htmlAttributes());
-        }
+        return Alternatives
+                .either(context.classAttribute(), classAttribute -> RubyHashExpression.singleEntryHash(
+                        ConstantRubyExpression.symbol("class"),
+                        ConstantRubyExpression.string(classAttribute.WORD().getText())
+                ))
+                .or(context.idAttribute(), idAttribute -> RubyHashExpression.singleEntryHash(
+                        ConstantRubyExpression.symbol("id"),
+                        ConstantRubyExpression.string(idAttribute.WORD().getText())
+                ))
+                .or(context.attributeHash(), this::rubyAttributeHash)
+                .or(context.htmlAttributes(), this::htmlStyleAttributes)
+                .orException();
     }
 
     private RubyHashExpression htmlStyleAttributes(JavaHamlParser.HtmlAttributesContext context) {
@@ -248,7 +245,7 @@ public class HamlTreeBuilder {
 
         public T orDefault(T defaultValue) {
             for (Alternative<?, T> alternative : alternatives) {
-                if(alternative.value != null) {
+                if (alternative.value != null) {
                     return alternative.value();
                 }
             }
@@ -257,7 +254,7 @@ public class HamlTreeBuilder {
 
         public T orException() {
             for (Alternative<?, T> alternative : alternatives) {
-                if(alternative.value != null) {
+                if (alternative.value != null) {
                     return alternative.value();
                 }
             }
