@@ -149,17 +149,16 @@ public class HamlTreeBuilder {
     }
 
     private Iterable<HashEntry> hashEntries(JavaHamlParser.AttributeHashContext parseTree) {
-        if (parseTree.newStyleHashEntries() != null) {
-            return Iterables.transform(
-                    parseTree.newStyleHashEntries().newStyleHashEntry(),
-                    this::hashEntry
-            );
-        } else {
-            return Iterables.transform(
-                    parseTree.oldStyleHashEntries().oldStyleHashEntry(),
-                    this::hashEntry
-            );
-        }
+        return Alternatives
+                .either(parseTree.newStyleHashEntries(), hashEntries -> Iterables.transform(
+                        hashEntries.newStyleHashEntry(),
+                        this::hashEntry
+                ))
+                .or(parseTree.oldStyleHashEntries(), hashEntries -> Iterables.transform(
+                        hashEntries.oldStyleHashEntry(),
+                        this::hashEntry
+                ))
+                .orException();
     }
 
     private HashEntry hashEntry(JavaHamlParser.NewStyleHashEntryContext context) {
@@ -177,24 +176,29 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression expression(JavaHamlParser.ExpressionContext context) {
-        if (context.symbol() != null) {
-            JavaHamlParser.SymbolContext symbol = context.symbol();
-            if (symbol.singleQuotedString() != null) {
-                return ConstantRubyExpression.symbol(symbol.singleQuotedString().singleQuotedStringContent().getText());
-            } else {
-                return ConstantRubyExpression.symbol(symbol.WORD().getText());
-            }
-        } else if (context.singleQuotedString() != null) {
-            return ConstantRubyExpression.string(context.singleQuotedString().singleQuotedStringContent().getText());
-        } else if (context.doubleQuotedString() != null) {
-            return ConstantRubyExpression.string(context.doubleQuotedString().doubleQuotedStringContent().getText());
-        } else if (context.fieldReference() != null) {
-            return fieldReference(context.fieldReference());
-        } else if (context.methodCall() != null) {
-            return methodCall(context.methodCall());
-        } else {
-            return ConstantRubyExpression.integer(Integer.parseInt(context.intValue().getText()));
-        }
+        return Alternatives
+                .either(context.symbol(), this::symbol)
+                .or(context.singleQuotedString(), string -> ConstantRubyExpression.string(singleQuotedString(string)))
+                .or(context.doubleQuotedString(), string -> ConstantRubyExpression.string(doubleQuotedString(string)))
+                .or(context.fieldReference(), this::fieldReference)
+                .or(context.methodCall(), this::methodCall)
+                .or(context.intValue(), value -> ConstantRubyExpression.integer(Integer.parseInt(value.getText())))
+                .orException();
+    }
+
+    private RubyExpression symbol(JavaHamlParser.SymbolContext context) {
+        return Alternatives
+                .either(context.singleQuotedString(), string -> ConstantRubyExpression.symbol(singleQuotedString(string)))
+                .or(context.WORD(), word -> ConstantRubyExpression.symbol(word.getText()))
+                .orException();
+    }
+
+    private String doubleQuotedString(JavaHamlParser.DoubleQuotedStringContext context) {
+        return context.doubleQuotedStringContent().getText();
+    }
+
+    private String singleQuotedString(JavaHamlParser.SingleQuotedStringContext context) {
+        return context.singleQuotedStringContent().getText();
     }
 
     private FieldReferenceExpression fieldReference(JavaHamlParser.FieldReferenceContext context) {
@@ -241,15 +245,6 @@ public class HamlTreeBuilder {
         public <I> Alternatives<T> or(I value, Function<I, T> transform) {
             alternatives.add(new Alternative<>(value, transform));
             return this;
-        }
-
-        public T orDefault(T defaultValue) {
-            for (Alternative<?, T> alternative : alternatives) {
-                if (alternative.value != null) {
-                    return alternative.value();
-                }
-            }
-            return defaultValue;
         }
 
         public T orException() {
