@@ -10,9 +10,11 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class HamlTreeBuilder {
     public RootNode buildTreeFrom(String input) {
@@ -34,18 +36,13 @@ public class HamlTreeBuilder {
     }
 
     private HamlNode tag(JavaHamlParser.HtmlTagContext context) {
-        if (context.realHtmlTag() != null) {
-            return realHtmlTag(context.realHtmlTag());
-        } else if (context.escapedText() != null) {
-            return new TextNode(ConstantRubyExpression.string(context.escapedText().text().getText()));
-        } else if (context.plainText() != null) {
-            return new TextNode(ConstantRubyExpression.string(context.plainText().getText()));
-        } else if (context.code() != null) {
-            return new CodeNode(codeNode(context.code()));
-        } else if (context.rubyContent() != null) {
-            return new TextNode(expression(context.rubyContent().expression()));
-        }
-        throw new IllegalStateException("No content found");
+        return Alternatives
+                .either(context.realHtmlTag(), this::realHtmlTag)
+                .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.text().getText())))
+                .or(context.plainText(), text -> new TextNode(ConstantRubyExpression.string(text.getText())))
+                .or(context.code(), code -> new CodeNode(codeNode(code)))
+                .or(context.rubyContent(), ruby -> new TextNode(expression(ruby.expression())))
+                .orException();
     }
 
     private HamlNode realHtmlTag(JavaHamlParser.RealHtmlTagContext context) {
@@ -234,5 +231,51 @@ public class HamlTreeBuilder {
 
     private Iterable<? extends RubyExpression> methodParametersWithoutBrackets(JavaHamlParser.MethodParametersWithoutBracketsContext context) {
         return Iterables.transform(context.expression(), this::expression);
+    }
+
+    private static class Alternatives<T> {
+        private final List<Alternative<?, T>> alternatives = new ArrayList<>();
+
+        public static <I, O> Alternatives<O> either(I value, Function<I, O> transform) {
+            Alternatives<O> alternatives = new Alternatives<>();
+            return alternatives.or(value, transform);
+        }
+
+        public <I> Alternatives<T> or(I value, Function<I, T> transform) {
+            alternatives.add(new Alternative<>(value, transform));
+            return this;
+        }
+
+        public T orDefault(T defaultValue) {
+            for (Alternative<?, T> alternative : alternatives) {
+                if(alternative.value != null) {
+                    return alternative.value();
+                }
+            }
+            return defaultValue;
+        }
+
+        public T orException() {
+            for (Alternative<?, T> alternative : alternatives) {
+                if(alternative.value != null) {
+                    return alternative.value();
+                }
+            }
+            throw new IllegalArgumentException("No alternative found");
+        }
+
+        private static class Alternative<I, O> {
+            private final I value;
+            private final Function<I, O> transform;
+
+            private Alternative(I value, Function<I, O> transform) {
+                this.value = value;
+                this.transform = transform;
+            }
+
+            public O value() {
+                return transform.apply(value);
+            }
+        }
     }
 }
