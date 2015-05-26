@@ -25,13 +25,15 @@ tokens { INDENT, DEDENT }
 
 document: doctype? htmlTag+;
 
-doctype: doctypeStart SPACE actualDoctype NL;
+doctype: EXCLAMATION EXCLAMATION EXCLAMATION SPACE actualDoctype NL;
 
 actualDoctype: WORD | NUMBER;
 
-doctypeStart: EXCLAMATION EXCLAMATION EXCLAMATION;
+htmlTag: realHtmlTag | code | escapedText NL | rubyContent NL | plainText NL;
 
-htmlTag: (tagName? attribute* (textContent | rubyContent)? (NL | childTags)) | code | escapedText NL | rubyContent NL | plainText NL;
+realHtmlTag: tagName? attribute* tagContent? (NL | childTags);
+
+tagContent: textContent | rubyContent;
 
 tagName: PERCENT WORD;
 
@@ -51,7 +53,7 @@ escapedText: BACKSLASH text;
 
 textContent: SPACE text;
 
-plainText: ~(BACKSLASH | EQUALS_SIGN | DASH) text;
+plainText: ~(BACKSLASH | EQUALS_SIGN | DASH | PERCENT) text;
 
 text: (~NL)+;
 
@@ -101,15 +103,17 @@ intValue: NUMBER;
 
 fieldReference: AT_SIGN WORD;
 
-methodCall: fieldReference (DOT methodName)+ whitespace? (methodParameters | emptyMethodParameters | methodParametersWithoutBrackets)?;
+methodCall: fieldReference singleMethodCall+;
+
+singleMethodCall: DOT methodName (whitespace? methodParameters)?;
+
+methodParameters: methodParametersWithBrackets | emptyMethodParameters | methodParametersWithoutBrackets;
 
 emptyMethodParameters: LEFT_BRACKET whitespace? RIGHT_BRACKET;
 
-methodParameters: LEFT_BRACKET whitespace? methodParametersWithoutBrackets whitespace? RIGHT_BRACKET;
+methodParametersWithBrackets: LEFT_BRACKET whitespace? methodParametersWithoutBrackets whitespace? RIGHT_BRACKET;
 
-methodParametersWithoutBrackets: (methodParameter whitespace? COMMA whitespace?)* methodParameter;
-
-methodParameter: expression;
+methodParametersWithoutBrackets: (expression whitespace? COMMA whitespace?)* expression;
 
 methodName: WORD;
 
