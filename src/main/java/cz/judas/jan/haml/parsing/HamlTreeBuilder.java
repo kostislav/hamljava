@@ -210,6 +210,10 @@ public class HamlTreeBuilder {
     }
 
     private String doubleQuotedString(JavaHamlParser.DoubleQuotedStringContext context) {
+        return nonEmptyDoubleQuotedString(context.nonEmptyDoubleQuotedString());
+    }
+
+    private String nonEmptyDoubleQuotedString(JavaHamlParser.NonEmptyDoubleQuotedStringContext context) {
         return context.doubleQuotedStringContent().getText();
     }
 

@@ -95,9 +95,15 @@ singleQuotedString: SINGLE_QUOTE singleQuotedStringContent SINGLE_QUOTE;
 
 singleQuotedStringContent: (~SINGLE_QUOTE)*;
 
-doubleQuotedString: DOUBLE_QUOTE doubleQuotedStringContent DOUBLE_QUOTE;
+doubleQuotedString: emptyDoubleQuotedString | nonEmptyDoubleQuotedString;
 
-doubleQuotedStringContent: (~DOUBLE_QUOTE)*;
+emptyDoubleQuotedString: DOUBLE_QUOTE DOUBLE_QUOTE;
+
+nonEmptyDoubleQuotedString: DOUBLE_QUOTE doubleQuotedStringContent DOUBLE_QUOTE;
+
+doubleQuotedStringContent: (~DOUBLE_QUOTE)+;
+
+interpolatedExpression: HASH LEFT_BRACE expression RIGHT_BRACE;
 
 intValue: NUMBER;
 

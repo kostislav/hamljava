@@ -2,6 +2,7 @@ package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -106,6 +107,14 @@ public class HamlParserTest {
         assertThat(
                 parser.process("%div\n\t- @values.each do |value|\n\t\t%span= value", new TemplateContext(map("values", list("a", "b"), "blbost", "e"))),
                 is("<div><span>a</span><span>b</span></div>")
+        );
+    }
+
+    @Test @Ignore
+    public void stringInterpolation() throws Exception {
+        assertThat(
+                parser.process("%title\n\t#{@abc} gheg #{@ghi}ef", new TemplateContext(map("abc", "def", "ghi", "jkl"))),
+                is("<title>def gheg jklef</title>")
         );
     }
 
