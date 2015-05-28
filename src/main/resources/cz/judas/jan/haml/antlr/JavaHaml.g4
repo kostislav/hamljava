@@ -49,7 +49,9 @@ htmlAttributeEntry: htmlAttributeKey EQUALS_SIGN expression;
 
 htmlAttributeKey: WORD | (WORD COLON WORD);
 
-escapedText: BACKSLASH text;
+escapedText: BACKSLASH hamlSpecialChar text;
+
+hamlSpecialChar: BACKSLASH | EQUALS_SIGN | DASH | PERCENT | DOT | HASH;
 
 textContent: SPACE text;
 

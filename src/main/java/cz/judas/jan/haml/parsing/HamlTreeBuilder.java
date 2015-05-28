@@ -38,7 +38,7 @@ public class HamlTreeBuilder {
     private HamlNode tag(JavaHamlParser.HtmlTagContext context) {
         return Alternatives
                 .either(context.realHtmlTag(), this::realHtmlTag)
-                .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.text().getText())))
+                .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.hamlSpecialChar().getText() + text.text().getText())))
                 .or(context.plainText(), text -> new TextNode(ConstantRubyExpression.string(text.getText())))
                 .or(context.code(), code -> new CodeNode(codeNode(code)))
                 .or(context.rubyContent(), ruby -> new TextNode(expression(ruby.expression())))
