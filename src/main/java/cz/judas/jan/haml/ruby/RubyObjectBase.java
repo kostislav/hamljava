@@ -21,7 +21,7 @@ public class RubyObjectBase implements RubyObject {
 
     @Override
     public RubyObject getProperty(String name) {
-        return RubyObject.wrap(callJavaMethod(name, Collections.emptyList()));
+        return RubyObject.wrap(getPropertyOrCallNoArgMethod(name));
     }
 
     @Override
@@ -43,29 +43,22 @@ public class RubyObjectBase implements RubyObject {
         return javaObject;
     }
 
-    private Object callJavaMethod(String name, List<RubyObject> arguments) {
+    private Object getPropertyOrCallNoArgMethod(String name) {
         try {
-            try {
-                return getFieldValue(javaObject, name);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                try {
-                    return callGetter(javaObject, name);
-                } catch (NoSuchMethodException | IllegalAccessException e1) {
-                    return callMethod(javaObject, name, arguments);
+            for (Field property : javaObject.getClass().getDeclaredFields()) {
+                if (property.getName().equals(name) && Modifier.isPublic(property.getModifiers())) {
+                    property.setAccessible(true);
+                    return property.get(javaObject);
                 }
+            }
+            try {
+                return callGetter(javaObject, name);
+            } catch (NoSuchMethodException | IllegalAccessException e1) {
+                return callMethod(javaObject, name, Collections.emptyList());
             }
         } catch (Exception e) {
             throw new RuntimeException("Could not get value for property " + javaObject + "." + name, e);
         }
-    }
-
-    private Object getFieldValue(Object target, String name) throws NoSuchFieldException, IllegalAccessException {
-        Field property = target.getClass().getDeclaredField(name);
-        if (!Modifier.isPublic(property.getModifiers())) {
-            throw new IllegalAccessException("Field " + name + " is not public");
-        }
-        property.setAccessible(true);
-        return property.get(target);
     }
 
     private Object callGetter(Object target, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
