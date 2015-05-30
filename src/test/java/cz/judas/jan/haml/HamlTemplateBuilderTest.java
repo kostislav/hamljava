@@ -153,6 +153,15 @@ public class HamlTemplateBuilderTest {
         );
     }
 
+    @Test
+    public void canCallMethodsOnLocalVariables() throws Exception {
+        assertParses(
+                "%ul\n\t- @people.each do |person|\n\t\t%li #{person.name} is #{person.age}",
+                map("people", list(new Person("abc", 36), new Person("def", 64))),
+                "<ul><li>abc is 37</li><li>def is 65</li></ul>"
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }

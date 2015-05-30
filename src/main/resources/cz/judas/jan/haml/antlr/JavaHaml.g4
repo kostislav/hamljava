@@ -113,7 +113,9 @@ intValue: NUMBER;
 
 fieldReference: AT_SIGN WORD;
 
-methodCall: fieldReference singleMethodCall+;
+methodCall: methodTarget singleMethodCall+;
+
+methodTarget: fieldReference | localVariable;
 
 localVariable: WORD;
 

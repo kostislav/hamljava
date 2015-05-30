@@ -56,7 +56,6 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression text(JavaHamlParser.TextContext context) {
-        // TODO check first char
         ImmutableList.Builder<RubyExpression> builder = ImmutableList.builder();
         StringBuilder stringBuilder = new StringBuilder();
         for (JavaHamlParser.TextEntryContext entryContext : context.textEntry()) {
@@ -100,11 +99,10 @@ public class HamlTreeBuilder {
 
     private RubyExpression tagContent(JavaHamlParser.TagContentContext context) {
         if (context != null) {
-            if (context.rubyContent() != null) {
-                return expression(context.rubyContent().expression());
-            } else if (context.textContent() != null) {
-                return ConstantRubyExpression.string(context.textContent().text().getText());
-            }
+            return Alternatives
+                    .either(context.rubyContent(), rubyContent -> expression(rubyContent.expression()))
+                    .or(context.textContent(), textContent -> text(textContent.text()))
+                    .orException();
         }
         return ConstantRubyExpression.EMPTY_STRING;
     }
@@ -229,8 +227,12 @@ public class HamlTreeBuilder {
                 .or(context.fieldReference(), this::fieldReference)
                 .or(context.methodCall(), this::methodCall)
                 .or(context.intValue(), value -> ConstantRubyExpression.integer(Integer.parseInt(value.getText())))
-                .or(context.localVariable(), variable -> new PropertyAccessExpression(new CurrentScopeExpression(), variable.getText()))
+                .or(context.localVariable(), this::localVariable)
                 .orException();
+    }
+
+    private PropertyAccessExpression localVariable(JavaHamlParser.LocalVariableContext variable) {
+        return new PropertyAccessExpression(new CurrentScopeExpression(), variable.getText());
     }
 
     private RubyExpression symbol(JavaHamlParser.SymbolContext context) {
@@ -252,12 +254,12 @@ public class HamlTreeBuilder {
         return context.singleQuotedStringContent().getText();
     }
 
-    private FieldReferenceExpression fieldReference(JavaHamlParser.FieldReferenceContext context) {
+    private RubyExpression fieldReference(JavaHamlParser.FieldReferenceContext context) {
         return new FieldReferenceExpression(context.WORD().getText());
     }
 
     private PossibleMethodCall methodCall(JavaHamlParser.MethodCallContext context) {
-        RubyExpression target = fieldReference(context.fieldReference());
+        RubyExpression target = methodTarget(context.methodTarget());
         PossibleMethodCall result = null;
         for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
             Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
@@ -288,5 +290,12 @@ public class HamlTreeBuilder {
 
     private Iterable<? extends RubyExpression> methodParametersWithoutBrackets(JavaHamlParser.MethodParametersWithoutBracketsContext context) {
         return Iterables.transform(context.expression(), this::expression);
+    }
+
+    private RubyExpression methodTarget(JavaHamlParser.MethodTargetContext context) {
+        return Alternatives
+                .either(context.fieldReference(), this::fieldReference)
+                .or(context.localVariable(), this::localVariable)
+                .orException();
     }
 }
