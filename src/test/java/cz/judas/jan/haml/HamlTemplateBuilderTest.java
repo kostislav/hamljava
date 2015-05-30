@@ -145,6 +145,14 @@ public class HamlTemplateBuilderTest {
         assertThat(html, is("<html><body><div>blah bleh</div></body></html>"));
     }
 
+    @Test
+    public void handlesNonAsciiChars() throws Exception {
+        assertParses(
+                "%div řečiště",
+                "<div>řečiště</div>"
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }
