@@ -22,6 +22,10 @@ public class TestObject {
         return "abc" + value;
     }
 
+    public String methodWithArgs(int value, String anotherValue) {
+        return "abc" + value + anotherValue;
+    }
+
     public int brokenNoArgMethod() {
         throw new IllegalStateException("Is broken");
     }

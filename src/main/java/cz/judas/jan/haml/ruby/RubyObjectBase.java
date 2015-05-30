@@ -1,16 +1,17 @@
 package cz.judas.jan.haml.ruby;
 
 import com.google.common.collect.FluentIterable;
+import cz.judas.jan.haml.ruby.reflect.MethodCall;
+import cz.judas.jan.haml.ruby.reflect.MethodCallCreator;
 import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class RubyObjectBase implements RubyObject {
     private final PropertyAccessCreator propertyAccessCreator = new PropertyAccessCreator();
+    private final MethodCallCreator methodCallCreator = new MethodCallCreator();
 
     private final Object javaObject;
 
@@ -25,11 +26,19 @@ public class RubyObjectBase implements RubyObject {
 
     @Override
     public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        try {
-            return RubyObject.wrap(callMethod(javaObject, name, arguments));
-        } catch (Exception e) {
-            throw new RuntimeException("Could not call method " + name + " on " + javaObject);
-        }
+        MethodCall methodCall = methodCallCreator.createFor(
+                javaObject.getClass(),
+                name,
+                arguments.size()
+        );
+        return RubyObject.wrap(
+                methodCall.invoke(
+                        javaObject,
+                        FluentIterable.from(arguments)
+                                .transform(RubyObject::asJavaObject)
+                                .toList()
+                )
+        );
     }
 
     @Override
@@ -40,20 +49,5 @@ public class RubyObjectBase implements RubyObject {
     @Override
     public Object asJavaObject() {
         return javaObject;
-    }
-
-    private Object callMethod(Object target, String name, List<RubyObject> arguments) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        for (Method method : target.getClass().getMethods()) {
-            if (method.getName().equals(name) && method.getParameterCount() == arguments.size()) {
-                method.setAccessible(true);
-                return method.invoke(
-                        target,
-                        FluentIterable.from(arguments)
-                                .transform(RubyObject::asJavaObject)
-                                .toArray(Object.class)
-                );
-            }
-        }
-        throw new NoSuchMethodException("Method " + name + " not found");
     }
 }
