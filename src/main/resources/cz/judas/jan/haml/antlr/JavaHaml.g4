@@ -55,14 +55,11 @@ hamlSpecialChar: BACKSLASH | EQUALS_SIGN | DASH | PERCENT | DOT | HASH;
 
 textContent: SPACE text;
 
-//plainText: ~(BACKSLASH | EQUALS_SIGN | DASH | PERCENT) text;
 plainText: text;
 
 text: textEntry+;
 
-textEntry: interpolatedExpression | regularText;
-
-regularText: (BACKSLASH HASH LEFT_BRACE) | (HASH ~LEFT_BRACE) | ~(HASH | NL);
+textEntry: interpolatedExpression | (BACKSLASH HASH LEFT_BRACE) | (HASH ~LEFT_BRACE) | ~(HASH | NL);
 
 rubyContent: EQUALS_SIGN whitespace? expression;
 
