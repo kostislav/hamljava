@@ -231,8 +231,8 @@ public class HamlTreeBuilder {
                 .orException();
     }
 
-    private PropertyAccessExpression localVariable(JavaHamlParser.LocalVariableContext variable) {
-        return new PropertyAccessExpression(new CurrentScopeExpression(), variable.getText());
+    private RubyExpression localVariable(JavaHamlParser.LocalVariableContext variable) {
+        return new LocalVariableExpression(variable.getText());
     }
 
     private RubyExpression symbol(JavaHamlParser.SymbolContext context) {
