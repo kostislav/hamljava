@@ -3,25 +3,18 @@ package cz.judas.jan.haml.ruby;
 import com.google.common.collect.FluentIterable;
 import cz.judas.jan.haml.ruby.reflect.MethodCall;
 import cz.judas.jan.haml.ruby.reflect.MethodCallCreator;
-import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
 import java.util.List;
 
 public class RubyObjectBase implements RubyObject {
-    private static final PropertyAccessCreator PROPERTY_ACCESS_CREATOR = new PropertyAccessCreator();
     private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator();
 
     private final Object javaObject;
 
     public RubyObjectBase(Object javaObject) {
         this.javaObject = javaObject;
-    }
-
-    @Override
-    public RubyObject getProperty(String name, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return RubyObject.wrap(PROPERTY_ACCESS_CREATOR.createFor(name, javaObject.getClass()).get(javaObject));
     }
 
     @Override

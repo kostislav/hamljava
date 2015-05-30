@@ -1,13 +1,16 @@
 package cz.judas.jan.haml.tree.ruby;
 
-import cz.judas.jan.haml.template.HtmlOutput;
-import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
+import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
 
 import java.util.Collections;
 
 public class PropertyAccessExpression implements PossibleMethodCall {
+    private static final PropertyAccessCreator PROPERTY_ACCESS_CREATOR = new PropertyAccessCreator();
+
     private final RubyExpression target;
     private final String name;
 
@@ -18,7 +21,8 @@ public class PropertyAccessExpression implements PossibleMethodCall {
 
     @Override
     public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return target.evaluate(htmlOutput, templateContext).getProperty(name, htmlOutput, templateContext);
+        Object targetObject = target.evaluate(htmlOutput, templateContext).asJavaObject();
+        return RubyObject.wrap(PROPERTY_ACCESS_CREATOR.createFor(name, targetObject.getClass()).get(targetObject));
     }
 
     @Override

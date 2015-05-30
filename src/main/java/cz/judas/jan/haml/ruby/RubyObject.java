@@ -11,10 +11,6 @@ public interface RubyObject {
         throw new IllegalArgumentException("Method " + name + " does not exist");
     }
 
-    default RubyObject getProperty(String name, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        throw new IllegalArgumentException("Property or method " + name + " does not exist");
-    }
-
     String asString();
 
     Object asJavaObject();
