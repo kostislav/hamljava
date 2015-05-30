@@ -8,32 +8,15 @@ import static org.hamcrest.Matchers.is;
 public class NoArgMethodCallTest {
     @Test
     public void callsMethod() throws Exception {
-        NoArgMethodCall noArgMethodCall = new NoArgMethodCall(SomeObject.class.getMethod("getValue1"));
+        NoArgMethodCall noArgMethodCall = new NoArgMethodCall(TestObject.class.getMethod("noArgMethod"));
 
-        assertThat(noArgMethodCall.get(new SomeObject(43)), is((Object)43));
+        assertThat(noArgMethodCall.get(new TestObject(43, 54)), is((Object)"abc"));
     }
 
     @Test(expected = RuntimeException.class)
     public void rethrowsExceptionIfCallFails() throws Exception {
-        NoArgMethodCall noArgMethodCall = new NoArgMethodCall(SomeObject.class.getMethod("brokenMethod"));
+        NoArgMethodCall noArgMethodCall = new NoArgMethodCall(TestObject.class.getMethod("brokenNoArgMethod"));
 
-        noArgMethodCall.get(new SomeObject(4));
-    }
-
-    private static class SomeObject {
-        private final int value1;
-
-        private SomeObject(int value1) {
-            this.value1 = value1;
-        }
-
-        public int getValue1() {
-            return value1;
-        }
-
-        @SuppressWarnings("UnusedDeclaration")
-        public int brokenMethod() {
-            throw new IllegalStateException("Is broken");
-        }
+        noArgMethodCall.get(new TestObject(4, 5));
     }
 }

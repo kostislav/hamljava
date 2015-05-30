@@ -8,25 +8,15 @@ import static org.hamcrest.Matchers.is;
 public class FieldAccessTest {
     @Test
     public void callsMethod() throws Exception {
-        FieldAccess fieldAccess = new FieldAccess(SomeObject.class.getField("bleh"));
+        FieldAccess fieldAccess = new FieldAccess(TestObject.class.getField("publicField"));
 
-        assertThat(fieldAccess.get(new SomeObject(43)), is((Object)43));
+        assertThat(fieldAccess.get(new TestObject(43, 54)), is((Object)43));
     }
 
     @Test(expected = RuntimeException.class)
     public void failsIfInaccessible() throws Exception {
-        FieldAccess fieldAccess = new FieldAccess(SomeObject.class.getDeclaredField("blah"));
+        FieldAccess fieldAccess = new FieldAccess(TestObject.class.getDeclaredField("privateField"));
 
-        fieldAccess.get(new SomeObject(4));
-    }
-
-    private static class SomeObject {
-        public final int bleh;
-        @SuppressWarnings("UnusedDeclaration")
-        private final int blah = 89;
-
-        private SomeObject(int bleh) {
-            this.bleh = bleh;
-        }
+        fieldAccess.get(new TestObject(4, 5));
     }
 }
