@@ -18,7 +18,7 @@ public class CurrentScope implements RubyObject {
     }
 
     @Override
-    public RubyObject getProperty(String name) {
+    public RubyObject getProperty(String name, HtmlOutput htmlOutput, TemplateContext templateContext) {
         return scope.getVariable(name);
     }
 

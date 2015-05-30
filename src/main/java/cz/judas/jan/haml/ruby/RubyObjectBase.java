@@ -20,7 +20,7 @@ public class RubyObjectBase implements RubyObject {
     }
 
     @Override
-    public RubyObject getProperty(String name) {
+    public RubyObject getProperty(String name, HtmlOutput htmlOutput, TemplateContext templateContext) {
         return RubyObject.wrap(getPropertyOrCallNoArgMethod(name));
     }
 
