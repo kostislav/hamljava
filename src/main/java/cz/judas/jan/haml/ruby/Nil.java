@@ -14,6 +14,11 @@ public class Nil implements RubyObject {
     }
 
     @Override
+    public RubyObject getProperty(String name) {
+        return INSTANCE;
+    }
+
+    @Override
     public String asString() {
         return "nil";
     }

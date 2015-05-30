@@ -127,7 +127,7 @@ public class HamlTreeBuilder {
         RubyExpression expression = expression(codeContext.expression());
         JavaHamlParser.BlockContext blockContext = codeContext.block();
         if (blockContext != null) {
-            MethodCallExpression methodCallExpression = (MethodCallExpression) expression;
+            PossibleMethodCall methodCallExpression = (PossibleMethodCall) expression;
             return methodCallExpression.withBlock(block(blockContext));
         } else {
             return expression;
@@ -254,15 +254,20 @@ public class HamlTreeBuilder {
         return new FieldReferenceExpression(context.WORD().getText());
     }
 
-    private MethodCallExpression methodCall(JavaHamlParser.MethodCallContext context) {
+    private PossibleMethodCall methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = fieldReference(context.fieldReference());
-        MethodCallExpression result = null;
+        PossibleMethodCall result = null;
         for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
-            result = new MethodCallExpression(
-                    target,
-                    singleMethodCallContext.methodName().getText(),
-                    methodArguments(singleMethodCallContext.methodParameters())
-            );
+            Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
+            if(arguments == null) {
+                result = new PropertyAccessExpression(target, singleMethodCallContext.methodName().getText());
+            } else {
+                result = new MethodCallExpression(
+                        target,
+                        singleMethodCallContext.methodName().getText(),
+                        arguments
+                );
+            }
             target = result;
         }
         return result;
@@ -270,13 +275,13 @@ public class HamlTreeBuilder {
 
     private Iterable<? extends RubyExpression> methodArguments(JavaHamlParser.MethodParametersContext context) {
         if (context != null) {
-            if (context.methodParametersWithoutBrackets() != null) {
-                return methodParametersWithoutBrackets(context.methodParametersWithoutBrackets());
-            } else if (context.methodParametersWithBrackets() != null) {
-                return methodParametersWithoutBrackets(context.methodParametersWithBrackets().methodParametersWithoutBrackets());
-            }
+            return Alternatives
+                    .either(context.methodParametersWithoutBrackets(), this::methodParametersWithoutBrackets)
+                    .or(context.methodParametersWithBrackets(), params -> methodParametersWithoutBrackets(params.methodParametersWithoutBrackets()))
+                    .or(context.emptyMethodParameters(), emptyParams -> Collections.emptyList())
+                    .orException();
         }
-        return Collections.emptyList();
+        return null;
     }
 
     private Iterable<? extends RubyExpression> methodParametersWithoutBrackets(JavaHamlParser.MethodParametersWithoutBracketsContext context) {

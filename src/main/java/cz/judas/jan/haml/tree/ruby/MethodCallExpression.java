@@ -9,7 +9,7 @@ import cz.judas.jan.haml.ruby.RubyObject;
 
 import java.util.List;
 
-public class MethodCallExpression implements RubyExpression {
+public class MethodCallExpression implements PossibleMethodCall {
     private final String methodName;
     private final RubyBlock block;
     private final RubyExpression target;
@@ -34,6 +34,7 @@ public class MethodCallExpression implements RubyExpression {
         return target.evaluate(htmlOutput, variables).callMethod(methodName, evaluatedArgs, block, htmlOutput, variables);
     }
 
+    @Override
     public MethodCallExpression withBlock(RubyBlock block) {
         return new MethodCallExpression(target, methodName, arguments, block);
     }

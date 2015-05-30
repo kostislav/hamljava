@@ -20,15 +20,16 @@ public class RubyObjectBase implements RubyObject {
     }
 
     @Override
+    public RubyObject getProperty(String name) {
+        return RubyObject.wrap(callJavaMethod(name, Collections.emptyList()));
+    }
+
+    @Override
     public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        if(arguments.isEmpty()) {
-            return RubyObject.wrap(callJavaMethod(name, arguments));
-        } else {
-            try {
-                return RubyObject.wrap(callMethod(javaObject, name, arguments));
-            } catch (Exception e) {
-                throw new RuntimeException("Could not call method " + name + " on " + javaObject);
-            }
+        try {
+            return RubyObject.wrap(callMethod(javaObject, name, arguments));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not call method " + name + " on " + javaObject);
         }
     }
 
@@ -54,7 +55,7 @@ public class RubyObjectBase implements RubyObject {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Could not get value for for property " + javaObject + "." + name, e);
+            throw new RuntimeException("Could not get value for property " + javaObject + "." + name, e);
         }
     }
 

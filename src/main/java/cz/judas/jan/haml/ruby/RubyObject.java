@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface RubyObject {
-    RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext);
+    default RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+        throw new IllegalArgumentException("Method " + name + " does not exist");
+    }
+
+    default RubyObject getProperty(String name) {
+        throw new IllegalArgumentException("Property or method " + name + " does not exist");
+    }
 
     String asString();
 
