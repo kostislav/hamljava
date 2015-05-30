@@ -229,7 +229,7 @@ public class HamlTreeBuilder {
                 .or(context.fieldReference(), this::fieldReference)
                 .or(context.methodCall(), this::methodCall)
                 .or(context.intValue(), value -> ConstantRubyExpression.integer(Integer.parseInt(value.getText())))
-                .or(context.localVariable(), variable -> new LocalVariableExpression(variable.getText()))
+                .or(context.localVariable(), variable -> new PropertyAccessExpression(new CurrentScopeExpression(), variable.getText()))
                 .orException();
     }
 
