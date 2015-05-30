@@ -12,12 +12,14 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class HamlTreeBuilder {
-    public RootNode buildTreeFrom(String input) {
+    public RootNode buildTreeFrom(Reader input) throws IOException {
         JavaHamlLexer lexer = new JavaHamlLexer(new ANTLRInputStream(input));
         TokenStream tokenStream = new CommonTokenStream(lexer);
         JavaHamlParser parser = new JavaHamlParser(tokenStream);

@@ -8,6 +8,8 @@ import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.StringReader;
+
 import static cz.judas.jan.haml.testutil.Expressions.*;
 import static cz.judas.jan.haml.testutil.Nodes.*;
 import static cz.judas.jan.haml.testutil.ShortCollections.list;
@@ -202,6 +204,6 @@ public class HamlTreeBuilderTest {
     }
 
     private void assertParses(String input, RootNode tree) throws Exception {
-        assertThat(treeBuilder.buildTreeFrom(input), is(tree));
+        assertThat(treeBuilder.buildTreeFrom(new StringReader(input)), is(tree));
     }
 }
