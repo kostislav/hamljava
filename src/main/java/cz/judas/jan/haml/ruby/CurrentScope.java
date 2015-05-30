@@ -3,6 +3,7 @@ package cz.judas.jan.haml.ruby;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CurrentScope implements RubyObject {
@@ -19,7 +20,11 @@ public class CurrentScope implements RubyObject {
 
     @Override
     public RubyObject getProperty(String name, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return scope.getVariable(name);
+        if(name.equals("yield")) {
+            return templateContext.getBlock().invoke(Collections.emptyList(), RubyBlock.EMPTY, htmlOutput, templateContext.withLocalVariables(Collections.emptyMap()));
+        } else {
+            return scope.getVariable(name);
+        }
     }
 
     @Override

@@ -1,19 +1,35 @@
 package cz.judas.jan.haml.template;
 
-import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.tree.HamlNode;
+import cz.judas.jan.haml.tree.HamlNodeBlock;
 
 import java.util.Map;
 
 public class HamlTemplate {
-    private final RootNode rootNode;
+    private final HamlNode rootNode;
 
-    public HamlTemplate(RootNode rootNode) {
+    public HamlTemplate(HamlNode rootNode) {
         this.rootNode = rootNode;
     }
 
-    public String evaluateFor(Map<String, ?> fieldValues) {
+    public String evaluate(Map<String, ?> fieldValues) {
+        return evaluate(fieldValues, RubyBlock.EMPTY);
+    }
+
+    public String evaluate(Map<String, ?> fieldValues, HamlTemplate innerTemplate) {
+        return evaluate(fieldValues, new HamlNodeBlock(innerTemplate.rootNode));
+    }
+
+    private String evaluate(Map<String, ?> fieldValues, RubyBlock block) {
         HtmlOutput htmlOutput = new HtmlOutput();
-        rootNode.evaluate(htmlOutput, new TemplateContext(fieldValues));
+        rootNode.evaluate(
+                htmlOutput,
+                new TemplateContext(
+                        fieldValues,
+                        block
+                )
+        );
         return htmlOutput.build();
     }
 }

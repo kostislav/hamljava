@@ -1,6 +1,7 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.template.HamlTemplate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -134,13 +135,23 @@ public class HamlTemplateBuilderTest {
         );
     }
 
+    @Test
+    public void callsInnerTemplate() throws Exception {
+        HamlTemplate layoutTemplate = templateBuilder.buildFrom("%html\n\t%body\n\t\t= yield");
+        HamlTemplate innerTemplate = templateBuilder.buildFrom("%div blah bleh");
+
+        String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);
+
+        assertThat(html, is("<html><body><div>blah bleh</div></body></html>"));
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }
 
     private void assertParses(String input, Map<String, ?> fieldValues, String expected) {
         assertThat(
-                templateBuilder.buildFrom(input).evaluateFor(fieldValues),
+                templateBuilder.buildFrom(input).evaluate(fieldValues),
                 is(expected)
         );
     }

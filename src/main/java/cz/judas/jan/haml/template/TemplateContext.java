@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.template;
 
 import com.google.common.collect.ImmutableMap;
+import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.RubyObject;
 
 import java.util.Collections;
@@ -10,15 +11,20 @@ import java.util.Map;
 public class TemplateContext {
     private final Map<String, Object> fieldValues;
     private final Map<String, RubyObject> localVariables;
+    private final RubyBlock block;
 
     public TemplateContext(Map<String, ?> fieldValues) {
-        this.fieldValues = ImmutableMap.copyOf(fieldValues);
-        localVariables = Collections.emptyMap();
+        this(fieldValues, RubyBlock.EMPTY);
     }
 
-    private TemplateContext(Map<String, Object> fieldValues, Map<String, RubyObject> localVariables) {
-        this.fieldValues = fieldValues;
+    public TemplateContext(Map<String, ?> fieldValues, RubyBlock block) {
+        this(fieldValues, Collections.emptyMap(), block);
+    }
+
+    private TemplateContext(Map<String, ?> fieldValues, Map<String, RubyObject> localVariables, RubyBlock block) {
+        this.fieldValues = ImmutableMap.copyOf(fieldValues);
         this.localVariables = ImmutableMap.copyOf(localVariables);
+        this.block = block;
     }
 
     public Object getField(String name) {
@@ -37,9 +43,13 @@ public class TemplateContext {
         return value;
     }
 
+    public RubyBlock getBlock() {
+        return block;
+    }
+
     public TemplateContext withLocalVariables(Map<String, RubyObject> localVariables) {
         Map<String, RubyObject> newScope = new HashMap<>(this.localVariables);
         newScope.putAll(localVariables);
-        return new TemplateContext(fieldValues, ImmutableMap.copyOf(newScope));
+        return new TemplateContext(fieldValues, ImmutableMap.copyOf(newScope), RubyBlock.EMPTY);
     }
 }
