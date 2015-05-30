@@ -10,8 +10,8 @@ import cz.judas.jan.haml.template.TemplateContext;
 import java.util.List;
 
 public class RubyObjectBase implements RubyObject {
-    private final PropertyAccessCreator propertyAccessCreator = new PropertyAccessCreator();
-    private final MethodCallCreator methodCallCreator = new MethodCallCreator();
+    private static final PropertyAccessCreator PROPERTY_ACCESS_CREATOR = new PropertyAccessCreator();
+    private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator();
 
     private final Object javaObject;
 
@@ -21,12 +21,12 @@ public class RubyObjectBase implements RubyObject {
 
     @Override
     public RubyObject getProperty(String name, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return RubyObject.wrap(propertyAccessCreator.createFor(name, javaObject.getClass()).get(javaObject));
+        return RubyObject.wrap(PROPERTY_ACCESS_CREATOR.createFor(name, javaObject.getClass()).get(javaObject));
     }
 
     @Override
     public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        MethodCall methodCall = methodCallCreator.createFor(
+        MethodCall methodCall = METHOD_CALL_CREATOR.createFor(
                 javaObject.getClass(),
                 name,
                 arguments.size()

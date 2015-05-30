@@ -1,12 +1,13 @@
 package cz.judas.jan.haml.ruby;
 
-import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.ruby.methods.IterableEach;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
 import java.util.List;
 
 public class RubyIterable extends RubyObjectBase {
+    private static final IterableEach ITERABLE_EACH = new IterableEach();
     private final Iterable<?> javaObject;
 
     public RubyIterable(Iterable<?> javaObject) {
@@ -17,10 +18,7 @@ public class RubyIterable extends RubyObjectBase {
     @Override
     public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         if (name.equals("each")) {
-            for (Object o : javaObject) {
-                block.invoke(ImmutableList.of(RubyObject.wrap(o)), RubyBlock.EMPTY, htmlOutput, templateContext);
-            }
-            return Nil.INSTANCE;
+            return ITERABLE_EACH.invoke(javaObject, arguments, block, htmlOutput, templateContext);
         } else {
             return super.callMethod(name, arguments, block, htmlOutput, templateContext);
         }
