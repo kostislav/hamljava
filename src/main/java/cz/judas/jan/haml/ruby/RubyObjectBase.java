@@ -67,7 +67,7 @@ public class RubyObjectBase implements RubyObject {
 
     private Object callMethod(Object target, String name, List<RubyObject> arguments) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         for (Method method : target.getClass().getMethods()) {
-            if (Modifier.isPublic(method.getModifiers()) && method.getName().equals(name) && method.getParameterCount() == arguments.size()) {
+            if (method.getName().equals(name) && method.getParameterCount() == arguments.size()) {
                 method.setAccessible(true);
                 return method.invoke(
                         target,

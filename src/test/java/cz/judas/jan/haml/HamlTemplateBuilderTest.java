@@ -162,6 +162,15 @@ public class HamlTemplateBuilderTest {
         );
     }
 
+    @Test
+    public void findsInterfaceMethods() throws Exception {
+        assertParses(
+                "%div= @people.size",
+                map("people", list(new Person("abc", 36), new Person("def", 64))),
+                "<div>2</div>"
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }
