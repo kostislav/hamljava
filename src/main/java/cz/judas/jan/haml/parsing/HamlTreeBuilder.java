@@ -39,10 +39,18 @@ public class HamlTreeBuilder {
         return Alternatives
                 .either(context.realHtmlTag(), this::realHtmlTag)
                 .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.hamlSpecialChar().getText() + text.text().getText())))
-                .or(context.plainText(), text -> new TextNode(text(text.text())))
+                .or(context.plainText(), this::plainText)
                 .or(context.code(), code -> new CodeNode(codeNode(code)))
                 .or(context.rubyContent(), ruby -> new TextNode(expression(ruby.expression())))
                 .orException();
+    }
+
+    private TextNode plainText(JavaHamlParser.PlainTextContext context) {
+        char firstChar = context.getText().charAt(0);
+        if (firstChar == '\\' || firstChar == '=' || firstChar == '-' || firstChar == '%' || firstChar == '.' || firstChar == '#') {
+            throw new IllegalArgumentException("Cannot parse " + context.getText());
+        }
+        return new TextNode(text(context.text()));
     }
 
     private RubyExpression text(JavaHamlParser.TextContext context) {
@@ -51,7 +59,7 @@ public class HamlTreeBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         for (JavaHamlParser.TextEntryContext entryContext : context.textEntry()) {
             if (entryContext.interpolatedExpression() != null) {
-                if(stringBuilder.length() > 0) {
+                if (stringBuilder.length() > 0) {
                     builder.add(ConstantRubyExpression.string(stringBuilder.toString()));
                     stringBuilder = new StringBuilder();
                 }
@@ -60,7 +68,7 @@ public class HamlTreeBuilder {
                 stringBuilder.append(entryContext.getText());
             }
         }
-        if(stringBuilder.length() > 0) {
+        if (stringBuilder.length() > 0) {
             builder.add(ConstantRubyExpression.string(stringBuilder.toString()));
         }
         return CompoundStringExpression.from(builder.build());

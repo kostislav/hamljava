@@ -112,8 +112,8 @@ public class HamlParserTest {
     @Test
     public void stringInterpolation() throws Exception {
         assertThat(
-                parser.process("%title\n\t#{@abc} gheg #{@ghi}ef", new TemplateContext(map("abc", "def", "ghi", "jkl"))),
-                is("<title>def gheg jklef</title>")
+                parser.process("%title\n\tblah #{@abc} gheg #{@ghi}ef", new TemplateContext(map("abc", "def", "ghi", "jkl"))),
+                is("<title>blah def gheg jklef</title>")
         );
     }
 
