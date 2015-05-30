@@ -39,10 +39,31 @@ public class HamlTreeBuilder {
         return Alternatives
                 .either(context.realHtmlTag(), this::realHtmlTag)
                 .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.hamlSpecialChar().getText() + text.text().getText())))
-                .or(context.plainText(), text -> new TextNode(ConstantRubyExpression.string(text.getText())))
+                .or(context.plainText(), text -> new TextNode(text(text.text())))
                 .or(context.code(), code -> new CodeNode(codeNode(code)))
                 .or(context.rubyContent(), ruby -> new TextNode(expression(ruby.expression())))
                 .orException();
+    }
+
+    private RubyExpression text(JavaHamlParser.TextContext context) {
+        // TODO check first char
+        ImmutableList.Builder<RubyExpression> builder = ImmutableList.builder();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (JavaHamlParser.TextEntryContext entryContext : context.textEntry()) {
+            if (entryContext.interpolatedExpression() != null) {
+                if(stringBuilder.length() > 0) {
+                    builder.add(ConstantRubyExpression.string(stringBuilder.toString()));
+                    stringBuilder = new StringBuilder();
+                }
+                builder.add(expression(entryContext.interpolatedExpression().expression()));
+            } else {
+                stringBuilder.append(entryContext.getText());
+            }
+        }
+        if(stringBuilder.length() > 0) {
+            builder.add(ConstantRubyExpression.string(stringBuilder.toString()));
+        }
+        return CompoundStringExpression.from(builder.build());
     }
 
     private HamlNode realHtmlTag(JavaHamlParser.RealHtmlTagContext context) {
