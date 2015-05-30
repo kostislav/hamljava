@@ -21,7 +21,15 @@ public class RubyObjectBase implements RubyObject {
 
     @Override
     public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return RubyObject.wrap(callJavaMethod(name, arguments));
+        if(arguments.isEmpty()) {
+            return RubyObject.wrap(callJavaMethod(name, arguments));
+        } else {
+            try {
+                return RubyObject.wrap(callMethod(javaObject, name, arguments));
+            } catch (Exception e) {
+                throw new RuntimeException("Could not call method " + name + " on " + javaObject);
+            }
+        }
     }
 
     @Override

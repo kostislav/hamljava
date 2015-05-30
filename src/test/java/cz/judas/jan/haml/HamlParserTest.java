@@ -117,6 +117,15 @@ public class HamlParserTest {
         );
     }
 
+    @Test
+    public void doesNotReadFieldIfMethodHasParameters() throws Exception {
+        assertThat(
+                parser.process("%span= @person.name('whatever')", new TemplateContext(map("person", new Person("karl", 654)))),
+                is("<span>I am whatever</span>")
+        );
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
     private static class Person {
         public final String name;
         private final int age;
@@ -126,19 +135,20 @@ public class HamlParserTest {
             this.age = age;
         }
 
-        @SuppressWarnings("UnusedDeclaration")
         public int getAge() {
             return age + 1;
         }
 
-        @SuppressWarnings("UnusedDeclaration")
         public int getFakeAge(int fakeValue) {
             return fakeValue;
         }
 
-        @SuppressWarnings("UnusedDeclaration")
         public String getFakeName(String fakeFirstName, String fakeLastName) {
             return fakeFirstName + " " + fakeLastName;
+        }
+
+        public String name(String fakeName) {
+            return "I am " + fakeName;
         }
     }
 }
