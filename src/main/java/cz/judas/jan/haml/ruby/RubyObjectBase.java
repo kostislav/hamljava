@@ -1,18 +1,17 @@
 package cz.judas.jan.haml.ruby;
 
 import com.google.common.collect.FluentIterable;
+import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
-import org.apache.commons.lang.StringUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Collections;
 import java.util.List;
 
 public class RubyObjectBase implements RubyObject {
+    private final PropertyAccessCreator propertyAccessCreator = new PropertyAccessCreator();
+
     private final Object javaObject;
 
     public RubyObjectBase(Object javaObject) {
@@ -21,7 +20,7 @@ public class RubyObjectBase implements RubyObject {
 
     @Override
     public RubyObject getProperty(String name, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return RubyObject.wrap(getPropertyOrCallNoArgMethod(name));
+        return RubyObject.wrap(propertyAccessCreator.createFor(name, javaObject.getClass()).get(javaObject));
     }
 
     @Override
@@ -41,28 +40,6 @@ public class RubyObjectBase implements RubyObject {
     @Override
     public Object asJavaObject() {
         return javaObject;
-    }
-
-    private Object getPropertyOrCallNoArgMethod(String name) {
-        try {
-            for (Field property : javaObject.getClass().getDeclaredFields()) {
-                if (property.getName().equals(name) && Modifier.isPublic(property.getModifiers())) {
-                    property.setAccessible(true);
-                    return property.get(javaObject);
-                }
-            }
-            try {
-                return callGetter(javaObject, name);
-            } catch (NoSuchMethodException | IllegalAccessException e1) {
-                return callMethod(javaObject, name, Collections.emptyList());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Could not get value for property " + javaObject + "." + name, e);
-        }
-    }
-
-    private Object callGetter(Object target, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        return callMethod(target, "get" + StringUtils.capitalize(name), Collections.emptyList());
     }
 
     private Object callMethod(Object target, String name, List<RubyObject> arguments) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
