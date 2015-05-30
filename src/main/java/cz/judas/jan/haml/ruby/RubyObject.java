@@ -24,9 +24,9 @@ public interface RubyObject {
         if (javaObject instanceof RubyObject) {
             return (RubyObject) javaObject;
         } else if (javaObject instanceof Map) {
-            return RubyHash.fromJava((Map<?, ?>) javaObject);
+            return new RubyHash((Map<?, ?>) javaObject);
         } else if (javaObject instanceof Iterable) {
-            return RubyIterable.fromJava((Iterable<?>) javaObject);
+            return new RubyIterable((Iterable<?>) javaObject);
         } else if (javaObject instanceof String) {
             return new RubyString((String) javaObject);
         } else if (javaObject instanceof Integer) {

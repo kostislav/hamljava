@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.ruby;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -8,9 +7,9 @@ import cz.judas.jan.haml.template.TemplateContext;
 import java.util.List;
 
 public class RubyIterable extends RubyObjectBase {
-    private final Iterable<RubyObject> javaObject;
+    private final Iterable<?> javaObject;
 
-    public RubyIterable(Iterable<RubyObject> javaObject) {
+    public RubyIterable(Iterable<?> javaObject) {
         super(javaObject);
         this.javaObject = javaObject;
     }
@@ -18,16 +17,12 @@ public class RubyIterable extends RubyObjectBase {
     @Override
     public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         if (name.equals("each")) {
-            for (RubyObject o : javaObject) {
-                block.invoke(ImmutableList.of(o), RubyBlock.EMPTY, htmlOutput, templateContext);
+            for (Object o : javaObject) {
+                block.invoke(ImmutableList.of(RubyObject.wrap(o)), RubyBlock.EMPTY, htmlOutput, templateContext);
             }
             return Nil.INSTANCE;
         } else {
             return super.callMethod(name, arguments, block, htmlOutput, templateContext);
         }
-    }
-
-    public static RubyIterable fromJava(Iterable<?> javaObject) {
-        return new RubyIterable(FluentIterable.from(javaObject).transform(RubyObject::wrap).toList());
     }
 }
