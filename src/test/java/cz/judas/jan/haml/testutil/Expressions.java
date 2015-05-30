@@ -1,4 +1,4 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.testutil;
 
 import cz.judas.jan.haml.tree.ruby.ConstantRubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;

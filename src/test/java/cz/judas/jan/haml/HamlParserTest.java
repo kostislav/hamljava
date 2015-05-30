@@ -1,13 +1,14 @@
 package cz.judas.jan.haml;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.template.TemplateContext;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
 
-import static cz.judas.jan.haml.ShortCollections.list;
-import static cz.judas.jan.haml.ShortCollections.map;
+import static cz.judas.jan.haml.testutil.ShortCollections.list;
+import static cz.judas.jan.haml.testutil.ShortCollections.map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

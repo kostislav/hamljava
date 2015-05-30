@@ -2,8 +2,8 @@ package cz.judas.jan.haml.ruby;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.TemplateContext;
+import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
 
 import java.util.List;
 import java.util.Map;

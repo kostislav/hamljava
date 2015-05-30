@@ -1,4 +1,4 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.testutil;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("UtilityClass")
 public class ShortCollections {
     @SafeVarargs
     public static <T> List<T> list(T... items) {

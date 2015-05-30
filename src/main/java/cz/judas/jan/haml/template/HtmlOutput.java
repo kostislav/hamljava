@@ -1,4 +1,4 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.template;
 
 public class HtmlOutput {
     private final StringBuilder stringBuilder = new StringBuilder();

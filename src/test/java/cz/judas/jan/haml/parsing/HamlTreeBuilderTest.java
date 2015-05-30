@@ -8,10 +8,10 @@ import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import org.junit.Before;
 import org.junit.Test;
 
-import static cz.judas.jan.haml.Expressions.*;
-import static cz.judas.jan.haml.Nodes.*;
-import static cz.judas.jan.haml.ShortCollections.list;
-import static cz.judas.jan.haml.ShortCollections.map;
+import static cz.judas.jan.haml.testutil.Expressions.*;
+import static cz.judas.jan.haml.testutil.Nodes.*;
+import static cz.judas.jan.haml.testutil.ShortCollections.list;
+import static cz.judas.jan.haml.testutil.ShortCollections.map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

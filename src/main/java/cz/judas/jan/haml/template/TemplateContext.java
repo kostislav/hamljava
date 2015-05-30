@@ -1,4 +1,4 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.template;
 
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.ruby.RubyObject;

@@ -1,8 +1,8 @@
 package cz.judas.jan.haml.tree.ruby;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.HtmlOutput;
-import cz.judas.jan.haml.TemplateContext;
+import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.RubyString;
 

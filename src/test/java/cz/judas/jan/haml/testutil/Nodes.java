@@ -1,4 +1,4 @@
-package cz.judas.jan.haml;
+package cz.judas.jan.haml.testutil;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.tree.*;
