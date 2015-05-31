@@ -29,7 +29,7 @@ public class ConstantRubyExpression implements RubyExpression {
     }
 
     public static ConstantRubyExpression symbol(String value) {
-        return new ConstantRubyExpression(new RubySymbol(value));
+        return new ConstantRubyExpression(new RubyObjectBase(new RubySymbol(value)));
     }
 
     public static ConstantRubyExpression integer(int value) {
