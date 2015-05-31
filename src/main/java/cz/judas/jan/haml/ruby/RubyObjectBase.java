@@ -29,7 +29,10 @@ public class RubyObjectBase implements RubyObject {
                         javaObject,
                         FluentIterable.from(arguments)
                                 .transform(RubyObject::asJavaObject)
-                                .toList()
+                                .toList(),
+                        block,
+                        htmlOutput,
+                        templateContext
                 )
         );
     }

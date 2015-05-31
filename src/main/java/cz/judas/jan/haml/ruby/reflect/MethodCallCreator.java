@@ -7,7 +7,7 @@ public class MethodCallCreator {
         for (Method method : targetClass.getMethods()) {
             if(method.getName().equals(methodName) && method.getParameterCount() == argumentCount) {
                 method.setAccessible(true);
-                return new MethodCall(method);
+                return new ReflectionMethodCall(method);
             }
         }
 
