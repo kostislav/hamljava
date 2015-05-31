@@ -1,5 +1,8 @@
 package cz.judas.jan.haml.tree.ruby;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -21,23 +24,22 @@ public class MethodCallExpression implements PossibleMethodCall {
     private final RubyBlock block;
     private final RubyExpression target;
     private final List<RubyExpression> arguments;
+    private final LoadingCache<Class<?>, MethodCall> cache;
 
     public MethodCallExpression(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments, RubyBlock block) {
         this.target = target;
         this.methodName = methodName;
         this.block = block;
         this.arguments = ImmutableList.copyOf(arguments);
+        cache = CacheBuilder.newBuilder()
+                .build(CacheLoader.from(key ->  METHOD_CALL_CREATOR.createFor(key, methodName, this.arguments.size())));
     }
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
         Object evaluatedTarget = target.evaluate(htmlOutput, variables);
 
-        MethodCall methodCall = METHOD_CALL_CREATOR.createFor(
-                evaluatedTarget.getClass(),
-                methodName,
-                arguments.size()
-        );
+        MethodCall methodCall = cache.getUnchecked(evaluatedTarget.getClass());
 
         List<Object> evaluatedArgs = FluentIterable.from(arguments)
                 .transform(arg -> arg.evaluate(htmlOutput, variables))

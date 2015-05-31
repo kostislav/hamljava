@@ -1,7 +1,11 @@
 package cz.judas.jan.haml.tree.ruby;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.ruby.reflect.PropertyAccess;
 import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -13,16 +17,19 @@ public class PropertyAccessExpression implements PossibleMethodCall {
 
     private final RubyExpression target;
     private final String name;
+    private final LoadingCache<Class<?>, PropertyAccess> cache;
 
     public PropertyAccessExpression(RubyExpression target, String name) {
         this.target = target;
         this.name = name;
+        cache = CacheBuilder.newBuilder()
+                .build(CacheLoader.from(key -> PROPERTY_ACCESS_CREATOR.createFor(key, name)));
     }
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Object targetObject = target.evaluate(htmlOutput, templateContext);
-        return PROPERTY_ACCESS_CREATOR.createFor(targetObject.getClass(), name).get(targetObject, RubyBlock.EMPTY, htmlOutput, templateContext);
+        return cache.getUnchecked(targetObject.getClass()).get(targetObject, RubyBlock.EMPTY, htmlOutput, templateContext);
     }
 
     @Override
