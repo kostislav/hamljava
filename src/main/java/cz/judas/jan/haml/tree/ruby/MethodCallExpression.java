@@ -48,7 +48,7 @@ public class MethodCallExpression implements PossibleMethodCall {
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
                 .transform(RubyObject::unwrap)
                 .toList();
-        return RubyObject.wrap(methodCall.invoke(evaluatedTarget, evaluatedArgs, block, htmlOutput, variables));
+        return methodCall.invoke(evaluatedTarget, evaluatedArgs, block, htmlOutput, variables);
     }
 
     @Override

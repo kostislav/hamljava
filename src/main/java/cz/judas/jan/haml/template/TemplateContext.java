@@ -2,7 +2,6 @@ package cz.judas.jan.haml.template;
 
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class TemplateContext {
     }
 
     public Object getVariable(String name) {
-        Object value = RubyObject.wrap(localVariables.get(name));
+        Object value = localVariables.get(name);
         if(value == null) {
             throw new IllegalArgumentException("Variable " + name + " does not exist");
         }

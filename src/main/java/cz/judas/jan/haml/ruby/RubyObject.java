@@ -4,8 +4,8 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 public class RubyObject {
-    public static final Object NIL = wrap(new Nil());
-    public static final Object EMPTY_STRING = wrap("");
+    public static final Object NIL = new Nil();
+    public static final Object EMPTY_STRING = "";
 
     private final Object javaObject;
 
@@ -16,14 +16,6 @@ public class RubyObject {
     @Override
     public String toString() {
         return javaObject.toString();
-    }
-
-    public static Object wrap(Object javaObject) {
-        if (javaObject instanceof RubyObject) {
-            return javaObject;
-        } else {
-            return new RubyObject(javaObject);
-        }
     }
 
     public static Object unwrap(Object maybeWrapped) {

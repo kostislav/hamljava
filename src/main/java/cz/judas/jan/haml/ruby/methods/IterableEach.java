@@ -12,7 +12,7 @@ public class IterableEach implements AdditionalMethod<Iterable<?>> {
     @Override
     public Object invoke(Iterable<?> target, List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         for (Object o : target) {
-            block.invoke(ImmutableList.of(RubyObject.wrap(o)), RubyBlock.EMPTY, htmlOutput, templateContext);
+            block.invoke(ImmutableList.of(o), RubyBlock.EMPTY, htmlOutput, templateContext);
         }
 
         return RubyObject.NIL;

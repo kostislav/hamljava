@@ -32,8 +32,8 @@ public class IterableEachTest {
         iterableEach.invoke(list("abc", "def"), Collections.emptyList(), block, new HtmlOutput(), MockTemplateContext.EMPTY);
 
         block.assertArguments(is(list(
-                list((Object)RubyObject.wrap("abc")),
-                list((Object)RubyObject.wrap("def"))
+                list((Object)"abc"),
+                list((Object)"def")
         )));
     }
 
@@ -42,7 +42,7 @@ public class IterableEachTest {
     public void returnsNil() throws Exception {
         Object result = iterableEach.invoke(list("abc", "def"), Collections.emptyList(), new CapturingBlock(), new HtmlOutput(), MockTemplateContext.EMPTY);
 
-        assertThat(result, is((Object)RubyObject.NIL));
+        assertThat(result, is(RubyObject.NIL));
     }
 
     private static class CapturingBlock implements RubyBlock {

@@ -20,18 +20,19 @@ public class ConstantRubyExpression implements RubyExpression {
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return RubyObject.wrap(value);
+        return value;
     }
 
+    // TODO unnecessary
     public static ConstantRubyExpression string(String value) {
-        return new ConstantRubyExpression(RubyObject.wrap(value));
+        return new ConstantRubyExpression(value);
     }
 
     public static ConstantRubyExpression symbol(String value) {
-        return new ConstantRubyExpression(RubyObject.wrap(new RubySymbol(value)));
+        return new ConstantRubyExpression(new RubySymbol(value));
     }
 
     public static ConstantRubyExpression integer(int value) {
-        return new ConstantRubyExpression(RubyObject.wrap(value));
+        return new ConstantRubyExpression(value);
     }
 }
