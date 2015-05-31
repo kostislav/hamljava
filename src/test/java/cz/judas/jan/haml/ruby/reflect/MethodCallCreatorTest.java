@@ -1,10 +1,17 @@
 package cz.judas.jan.haml.ruby.reflect;
 
+import com.google.common.collect.ImmutableMultimap;
+import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
 import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.testutil.MockTemplateContext;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static cz.judas.jan.haml.testutil.ShortCollections.list;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,5 +35,26 @@ public class MethodCallCreatorTest {
     @Test(expected = IllegalArgumentException.class)
     public void failsIfMethodDoesNotExist() throws Exception {
         methodCallCreator.createFor(TestObject.class, "madeUpMethod", 1);
+    }
+
+    @Test
+    public void findsAdditionalMethods() throws Exception {
+        methodCallCreator = new MethodCallCreator(ImmutableMultimap.of(
+                Iterable.class, new TestAdditionalMethod()
+        ));
+        HtmlOutput htmlOutput = new HtmlOutput();
+
+        MethodCall propertyAccess = methodCallCreator.createFor(List.class, "myMethod", 1);
+        propertyAccess.invoke("kk", list("a"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);
+
+        assertThat(htmlOutput.build(), is("added kk a"));
+    }
+
+    private static class TestAdditionalMethod implements AdditionalMethod<String> {
+        @Override
+        public RubyObject invoke(String target, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+            htmlOutput.addUnescaped("added " + target + " " + arguments.get(0).asJavaObject());
+            return Nil.INSTANCE;
+        }
     }
 }
