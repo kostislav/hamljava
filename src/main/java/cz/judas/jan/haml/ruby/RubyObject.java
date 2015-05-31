@@ -17,12 +17,4 @@ public class RubyObject {
     public String toString() {
         return javaObject.toString();
     }
-
-    public static Object unwrap(Object maybeWrapped) {
-        if(maybeWrapped instanceof RubyObject) {
-            return ((RubyObject)maybeWrapped).javaObject;
-        } else {
-            return maybeWrapped;
-        }
-    }
 }

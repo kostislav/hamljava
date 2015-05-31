@@ -55,18 +55,18 @@ public class HtmlNode implements HamlNode {
     private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
         for (RubyHashExpression hashExpression : attributes) {
-            Map<?, ?> attributes = (Map<?, ?>) RubyObject.unwrap(hashExpression.evaluate(htmlOutput, templateContext));
+            Map<?, ?> attributes = hashExpression.evaluate(htmlOutput, templateContext);
             attributes.forEach((key, value) -> {
-                String attributeName = RubyObject.unwrap(key).toString();
+                String attributeName = key.toString();
                 if (attributeName.equals("class")) {
                     List<Object> classes = (List<Object>) mergedAttributes.get("class");
                     if (classes == null) {
                         classes = new ArrayList<>();
                         mergedAttributes.put("class", classes);
                     }
-                    classes.add(RubyObject.unwrap(value).toString());
+                    classes.add(value.toString());
                 } else {
-                    mergedAttributes.put(attributeName, RubyObject.unwrap(value).toString());
+                    mergedAttributes.put(attributeName, value.toString());
                 }
             });
         }

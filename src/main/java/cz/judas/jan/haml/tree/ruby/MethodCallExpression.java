@@ -3,13 +3,12 @@ package cz.judas.jan.haml.tree.ruby;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
+import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.methods.IterableEach;
 import cz.judas.jan.haml.ruby.reflect.MethodCall;
 import cz.judas.jan.haml.ruby.reflect.MethodCallCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
-import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class MethodCallExpression implements PossibleMethodCall {
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
-        Object evaluatedTarget = RubyObject.unwrap(target.evaluate(htmlOutput, variables));
+        Object evaluatedTarget = target.evaluate(htmlOutput, variables);
 
         MethodCall methodCall = METHOD_CALL_CREATOR.createFor(
                 evaluatedTarget.getClass(),
@@ -46,7 +45,6 @@ public class MethodCallExpression implements PossibleMethodCall {
 
         List<Object> evaluatedArgs = FluentIterable.from(arguments)
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
-                .transform(RubyObject::unwrap)
                 .toList();
         return methodCall.invoke(evaluatedTarget, evaluatedArgs, block, htmlOutput, variables);
     }

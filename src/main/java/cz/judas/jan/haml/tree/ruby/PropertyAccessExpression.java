@@ -2,7 +2,6 @@ package cz.judas.jan.haml.tree.ruby;
 
 import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -22,7 +21,7 @@ public class PropertyAccessExpression implements PossibleMethodCall {
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        Object targetObject = RubyObject.unwrap(target.evaluate(htmlOutput, templateContext));
+        Object targetObject = target.evaluate(htmlOutput, templateContext);
         return PROPERTY_ACCESS_CREATOR.createFor(name, targetObject.getClass()).get(targetObject, RubyBlock.EMPTY, htmlOutput, templateContext);
     }
 
