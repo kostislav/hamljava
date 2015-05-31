@@ -18,7 +18,7 @@ public class TextNode implements HamlNode {
 
     @Override
     public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        htmlOutput.addUnescaped(content.evaluate(htmlOutput, templateContext).asString());
+        htmlOutput.addUnescaped(content.evaluate(htmlOutput, templateContext));
 
         return RubyObject.NIL;
     }

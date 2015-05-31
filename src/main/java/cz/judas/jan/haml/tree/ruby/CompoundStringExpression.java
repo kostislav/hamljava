@@ -19,7 +19,7 @@ public class CompoundStringExpression implements RubyExpression {
     public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         StringBuilder stringBuilder = new StringBuilder();
         for (RubyExpression part : parts) {
-            stringBuilder.append(part.evaluate(htmlOutput, templateContext).asString());
+            stringBuilder.append(part.evaluate(htmlOutput, templateContext));
         }
         return new RubyObject(stringBuilder.toString());
     }

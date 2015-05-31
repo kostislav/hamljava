@@ -43,7 +43,7 @@ public class HtmlNode implements HamlNode {
         }
 
         htmlOutput.addUnescaped('>');
-        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, templateContext).asString());
+        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, templateContext));
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext);
         }

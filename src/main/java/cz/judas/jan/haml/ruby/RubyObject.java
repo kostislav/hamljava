@@ -1,10 +1,8 @@
 package cz.judas.jan.haml.ruby;
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @EqualsAndHashCode
-@ToString
 public class RubyObject {
     public static final RubyObject NIL = new RubyObject(new Nil());
     public static final RubyObject EMPTY_STRING = new RubyObject("");
@@ -15,12 +13,13 @@ public class RubyObject {
         this.javaObject = javaObject;
     }
 
-    public String asString() {
-        return javaObject.toString();
-    }
-
     public Object asJavaObject() {
         return javaObject;
+    }
+
+    @Override
+    public String toString() {
+        return javaObject.toString();
     }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
