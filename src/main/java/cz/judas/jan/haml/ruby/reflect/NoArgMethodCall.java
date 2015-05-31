@@ -1,5 +1,8 @@
 package cz.judas.jan.haml.ruby.reflect;
 
+import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -11,7 +14,7 @@ public class NoArgMethodCall implements PropertyAccess {
     }
 
     @Override
-    public Object get(Object target) {
+    public Object get(Object target, HtmlOutput htmlOutput, TemplateContext templateContext) {
         try {
             return method.invoke(target);
         } catch (IllegalAccessException | InvocationTargetException e) {

@@ -1,5 +1,8 @@
 package cz.judas.jan.haml.ruby.reflect;
 
+import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
+
 import java.lang.reflect.Field;
 
 public class FieldAccess implements PropertyAccess {
@@ -10,7 +13,7 @@ public class FieldAccess implements PropertyAccess {
     }
 
     @Override
-    public Object get(Object target) {
+    public Object get(Object target, HtmlOutput htmlOutput, TemplateContext templateContext) {
         try {
             return field.get(target);
         } catch (IllegalAccessException e) {

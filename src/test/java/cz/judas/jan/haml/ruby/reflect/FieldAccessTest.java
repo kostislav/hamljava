@@ -1,5 +1,7 @@
 package cz.judas.jan.haml.ruby.reflect;
 
+import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.testutil.MockTemplateContext;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,13 +12,13 @@ public class FieldAccessTest {
     public void callsMethod() throws Exception {
         FieldAccess fieldAccess = new FieldAccess(TestObject.class.getField("publicField"));
 
-        assertThat(fieldAccess.get(new TestObject(43, 54)), is((Object)43));
+        assertThat(fieldAccess.get(new TestObject(43, 54), new HtmlOutput(), MockTemplateContext.EMPTY), is((Object)43));
     }
 
     @Test(expected = RuntimeException.class)
     public void failsIfInaccessible() throws Exception {
         FieldAccess fieldAccess = new FieldAccess(TestObject.class.getDeclaredField("privateField"));
 
-        fieldAccess.get(new TestObject(4, 5));
+        fieldAccess.get(new TestObject(4, 5), new HtmlOutput(), MockTemplateContext.EMPTY);
     }
 }
