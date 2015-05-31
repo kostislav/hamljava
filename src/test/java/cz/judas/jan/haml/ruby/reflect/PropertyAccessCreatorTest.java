@@ -1,21 +1,28 @@
 package cz.judas.jan.haml.ruby.reflect;
 
+import com.google.common.collect.ImmutableMultimap;
+import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
 import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.testutil.MockTemplateContext;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
+import static cz.judas.jan.haml.testutil.ShortCollections.list;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class PropertyAccessCreatorTest {
-
     private PropertyAccessCreator propertyAccessCreator;
 
     @Before
     public void setUp() throws Exception {
-        propertyAccessCreator = new PropertyAccessCreator();
+        propertyAccessCreator = new PropertyAccessCreator(ImmutableMultimap.of());
     }
 
     @Test
@@ -44,5 +51,28 @@ public class PropertyAccessCreatorTest {
         PropertyAccess propertyAccess = propertyAccessCreator.createFor("methodWithArgs", TestObject.class);
 
         assertThat(propertyAccess.get(new TestObject(12, 34), RubyBlock.EMPTY, new HtmlOutput(), MockTemplateContext.EMPTY), is((Object)"abc"));
+    }
+
+    @Test
+    public void findsAdditionalMethods() throws Exception {
+        propertyAccessCreator = new PropertyAccessCreator(ImmutableMultimap.of(
+                Iterable.class, new TestAdditionalMethod()
+        ));
+        HtmlOutput htmlOutput = new HtmlOutput();
+
+        PropertyAccess propertyAccess = propertyAccessCreator.createFor("myMethod", List.class);
+        propertyAccess.get(list("a", "b"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);
+
+        assertThat(htmlOutput.build(), is("added a\nadded b\n"));
+    }
+
+    private static class TestAdditionalMethod implements AdditionalMethod<Iterable<?>> {
+        @Override
+        public RubyObject invoke(Iterable<?> target, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+            for (Object o : target) {
+                htmlOutput.addUnescaped("added " + o, '\n');
+            }
+            return Nil.INSTANCE;
+        }
     }
 }
