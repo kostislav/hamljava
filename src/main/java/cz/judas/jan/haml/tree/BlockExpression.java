@@ -3,7 +3,7 @@ package cz.judas.jan.haml.tree;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
@@ -25,7 +25,7 @@ public class BlockExpression implements RubyBlock {
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext.withLocalVariables(localVariables));
         }
-        return RubyObject.NIL;
+        return RubyConstants.NIL;
     }
 
     private ImmutableMap<String, Object> assignNamesTo(List<?> arguments) {

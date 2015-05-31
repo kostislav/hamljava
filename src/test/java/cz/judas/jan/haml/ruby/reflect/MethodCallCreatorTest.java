@@ -2,7 +2,7 @@ package cz.judas.jan.haml.ruby.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -53,7 +53,7 @@ public class MethodCallCreatorTest {
         @Override
         public Object invoke(String target, List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
             htmlOutput.addUnescaped("added " + target + " " + arguments.get(0));
-            return RubyObject.NIL;
+            return RubyConstants.NIL;
         }
     }
 }

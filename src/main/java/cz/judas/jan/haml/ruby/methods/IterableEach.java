@@ -2,7 +2,7 @@ package cz.judas.jan.haml.ruby.methods;
 
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
@@ -15,6 +15,6 @@ public class IterableEach implements AdditionalMethod<Iterable<?>> {
             block.invoke(ImmutableList.of(o), RubyBlock.EMPTY, htmlOutput, templateContext);
         }
 
-        return RubyObject.NIL;
+        return RubyConstants.NIL;
     }
 }

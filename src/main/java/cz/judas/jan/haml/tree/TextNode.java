@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.tree;
 
-import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
@@ -20,6 +20,6 @@ public class TextNode implements HamlNode {
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         htmlOutput.addUnescaped(content.evaluate(htmlOutput, templateContext));
 
-        return RubyObject.NIL;
+        return RubyConstants.NIL;
     }
 }

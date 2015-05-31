@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.tree.ruby;
 
-import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.ruby.RubySymbol;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class ConstantRubyExpression implements RubyExpression {
-    public static final ConstantRubyExpression EMPTY_STRING = new ConstantRubyExpression(RubyObject.EMPTY_STRING);
+    public static final ConstantRubyExpression EMPTY_STRING = new ConstantRubyExpression(RubyConstants.EMPTY_STRING);
 
     private final Object value;
 
