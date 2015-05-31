@@ -55,7 +55,7 @@ public class HtmlNode implements HamlNode {
     private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
         for (RubyHashExpression hashExpression : attributes) {
-            Map<?, ?> attributes = (Map<?, ?>) hashExpression.evaluate(htmlOutput, templateContext).asJavaObject();
+            Map<?, ?> attributes = (Map<?, ?>) RubyObject.unwrap(hashExpression.evaluate(htmlOutput, templateContext));
             attributes.forEach((key, value) -> {
                 String attributeName = RubyObject.unwrap(key).toString();
                 if (attributeName.equals("class")) {

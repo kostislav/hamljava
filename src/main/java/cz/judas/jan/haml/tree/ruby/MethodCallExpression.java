@@ -36,7 +36,7 @@ public class MethodCallExpression implements PossibleMethodCall {
 
     @Override
     public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
-        Object evaluatedTarget = target.evaluate(htmlOutput, variables).asJavaObject();
+        Object evaluatedTarget = RubyObject.unwrap(target.evaluate(htmlOutput, variables));
 
         MethodCall methodCall = METHOD_CALL_CREATOR.createFor(
                 evaluatedTarget.getClass(),
@@ -46,7 +46,7 @@ public class MethodCallExpression implements PossibleMethodCall {
 
         List<Object> evaluatedArgs = FluentIterable.from(arguments)
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
-                .transform(RubyObject::asJavaObject)
+                .transform(RubyObject::unwrap)
                 .toList();
         return RubyObject.wrap(methodCall.invoke(evaluatedTarget, evaluatedArgs, block, htmlOutput, variables));
     }

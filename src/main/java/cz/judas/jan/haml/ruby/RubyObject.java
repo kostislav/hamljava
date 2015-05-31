@@ -13,16 +13,11 @@ public class RubyObject {
         this.javaObject = javaObject;
     }
 
-    public Object asJavaObject() {
-        return javaObject;
-    }
-
     @Override
     public String toString() {
         return javaObject.toString();
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
     public static RubyObject wrap(Object javaObject) {
         if (javaObject instanceof RubyObject) {
             return (RubyObject) javaObject;
@@ -33,7 +28,7 @@ public class RubyObject {
 
     public static Object unwrap(Object maybeWrapped) {
         if(maybeWrapped instanceof RubyObject) {
-            return ((RubyObject)maybeWrapped).asJavaObject();
+            return ((RubyObject)maybeWrapped).javaObject;
         } else {
             return maybeWrapped;
         }
