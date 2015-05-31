@@ -28,10 +28,11 @@ public class MethodCallExpression implements PossibleMethodCall {
 
     @Override
     public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
-        ImmutableList<RubyObject> evaluatedArgs = FluentIterable.from(arguments)
+        List<Object> evaluatedArgs = FluentIterable.from(arguments)
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
+                .transform(RubyObject::asJavaObject)
                 .toList();
-        return target.evaluate(htmlOutput, variables).callMethod(methodName, evaluatedArgs, block, htmlOutput, variables);
+        return RubyObject.wrap(target.evaluate(htmlOutput, variables).callMethod(methodName, evaluatedArgs, block, htmlOutput, variables));
     }
 
     @Override

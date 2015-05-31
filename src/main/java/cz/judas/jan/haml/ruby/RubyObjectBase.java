@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.ruby;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.haml.ruby.methods.IterableEach;
 import cz.judas.jan.haml.ruby.reflect.MethodCall;
@@ -22,7 +21,7 @@ public class RubyObjectBase implements RubyObject {
     }
 
     @Override
-    public RubyObject callMethod(String name, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object callMethod(String name, List<Object> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         MethodCall methodCall = METHOD_CALL_CREATOR.createFor(
                 javaObject.getClass(),
                 name,
@@ -31,9 +30,7 @@ public class RubyObjectBase implements RubyObject {
         return RubyObject.wrap(
                 methodCall.invoke(
                         javaObject,
-                        FluentIterable.from(arguments)
-                                .transform(RubyObject::asJavaObject)
-                                .toList(),
+                        arguments,
                         block,
                         htmlOutput,
                         templateContext
