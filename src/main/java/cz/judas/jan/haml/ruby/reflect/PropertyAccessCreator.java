@@ -3,7 +3,6 @@ package cz.judas.jan.haml.ruby.reflect;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
-import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,7 +24,7 @@ public class PropertyAccessCreator {
             }
         }
 
-        String getterName = "get" + StringUtils.capitalize(name);
+        String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
         for (Method method : targetClass.getMethods()) {
             String methodName = method.getName();
             if(method.getParameterCount() == 0 && (methodName.equals(getterName) || methodName.equals(name)) ){

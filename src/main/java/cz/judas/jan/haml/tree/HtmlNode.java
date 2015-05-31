@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.tree;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -10,7 +11,6 @@ import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -41,7 +41,7 @@ public class HtmlNode implements HamlNode {
             htmlOutput.addUnescaped(" id=\"").add(attributes.id()).add('"');
         }
         if (attributes.hasClasses()) {
-            htmlOutput.addUnescaped(" class=\"").add(StringUtils.join(attributes.classes(), ' ')).add('"');
+            htmlOutput.addUnescaped(" class=\"").add(Joiner.on(' ').join(attributes.classes())).add('"');
         }
         for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
             String attributeName = entry.getKey();
