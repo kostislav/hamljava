@@ -1,6 +1,8 @@
 package cz.judas.jan.haml.ruby;
 
 public interface RubyObject {
+    RubyObject EMPTY_STRING = new RubyObjectBase("");
+
     String asString();
 
     Object asJavaObject();
@@ -9,8 +11,6 @@ public interface RubyObject {
     static RubyObject wrap(Object javaObject) {
         if (javaObject instanceof RubyObject) {
             return (RubyObject) javaObject;
-        } else if (javaObject instanceof String) {
-            return new RubyString((String) javaObject);
         } else if (javaObject instanceof Integer) {
             return new RubyInteger((Integer) javaObject);
         } else {

@@ -32,8 +32,8 @@ public class IterableEachTest {
         iterableEach.invoke(list("abc", "def"), Collections.emptyList(), block, new HtmlOutput(), MockTemplateContext.EMPTY);
 
         block.assertArguments(is(list(
-                list((RubyObject)new RubyString("abc")),
-                list(new RubyString("def"))
+                list((RubyObject)new RubyObjectBase("abc")),
+                list(new RubyObjectBase("def"))
         )));
     }
 

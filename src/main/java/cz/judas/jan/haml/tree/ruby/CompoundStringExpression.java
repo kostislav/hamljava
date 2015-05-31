@@ -1,10 +1,10 @@
 package cz.judas.jan.haml.tree.ruby;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.RubyObjectBase;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
-import cz.judas.jan.haml.ruby.RubyObject;
-import cz.judas.jan.haml.ruby.RubyString;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +22,7 @@ public class CompoundStringExpression implements RubyExpression {
         for (RubyExpression part : parts) {
             stringBuilder.append(part.evaluate(htmlOutput, templateContext).asString());
         }
-        return new RubyString(stringBuilder.toString());
+        return new RubyObjectBase(stringBuilder.toString());
     }
 
     public static RubyExpression from(Collection<? extends RubyExpression> parts) {
