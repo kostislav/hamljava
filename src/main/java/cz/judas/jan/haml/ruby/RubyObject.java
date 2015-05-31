@@ -1,23 +1,38 @@
 package cz.judas.jan.haml.ruby;
 
-public interface RubyObject {
-    RubyObject NIL = new RubyObjectBase(new Nil());
-    RubyObject EMPTY_STRING = new RubyObjectBase("");
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-    String asString();
+@EqualsAndHashCode
+@ToString
+public class RubyObject {
+    public static final RubyObject NIL = new RubyObject(new Nil());
+    public static final RubyObject EMPTY_STRING = new RubyObject("");
 
-    Object asJavaObject();
+    private final Object javaObject;
+
+    public RubyObject(Object javaObject) {
+        this.javaObject = javaObject;
+    }
+
+    public String asString() {
+        return javaObject.toString();
+    }
+
+    public Object asJavaObject() {
+        return javaObject;
+    }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
-    static RubyObject wrap(Object javaObject) {
+    public static RubyObject wrap(Object javaObject) {
         if (javaObject instanceof RubyObject) {
             return (RubyObject) javaObject;
         } else {
-            return new RubyObjectBase(javaObject);
+            return new RubyObject(javaObject);
         }
     }
 
-    static Object unwrap(Object maybeWrapped) {
+    public static Object unwrap(Object maybeWrapped) {
         if(maybeWrapped instanceof RubyObject) {
             return ((RubyObject)maybeWrapped).asJavaObject();
         } else {

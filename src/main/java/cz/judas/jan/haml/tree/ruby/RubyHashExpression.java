@@ -3,7 +3,6 @@ package cz.judas.jan.haml.tree.ruby;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.haml.ruby.RubyObject;
-import cz.judas.jan.haml.ruby.RubyObjectBase;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import lombok.EqualsAndHashCode;
@@ -26,7 +25,7 @@ public class RubyHashExpression implements RubyExpression {
         for (HashEntry entry : entries) {
             builder.put(entry.getKey().evaluate(htmlOutput, variables), entry.getValue().evaluate(htmlOutput, variables));
         }
-        return new RubyObjectBase(builder.build());
+        return new RubyObject(builder.build());
     }
 
     public static RubyHashExpression singleEntryHash(RubyExpression key, RubyExpression value) {

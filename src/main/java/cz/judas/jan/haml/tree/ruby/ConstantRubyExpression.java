@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.tree.ruby;
 
 import cz.judas.jan.haml.ruby.RubyObject;
-import cz.judas.jan.haml.ruby.RubyObjectBase;
 import cz.judas.jan.haml.ruby.RubySymbol;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -25,14 +24,14 @@ public class ConstantRubyExpression implements RubyExpression {
     }
 
     public static ConstantRubyExpression string(String value) {
-        return new ConstantRubyExpression(new RubyObjectBase(value));
+        return new ConstantRubyExpression(new RubyObject(value));
     }
 
     public static ConstantRubyExpression symbol(String value) {
-        return new ConstantRubyExpression(new RubyObjectBase(new RubySymbol(value)));
+        return new ConstantRubyExpression(new RubyObject(new RubySymbol(value)));
     }
 
     public static ConstantRubyExpression integer(int value) {
-        return new ConstantRubyExpression(new RubyObjectBase(value));
+        return new ConstantRubyExpression(new RubyObject(value));
     }
 }

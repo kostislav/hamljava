@@ -32,8 +32,8 @@ public class IterableEachTest {
         iterableEach.invoke(list("abc", "def"), Collections.emptyList(), block, new HtmlOutput(), MockTemplateContext.EMPTY);
 
         block.assertArguments(is(list(
-                list((RubyObject)new RubyObjectBase("abc")),
-                list(new RubyObjectBase("def"))
+                list(new RubyObject("abc")),
+                list(new RubyObject("def"))
         )));
     }
 
@@ -46,7 +46,7 @@ public class IterableEachTest {
     }
 
     private static class CapturingBlock implements RubyBlock {
-        private final List<List<? extends RubyObject>> arguments = new ArrayList<>();
+        private final List<List<RubyObject>> arguments = new ArrayList<>();
 
         @Override
         public RubyObject invoke(List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
@@ -54,7 +54,7 @@ public class IterableEachTest {
             return RubyObject.NIL;
         }
 
-        public void assertArguments(Matcher<? super List<List<? extends RubyObject>>> matcher) {
+        public void assertArguments(Matcher<? super List<List<RubyObject>>> matcher) {
             assertThat(arguments, matcher);
         }
     }

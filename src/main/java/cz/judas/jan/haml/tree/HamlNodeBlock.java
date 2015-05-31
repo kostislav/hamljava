@@ -2,7 +2,6 @@ package cz.judas.jan.haml.tree;
 
 import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.RubyObject;
-import cz.judas.jan.haml.ruby.RubyObjectBase;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
@@ -19,6 +18,6 @@ public class HamlNodeBlock implements RubyBlock {
     public RubyObject invoke(List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         HtmlOutput innerHtmlOutput = new HtmlOutput();
         expression.evaluate(innerHtmlOutput, templateContext);
-        return new RubyObjectBase(innerHtmlOutput.build());
+        return new RubyObject(innerHtmlOutput.build());
     }
 }
