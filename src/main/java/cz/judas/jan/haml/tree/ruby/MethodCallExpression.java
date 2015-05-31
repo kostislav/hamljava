@@ -22,10 +22,6 @@ public class MethodCallExpression implements PossibleMethodCall {
     private final RubyExpression target;
     private final List<RubyExpression> arguments;
 
-    public MethodCallExpression(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments) {
-        this(target, methodName, arguments, RubyBlock.EMPTY);
-    }
-
     public MethodCallExpression(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments, RubyBlock block) {
         this.target = target;
         this.methodName = methodName;

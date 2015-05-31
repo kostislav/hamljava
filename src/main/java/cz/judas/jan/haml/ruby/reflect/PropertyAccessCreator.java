@@ -10,13 +10,13 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 
 public class PropertyAccessCreator {
-    private final ImmutableMultimap<Class<?>, AdditionalMethod> additionalMethods;
+    private final Multimap<Class<?>, AdditionalMethod> additionalMethods;
 
     public PropertyAccessCreator(Multimap<? extends Class<?>, ? extends AdditionalMethod> additionalMethods) {
         this.additionalMethods = ImmutableMultimap.copyOf(additionalMethods);
     }
 
-    public PropertyAccess createFor(String name, Class<?> targetClass) {
+    public PropertyAccess createFor(Class<?> targetClass, String name) {
         for (Field property : targetClass.getDeclaredFields()) {
             if (property.getName().equals(name) && Modifier.isPublic(property.getModifiers())) {
                 property.setAccessible(true);

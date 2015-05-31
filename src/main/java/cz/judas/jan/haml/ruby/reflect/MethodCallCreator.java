@@ -1,15 +1,16 @@
 package cz.judas.jan.haml.ruby.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
 public class MethodCallCreator {
-    private final ImmutableMultimap<Class<?>, AdditionalMethod> additionalMethods;
+    private final Multimap<Class<?>, AdditionalMethod> additionalMethods;
 
-    public MethodCallCreator(ImmutableMultimap<? extends Class<?>, ? extends AdditionalMethod> additionalMethods) {
+    public MethodCallCreator(Multimap<? extends Class<?>, ? extends AdditionalMethod> additionalMethods) {
         this.additionalMethods = ImmutableMultimap.copyOf(additionalMethods);
     }
 
