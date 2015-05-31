@@ -16,7 +16,7 @@ public class FieldReferenceExpression implements RubyExpression {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
         return RubyObject.wrap(variables.getField(name));
     }
 }

@@ -21,7 +21,7 @@ public class PropertyAccessExpression implements PossibleMethodCall {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Object targetObject = RubyObject.unwrap(target.evaluate(htmlOutput, templateContext));
         return RubyObject.wrap(PROPERTY_ACCESS_CREATOR.createFor(name, targetObject.getClass()).get(targetObject, RubyBlock.EMPTY, htmlOutput, templateContext));
     }

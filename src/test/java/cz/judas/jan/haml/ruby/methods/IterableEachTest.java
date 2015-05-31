@@ -32,29 +32,30 @@ public class IterableEachTest {
         iterableEach.invoke(list("abc", "def"), Collections.emptyList(), block, new HtmlOutput(), MockTemplateContext.EMPTY);
 
         block.assertArguments(is(list(
-                list(new RubyObject("abc")),
-                list(new RubyObject("def"))
+                list((Object)RubyObject.wrap("abc")),
+                list((Object)RubyObject.wrap("def"))
         )));
     }
 
     @Test
     @Incompatibility
     public void returnsNil() throws Exception {
-        RubyObject result = iterableEach.invoke(list("abc", "def"), Collections.emptyList(), new CapturingBlock(), new HtmlOutput(), MockTemplateContext.EMPTY);
+        Object result = iterableEach.invoke(list("abc", "def"), Collections.emptyList(), new CapturingBlock(), new HtmlOutput(), MockTemplateContext.EMPTY);
 
-        assertThat(result, is(RubyObject.NIL));
+        assertThat(result, is((Object)RubyObject.NIL));
     }
 
     private static class CapturingBlock implements RubyBlock {
-        private final List<List<RubyObject>> arguments = new ArrayList<>();
+        private final List<List<Object>> arguments = new ArrayList<>();
 
+        @SuppressWarnings("unchecked")
         @Override
-        public RubyObject invoke(List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-            this.arguments.add(arguments);
+        public Object invoke(List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+            this.arguments.add((List<Object>)arguments);
             return RubyObject.NIL;
         }
 
-        public void assertArguments(Matcher<? super List<List<RubyObject>>> matcher) {
+        public void assertArguments(Matcher<? super List<List<Object>>> matcher) {
             assertThat(arguments, matcher);
         }
     }

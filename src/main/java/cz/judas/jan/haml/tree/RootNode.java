@@ -28,7 +28,7 @@ public class RootNode implements HamlNode {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addUnescaped('\n'));
 
         for (HamlNode child : children) {

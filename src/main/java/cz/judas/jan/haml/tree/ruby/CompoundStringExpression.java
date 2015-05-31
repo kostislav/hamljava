@@ -16,12 +16,12 @@ public class CompoundStringExpression implements RubyExpression {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         StringBuilder stringBuilder = new StringBuilder();
         for (RubyExpression part : parts) {
             stringBuilder.append(part.evaluate(htmlOutput, templateContext));
         }
-        return new RubyObject(stringBuilder.toString());
+        return RubyObject.wrap(stringBuilder.toString());
     }
 
     public static RubyExpression from(Collection<? extends RubyExpression> parts) {

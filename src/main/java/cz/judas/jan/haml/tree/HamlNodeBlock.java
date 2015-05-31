@@ -15,9 +15,9 @@ public class HamlNodeBlock implements RubyBlock {
     }
 
     @Override
-    public RubyObject invoke(List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object invoke(List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         HtmlOutput innerHtmlOutput = new HtmlOutput();
         expression.evaluate(innerHtmlOutput, templateContext);
-        return new RubyObject(innerHtmlOutput.build());
+        return RubyObject.wrap(innerHtmlOutput.build());
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class IterableEach implements AdditionalMethod<Iterable<?>> {
     @Override
-    public RubyObject invoke(Iterable<?> target, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object invoke(Iterable<?> target, List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         for (Object o : target) {
             block.invoke(ImmutableList.of(RubyObject.wrap(o)), RubyBlock.EMPTY, htmlOutput, templateContext);
         }

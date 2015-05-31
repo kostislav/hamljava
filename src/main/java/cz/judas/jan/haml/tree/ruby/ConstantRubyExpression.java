@@ -12,26 +12,26 @@ import lombok.ToString;
 public class ConstantRubyExpression implements RubyExpression {
     public static final ConstantRubyExpression EMPTY_STRING = new ConstantRubyExpression(RubyObject.EMPTY_STRING);
 
-    private final RubyObject value;
+    private final Object value;
 
-    public ConstantRubyExpression(RubyObject value) {
+    public ConstantRubyExpression(Object value) {
         this.value = value;
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return value;
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+        return RubyObject.wrap(value);
     }
 
     public static ConstantRubyExpression string(String value) {
-        return new ConstantRubyExpression(new RubyObject(value));
+        return new ConstantRubyExpression(RubyObject.wrap(value));
     }
 
     public static ConstantRubyExpression symbol(String value) {
-        return new ConstantRubyExpression(new RubyObject(new RubySymbol(value)));
+        return new ConstantRubyExpression(RubyObject.wrap(new RubySymbol(value)));
     }
 
     public static ConstantRubyExpression integer(int value) {
-        return new ConstantRubyExpression(new RubyObject(value));
+        return new ConstantRubyExpression(RubyObject.wrap(value));
     }
 }

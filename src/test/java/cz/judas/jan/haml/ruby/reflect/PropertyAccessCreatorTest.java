@@ -67,7 +67,7 @@ public class PropertyAccessCreatorTest {
 
     private static class TestAdditionalMethod implements AdditionalMethod<Iterable<?>> {
         @Override
-        public RubyObject invoke(Iterable<?> target, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+        public Object invoke(Iterable<?> target, List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
             for (Object o : target) {
                 htmlOutput.addUnescaped("added " + o, '\n');
             }

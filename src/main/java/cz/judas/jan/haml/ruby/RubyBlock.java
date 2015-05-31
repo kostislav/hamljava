@@ -10,5 +10,5 @@ public interface RubyBlock {
         throw new IllegalStateException("Block not present");
     };
 
-    RubyObject invoke(List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext);
+    Object invoke(List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext);
 }

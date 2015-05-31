@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.tree.ruby;
 
 import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 
@@ -15,7 +14,7 @@ public class LocalVariableExpression implements RubyExpression {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         if(name.equals("yield")) {
             return templateContext.getBlock().invoke(Collections.emptyList(), RubyBlock.EMPTY, htmlOutput, templateContext.withLocalVariables(Collections.emptyMap()));
         } else {

@@ -19,13 +19,14 @@ public class RubyHashExpression implements RubyExpression {
         this.entries = ImmutableList.copyOf(entries);
     }
 
+    // TODO return map
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
-        ImmutableMap.Builder<RubyObject, RubyObject> builder = ImmutableMap.builder();
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
+        ImmutableMap.Builder<Object, Object> builder = ImmutableMap.builder();
         for (HashEntry entry : entries) {
             builder.put(entry.getKey().evaluate(htmlOutput, variables), entry.getValue().evaluate(htmlOutput, variables));
         }
-        return new RubyObject(builder.build());
+        return RubyObject.wrap(builder.build());
     }
 
     public static RubyHashExpression singleEntryHash(RubyExpression key, RubyExpression value) {

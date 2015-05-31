@@ -20,19 +20,19 @@ public class BlockExpression implements RubyBlock {
     }
 
     @Override
-    public RubyObject invoke(List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        ImmutableMap<String, RubyObject> localVariables = assignNamesTo(arguments);
+    public Object invoke(List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+        ImmutableMap<String, Object> localVariables = assignNamesTo(arguments);
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext.withLocalVariables(localVariables));
         }
         return RubyObject.NIL;
     }
 
-    private ImmutableMap<String, RubyObject> assignNamesTo(List<RubyObject> arguments) {
-        ImmutableMap.Builder<String, RubyObject> builder = ImmutableMap.builder();
+    private ImmutableMap<String, Object> assignNamesTo(List<?> arguments) {
+        ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
 
         Iterator<String> nameIterator = argumentNames.iterator();
-        Iterator<RubyObject> values = arguments.iterator();
+        Iterator<?> values = arguments.iterator();
         while(nameIterator.hasNext()) {
             builder.put(nameIterator.next(), values.next());
         }

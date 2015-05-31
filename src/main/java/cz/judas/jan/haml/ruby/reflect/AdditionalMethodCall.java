@@ -1,8 +1,6 @@
 package cz.judas.jan.haml.ruby.reflect;
 
-import com.google.common.collect.FluentIterable;
 import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -19,14 +17,6 @@ public class AdditionalMethodCall implements MethodCall {
 
     @Override
     public Object invoke(Object target, List<?> args, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return method.invoke(
-                target,
-                FluentIterable.from(args)
-                        .transform(RubyObject::wrap)
-                        .toList(),
-                block,
-                htmlOutput,
-                templateContext
-        );
+        return method.invoke(target, args, block, htmlOutput, templateContext);
     }
 }

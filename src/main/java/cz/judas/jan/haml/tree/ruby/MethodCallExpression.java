@@ -35,7 +35,7 @@ public class MethodCallExpression implements PossibleMethodCall {
     }
 
     @Override
-    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
+    public Object evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
         Object evaluatedTarget = RubyObject.unwrap(target.evaluate(htmlOutput, variables));
 
         MethodCall methodCall = METHOD_CALL_CREATOR.createFor(

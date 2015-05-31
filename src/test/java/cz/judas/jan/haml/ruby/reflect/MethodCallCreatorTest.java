@@ -51,7 +51,7 @@ public class MethodCallCreatorTest {
 
     private static class TestAdditionalMethod implements AdditionalMethod<String> {
         @Override
-        public RubyObject invoke(String target, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+        public Object invoke(String target, List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
             htmlOutput.addUnescaped("added " + target + " " + RubyObject.unwrap(arguments.get(0)));
             return RubyObject.NIL;
         }
