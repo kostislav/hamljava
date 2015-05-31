@@ -1,6 +1,8 @@
 package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -10,7 +12,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @EqualsAndHashCode
 @ToString
@@ -31,14 +36,16 @@ public class HtmlNode implements HamlNode {
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         htmlOutput.addUnescaped('<', tagName);
 
-        for (Map.Entry<String, Object> entry : mergeAttributes(htmlOutput, templateContext).entrySet()) {
+        Attributes attributes = mergeAttributes(htmlOutput, templateContext);
+        if(attributes.hasId()) {
+            htmlOutput.addUnescaped(" id=\"", attributes.id(), '"');
+        }
+        if (attributes.hasClasses()) {
+            htmlOutput.addUnescaped(" class=\"", StringUtils.join(attributes.classes(), ' '), '"');
+        }
+        for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
             String attributeName = entry.getKey();
-            Object attributeValue;
-            if(attributeName.equals("class")) {
-                attributeValue = StringUtils.join((Collection<Object>)entry.getValue(), ' ');
-            } else {
-                attributeValue = entry.getValue();
-            }
+            Object attributeValue = entry.getValue();
             htmlOutput.addUnescaped(' ', attributeName, "=\"", attributeValue, '"');
         }
 
@@ -52,24 +59,50 @@ public class HtmlNode implements HamlNode {
         return RubyConstants.NIL;
     }
 
-    private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    private Attributes mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
+        List<String> classes = new ArrayList<>();
         for (RubyHashExpression hashExpression : attributes) {
             Map<?, ?> attributes = hashExpression.evaluate(htmlOutput, templateContext);
             attributes.forEach((key, value) -> {
                 String attributeName = key.toString();
                 if (attributeName.equals("class")) {
-                    List<Object> classes = (List<Object>) mergedAttributes.get("class");
-                    if (classes == null) {
-                        classes = new ArrayList<>();
-                        mergedAttributes.put("class", classes);
-                    }
                     classes.add(value.toString());
                 } else {
                     mergedAttributes.put(attributeName, value.toString());
                 }
             });
         }
-        return mergedAttributes;
+        return new Attributes(classes, mergedAttributes);
+    }
+
+    private static class Attributes {
+        private final List<String> classes;
+        private final Map<String, Object> attributes;
+
+        private Attributes(List<String> classes, Map<String, ?> attributes) {
+            this.classes = ImmutableList.copyOf(classes);
+            this.attributes = ImmutableMap.copyOf(attributes);
+        }
+
+        public boolean hasClasses() {
+            return !classes.isEmpty();
+        }
+
+        public List<String> classes() {
+            return ImmutableList.copyOf(classes);
+        }
+
+        public boolean hasId() {
+            return attributes.containsKey("id");
+        }
+
+        public String id() {
+            return attributes.get("id").toString();
+        }
+
+        public Map<String, Object> otherAttributes() {
+            return ImmutableMap.copyOf(Maps.filterKeys(attributes, key -> !key.equals("id")));
+        }
     }
 }
