@@ -1,15 +1,8 @@
 package cz.judas.jan.haml.ruby;
 
-public class Nil implements RubyObject {
-    public static final Nil INSTANCE = new Nil();
-
+public class Nil {
     @Override
-    public String asString() {
+    public String toString() {
         return "nil";
-    }
-
-    @Override
-    public Object asJavaObject() {
-        return null;
     }
 }

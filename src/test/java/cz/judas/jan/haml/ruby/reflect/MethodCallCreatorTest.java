@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.ruby.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
-import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
@@ -54,7 +53,7 @@ public class MethodCallCreatorTest {
         @Override
         public RubyObject invoke(String target, List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
             htmlOutput.addUnescaped("added " + target + " " + arguments.get(0).asJavaObject());
-            return Nil.INSTANCE;
+            return RubyObject.NIL;
         }
     }
 }

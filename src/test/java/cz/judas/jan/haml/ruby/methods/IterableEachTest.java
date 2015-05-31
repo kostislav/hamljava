@@ -42,7 +42,7 @@ public class IterableEachTest {
     public void returnsNil() throws Exception {
         RubyObject result = iterableEach.invoke(list("abc", "def"), Collections.emptyList(), new CapturingBlock(), new HtmlOutput(), MockTemplateContext.EMPTY);
 
-        assertThat(result, is((RubyObject)Nil.INSTANCE));
+        assertThat(result, is(RubyObject.NIL));
     }
 
     private static class CapturingBlock implements RubyBlock {
@@ -51,7 +51,7 @@ public class IterableEachTest {
         @Override
         public RubyObject invoke(List<RubyObject> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
             this.arguments.add(arguments);
-            return Nil.INSTANCE;
+            return RubyObject.NIL;
         }
 
         public void assertArguments(Matcher<? super List<List<? extends RubyObject>>> matcher) {

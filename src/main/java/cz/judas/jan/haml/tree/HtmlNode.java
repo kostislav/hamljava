@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -50,7 +49,7 @@ public class HtmlNode implements HamlNode {
         }
         htmlOutput.addUnescaped("</", tagName, '>');
 
-        return Nil.INSTANCE;
+        return RubyObject.NIL;
     }
 
     private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {

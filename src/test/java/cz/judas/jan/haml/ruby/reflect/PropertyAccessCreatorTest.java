@@ -1,7 +1,6 @@
 package cz.judas.jan.haml.ruby.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
-import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
@@ -72,7 +71,7 @@ public class PropertyAccessCreatorTest {
             for (Object o : target) {
                 htmlOutput.addUnescaped("added " + o, '\n');
             }
-            return Nil.INSTANCE;
+            return RubyObject.NIL;
         }
     }
 }
