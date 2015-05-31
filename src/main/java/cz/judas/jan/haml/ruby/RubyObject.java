@@ -11,8 +11,6 @@ public interface RubyObject {
     static RubyObject wrap(Object javaObject) {
         if (javaObject instanceof RubyObject) {
             return (RubyObject) javaObject;
-        } else if (javaObject instanceof Integer) {
-            return new RubyInteger((Integer) javaObject);
         } else {
             return new RubyObjectBase(javaObject);
         }

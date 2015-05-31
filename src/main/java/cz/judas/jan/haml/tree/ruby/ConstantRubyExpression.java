@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.tree.ruby;
 
-import cz.judas.jan.haml.ruby.RubyInteger;
 import cz.judas.jan.haml.ruby.RubyObject;
 import cz.judas.jan.haml.ruby.RubyObjectBase;
 import cz.judas.jan.haml.ruby.RubySymbol;
@@ -34,6 +33,6 @@ public class ConstantRubyExpression implements RubyExpression {
     }
 
     public static ConstantRubyExpression integer(int value) {
-        return new ConstantRubyExpression(new RubyInteger(value));
+        return new ConstantRubyExpression(new RubyObjectBase(value));
     }
 }
