@@ -29,7 +29,7 @@ public class RootNode implements HamlNode {
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addUnescaped('\n'));
+        doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addChar('\n'));
 
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext);

@@ -22,7 +22,7 @@ public class HamlTemplate {
     }
 
     private String evaluate(Map<String, ?> fieldValues, RubyBlock block) {
-        HtmlOutput htmlOutput = new HtmlOutput();
+        HtmlOutput htmlOutput = new HtmlOutput(false); // TODO make configurable
         rootNode.evaluate(
                 htmlOutput,
                 new TemplateContext(

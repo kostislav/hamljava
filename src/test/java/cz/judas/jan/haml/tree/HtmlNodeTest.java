@@ -25,7 +25,7 @@ public class HtmlNodeTest {
                 string("content"),
                 Collections.emptyList()
         );
-        HtmlOutput htmlOutput = new HtmlOutput();
+        HtmlOutput htmlOutput = new HtmlOutput(false);
 
         htmlNode.evaluate(htmlOutput, MockTemplateContext.EMPTY);
 
@@ -43,7 +43,7 @@ public class HtmlNodeTest {
                 string("content"),
                 Collections.emptyList()
         );
-        HtmlOutput htmlOutput = new HtmlOutput();
+        HtmlOutput htmlOutput = new HtmlOutput(false);
 
         htmlNode.evaluate(htmlOutput, MockTemplateContext.EMPTY);
 

@@ -42,7 +42,7 @@ public class MethodCallCreatorTest {
         methodCallCreator = new MethodCallCreator(ImmutableMultimap.of(
                 Iterable.class, new TestAdditionalMethod()
         ));
-        HtmlOutput htmlOutput = new HtmlOutput();
+        HtmlOutput htmlOutput = new HtmlOutput(false);
 
         MethodCall propertyAccess = methodCallCreator.createFor(List.class, "myMethod", 1);
         propertyAccess.invoke("kk", list("a"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);

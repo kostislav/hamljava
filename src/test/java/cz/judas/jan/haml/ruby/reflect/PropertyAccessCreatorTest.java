@@ -58,7 +58,7 @@ public class PropertyAccessCreatorTest {
         propertyAccessCreator = new PropertyAccessCreator(ImmutableMultimap.of(
                 Iterable.class, new TestAdditionalMethod()
         ));
-        HtmlOutput htmlOutput = new HtmlOutput();
+        HtmlOutput htmlOutput = new HtmlOutput(false);
 
         PropertyAccess propertyAccess = propertyAccessCreator.createFor(List.class, "myMethod");
         propertyAccess.get(list("a", "b"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);

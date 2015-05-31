@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.tree;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -34,27 +33,27 @@ public class HtmlNode implements HamlNode {
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        htmlOutput.add('<').addUnescaped(tagName);
+        htmlOutput.addChar('<').addUnescaped(tagName);
 
         Attributes attributes = mergeAttributes(htmlOutput, templateContext);
         if(attributes.hasId()) {
-            htmlOutput.addUnescaped(" id=\"").add(attributes.joinedIds()).add('"');
+            htmlOutput.addUnescaped(" id=\"").add(attributes.joinedIds()).addChar('"');
         }
         if (attributes.hasClasses()) {
-            htmlOutput.addUnescaped(" class=\"").add(attributes.joinedClasses()).add('"');
+            htmlOutput.addUnescaped(" class=\"").add(attributes.joinedClasses()).addChar('"');
         }
         for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
             String attributeName = entry.getKey();
             Object attributeValue = entry.getValue();
-            htmlOutput.add(' ').add(attributeName).addUnescaped("=\"").add(attributeValue).add('"');
+            htmlOutput.addChar(' ').add(attributeName).addUnescaped("=\"").add(attributeValue).addChar('"');
         }
 
-        htmlOutput.addUnescaped('>');
-        htmlOutput.addUnescaped(textContent.evaluate(htmlOutput, templateContext));
+        htmlOutput.addChar('>');
+        htmlOutput.add(textContent.evaluate(htmlOutput, templateContext));
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext);
         }
-        htmlOutput.addUnescaped("</").addUnescaped(tagName).add('>');
+        htmlOutput.addUnescaped("</").addUnescaped(tagName).addChar('>');
 
         return RubyConstants.NIL;
     }
@@ -99,7 +98,7 @@ public class HtmlNode implements HamlNode {
         }
 
         public String joinedClasses() {
-            return Joiner.on(' ').join(classes);
+            return String.join(" ", classes);
         }
 
         public boolean hasId() {
@@ -107,7 +106,7 @@ public class HtmlNode implements HamlNode {
         }
 
         public String joinedIds() {
-            return Joiner.on('_').join(ids);
+            return String.join("_", ids);
         }
 
         public Map<String, Object> otherAttributes() {
