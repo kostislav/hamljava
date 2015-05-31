@@ -38,10 +38,10 @@ public class HtmlNode implements HamlNode {
 
         Attributes attributes = mergeAttributes(htmlOutput, templateContext);
         if(attributes.hasId()) {
-            htmlOutput.addUnescaped(" id=\"").add(attributes.id()).add('"');
+            htmlOutput.addUnescaped(" id=\"").add(attributes.joinedIds()).add('"');
         }
         if (attributes.hasClasses()) {
-            htmlOutput.addUnescaped(" class=\"").add(Joiner.on(' ').join(attributes.classes())).add('"');
+            htmlOutput.addUnescaped(" class=\"").add(attributes.joinedClasses()).add('"');
         }
         for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
             String attributeName = entry.getKey();
@@ -61,27 +61,36 @@ public class HtmlNode implements HamlNode {
 
     private Attributes mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
-        List<String> classes = new ArrayList<>();
+        List<String> classes = new ArrayList<>(); // TODO object
+        List<String> ids = new ArrayList<>();
         for (RubyHashExpression hashExpression : attributes) {
             Map<?, ?> attributes = hashExpression.evaluate(htmlOutput, templateContext);
             attributes.forEach((key, value) -> {
                 String attributeName = key.toString();
-                if (attributeName.equals("class")) {
-                    classes.add(value.toString());
-                } else {
-                    mergedAttributes.put(attributeName, value.toString());
+                switch (attributeName) {
+                    case "class":
+                        classes.add(value.toString());
+                        break;
+                    case "id":
+                        ids.add(value.toString());
+                        break;
+                    default:
+                        mergedAttributes.put(attributeName, value.toString());
+                        break;
                 }
             });
         }
-        return new Attributes(classes, mergedAttributes);
+        return new Attributes(classes, ids, mergedAttributes);
     }
 
     private static class Attributes {
         private final List<String> classes;
+        private final List<String> ids;
         private final Map<String, Object> attributes;
 
-        private Attributes(List<String> classes, Map<String, ?> attributes) {
+        private Attributes(List<String> classes, List<String> ids, Map<String, ?> attributes) {
             this.classes = ImmutableList.copyOf(classes);
+            this.ids = ImmutableList.copyOf(ids);
             this.attributes = ImmutableMap.copyOf(attributes);
         }
 
@@ -89,16 +98,16 @@ public class HtmlNode implements HamlNode {
             return !classes.isEmpty();
         }
 
-        public List<String> classes() {
-            return ImmutableList.copyOf(classes);
+        public String joinedClasses() {
+            return Joiner.on(' ').join(classes);
         }
 
         public boolean hasId() {
-            return attributes.containsKey("id");
+            return !ids.isEmpty();
         }
 
-        public String id() {
-            return attributes.get("id").toString();
+        public String joinedIds() {
+            return Joiner.on('_').join(ids);
         }
 
         public Map<String, Object> otherAttributes() {
