@@ -2,10 +2,10 @@ package cz.judas.jan.haml.tree.ruby;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.ruby.RubyObjectBase;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
-import cz.judas.jan.haml.ruby.RubyHash;
-import cz.judas.jan.haml.ruby.RubyObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -21,12 +21,12 @@ public class RubyHashExpression implements RubyExpression {
     }
 
     @Override
-    public RubyHash evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
+    public RubyObject evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
         ImmutableMap.Builder<RubyObject, RubyObject> builder = ImmutableMap.builder();
         for (HashEntry entry : entries) {
             builder.put(entry.getKey().evaluate(htmlOutput, variables), entry.getValue().evaluate(htmlOutput, variables));
         }
-        return new RubyHash(builder.build());
+        return new RubyObjectBase(builder.build());
     }
 
     public static RubyHashExpression singleEntryHash(RubyExpression key, RubyExpression value) {

@@ -1,10 +1,10 @@
 package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.template.HtmlOutput;
-import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.ruby.Nil;
 import cz.judas.jan.haml.ruby.RubyObject;
+import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import lombok.EqualsAndHashCode;
@@ -56,17 +56,18 @@ public class HtmlNode implements HamlNode {
     private Map<String, Object> mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Map<String, Object> mergedAttributes = new LinkedHashMap<>();
         for (RubyHashExpression hashExpression : attributes) {
-            hashExpression.evaluate(htmlOutput, templateContext).each((key, value) -> {
-                String attributeName = key.asString();
-                if(attributeName.equals("class")) {
-                    List<Object> classes = (List<Object>)mergedAttributes.get("class");
-                    if(classes == null) {
+            Map<?, ?> attributes = (Map<?, ?>) hashExpression.evaluate(htmlOutput, templateContext).asJavaObject();
+            attributes.forEach((key, value) -> {
+                String attributeName = RubyObject.unwrap(key).toString();
+                if (attributeName.equals("class")) {
+                    List<Object> classes = (List<Object>) mergedAttributes.get("class");
+                    if (classes == null) {
                         classes = new ArrayList<>();
                         mergedAttributes.put("class", classes);
                     }
-                    classes.add(value.asString());
+                    classes.add(RubyObject.unwrap(value).toString());
                 } else {
-                    mergedAttributes.put(attributeName, value.asString());
+                    mergedAttributes.put(attributeName, RubyObject.unwrap(value).toString());
                 }
             });
         }
