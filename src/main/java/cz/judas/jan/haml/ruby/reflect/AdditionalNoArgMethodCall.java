@@ -7,11 +7,11 @@ import cz.judas.jan.haml.template.TemplateContext;
 
 import java.util.Collections;
 
-public class AdditionalMethodCall implements PropertyAccess {
+public class AdditionalNoArgMethodCall implements PropertyAccess {
     private final AdditionalMethod<Object> method;
 
     @SuppressWarnings("unchecked")
-    public AdditionalMethodCall(AdditionalMethod<?> method) {
+    public AdditionalNoArgMethodCall(AdditionalMethod<?> method) {
         this.method = (AdditionalMethod<Object>)method;
     }
 

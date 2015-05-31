@@ -36,7 +36,7 @@ public class PropertyAccessCreator {
 
         for (Map.Entry<Class<?>, AdditionalMethod> entry : additionalMethods.entries()) {
             if(entry.getKey().isAssignableFrom(targetClass)) {
-                return new AdditionalMethodCall(entry.getValue());
+                return new AdditionalNoArgMethodCall(entry.getValue());
             }
         }
 
