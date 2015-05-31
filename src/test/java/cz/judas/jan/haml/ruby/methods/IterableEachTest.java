@@ -3,6 +3,7 @@ package cz.judas.jan.haml.ruby.methods;
 import cz.judas.jan.haml.ruby.*;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
+import cz.judas.jan.haml.testutil.MockHtmlOutput;
 import cz.judas.jan.haml.testutil.MockTemplateContext;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class IterableEachTest {
     public void callsBlockForEveryItem() throws Exception {
         CapturingBlock block = new CapturingBlock();
 
-        iterableEach.invoke(list("abc", "def"), Collections.emptyList(), block, new HtmlOutput(), MockTemplateContext.EMPTY);
+        iterableEach.invoke(list("abc", "def"), Collections.emptyList(), block, MockHtmlOutput.create(), MockTemplateContext.EMPTY);
 
         block.assertArguments(is(list(
                 list((Object)"abc"),
@@ -40,7 +41,7 @@ public class IterableEachTest {
     @Test
     @Incompatibility
     public void returnsNil() throws Exception {
-        Object result = iterableEach.invoke(list("abc", "def"), Collections.emptyList(), new CapturingBlock(), new HtmlOutput(), MockTemplateContext.EMPTY);
+        Object result = iterableEach.invoke(list("abc", "def"), Collections.emptyList(), new CapturingBlock(), MockHtmlOutput.create(), MockTemplateContext.EMPTY);
 
         assertThat(result, is(RubyConstants.NIL));
     }

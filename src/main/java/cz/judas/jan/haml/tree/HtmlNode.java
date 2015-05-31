@@ -34,19 +34,19 @@ public class HtmlNode implements HamlNode {
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        htmlOutput.addUnescaped('<', tagName);
+        htmlOutput.add('<').addUnescaped(tagName);
 
         Attributes attributes = mergeAttributes(htmlOutput, templateContext);
         if(attributes.hasId()) {
-            htmlOutput.addUnescaped(" id=\"", attributes.id(), '"');
+            htmlOutput.addUnescaped(" id=\"").add(attributes.id()).add('"');
         }
         if (attributes.hasClasses()) {
-            htmlOutput.addUnescaped(" class=\"", StringUtils.join(attributes.classes(), ' '), '"');
+            htmlOutput.addUnescaped(" class=\"").add(StringUtils.join(attributes.classes(), ' ')).add('"');
         }
         for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
             String attributeName = entry.getKey();
             Object attributeValue = entry.getValue();
-            htmlOutput.addUnescaped(' ', attributeName, "=\"", attributeValue, '"');
+            htmlOutput.add(' ').add(attributeName).addUnescaped("=\"").add(attributeValue).add('"');
         }
 
         htmlOutput.addUnescaped('>');
@@ -54,7 +54,7 @@ public class HtmlNode implements HamlNode {
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext);
         }
-        htmlOutput.addUnescaped("</", tagName, '>');
+        htmlOutput.addUnescaped("</").addUnescaped(tagName).add('>');
 
         return RubyConstants.NIL;
     }

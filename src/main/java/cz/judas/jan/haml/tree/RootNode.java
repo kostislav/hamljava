@@ -37,10 +37,4 @@ public class RootNode implements HamlNode {
 
         return RubyConstants.NIL;
     }
-
-    public String toHtmlString(TemplateContext templateContext) {
-        HtmlOutput htmlOutput = new HtmlOutput();
-        evaluate(htmlOutput, templateContext);
-        return htmlOutput.build();
-    }
 }

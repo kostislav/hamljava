@@ -6,6 +6,7 @@ import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
+import cz.judas.jan.haml.testutil.MockHtmlOutput;
 import cz.judas.jan.haml.testutil.MockTemplateContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class MethodCallCreatorTest {
     public void findsCorrectMethod() throws Exception {
         MethodCall methodCall = methodCallCreator.createFor(TestObject.class, "methodWithArgs", 2);
 
-        assertThat(methodCall.invoke(new TestObject(1, 2), list(12, "p"), RubyBlock.EMPTY, new HtmlOutput(), MockTemplateContext.EMPTY), is((Object)"abc12p"));
+        assertThat(methodCall.invoke(new TestObject(1, 2), list(12, "p"), RubyBlock.EMPTY, MockHtmlOutput.create(), MockTemplateContext.EMPTY), is((Object)"abc12p"));
     }
 
     @Test(expected = IllegalArgumentException.class)
