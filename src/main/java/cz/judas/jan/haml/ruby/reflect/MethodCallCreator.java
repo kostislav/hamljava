@@ -8,9 +8,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 public class MethodCallCreator {
-    private final Multimap<Class<?>, AdditionalMethod> additionalMethods;
+    private final Multimap<Class<?>, AdditionalMethod<?>> additionalMethods;
 
-    public MethodCallCreator(Multimap<? extends Class<?>, ? extends AdditionalMethod> additionalMethods) {
+    public MethodCallCreator(Multimap<? extends Class<?>, ? extends AdditionalMethod<?>> additionalMethods) {
         this.additionalMethods = ImmutableMultimap.copyOf(additionalMethods);
     }
 
@@ -22,7 +22,7 @@ public class MethodCallCreator {
             }
         }
 
-        for (Map.Entry<Class<?>, AdditionalMethod> entry : additionalMethods.entries()) {
+        for (Map.Entry<Class<?>, AdditionalMethod<?>> entry : additionalMethods.entries()) {
             if(entry.getKey().isAssignableFrom(targetClass)) {
                 return new AdditionalMethodCall(entry.getValue());
             }

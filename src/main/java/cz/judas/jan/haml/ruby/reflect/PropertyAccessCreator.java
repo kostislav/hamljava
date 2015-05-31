@@ -10,9 +10,9 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 
 public class PropertyAccessCreator {
-    private final Multimap<Class<?>, AdditionalMethod> additionalMethods;
+    private final Multimap<Class<?>, AdditionalMethod<?>> additionalMethods;
 
-    public PropertyAccessCreator(Multimap<? extends Class<?>, ? extends AdditionalMethod> additionalMethods) {
+    public PropertyAccessCreator(Multimap<? extends Class<?>, ? extends AdditionalMethod<?>> additionalMethods) {
         this.additionalMethods = ImmutableMultimap.copyOf(additionalMethods);
     }
 
@@ -33,7 +33,7 @@ public class PropertyAccessCreator {
             }
         }
 
-        for (Map.Entry<Class<?>, AdditionalMethod> entry : additionalMethods.entries()) {
+        for (Map.Entry<Class<?>, AdditionalMethod<?>> entry : additionalMethods.entries()) {
             if(entry.getKey().isAssignableFrom(targetClass)) {
                 return new AdditionalNoArgMethodCall(entry.getValue());
             }
