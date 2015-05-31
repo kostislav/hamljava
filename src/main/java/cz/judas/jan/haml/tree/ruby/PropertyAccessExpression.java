@@ -3,7 +3,6 @@ package cz.judas.jan.haml.tree.ruby;
 import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.haml.ruby.RubyBlock;
 import cz.judas.jan.haml.ruby.RubyObject;
-import cz.judas.jan.haml.ruby.methods.IterableEach;
 import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
@@ -11,9 +10,7 @@ import cz.judas.jan.haml.template.TemplateContext;
 import java.util.Collections;
 
 public class PropertyAccessExpression implements PossibleMethodCall {
-    private static final PropertyAccessCreator PROPERTY_ACCESS_CREATOR = new PropertyAccessCreator(ImmutableMultimap.of(
-            Iterable.class, new IterableEach()
-    ));
+    private static final PropertyAccessCreator PROPERTY_ACCESS_CREATOR = new PropertyAccessCreator(ImmutableMultimap.of());
 
     private final RubyExpression target;
     private final String name;

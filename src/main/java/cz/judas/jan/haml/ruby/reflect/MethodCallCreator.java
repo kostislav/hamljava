@@ -9,10 +9,6 @@ import java.util.Map;
 public class MethodCallCreator {
     private final ImmutableMultimap<Class<?>, AdditionalMethod> additionalMethods;
 
-    public MethodCallCreator() {
-        this(ImmutableMultimap.of());
-    }
-
     public MethodCallCreator(ImmutableMultimap<? extends Class<?>, ? extends AdditionalMethod> additionalMethods) {
         this.additionalMethods = ImmutableMultimap.copyOf(additionalMethods);
     }

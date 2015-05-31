@@ -1,6 +1,8 @@
 package cz.judas.jan.haml.ruby;
 
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMultimap;
+import cz.judas.jan.haml.ruby.methods.IterableEach;
 import cz.judas.jan.haml.ruby.reflect.MethodCall;
 import cz.judas.jan.haml.ruby.reflect.MethodCallCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
@@ -9,7 +11,9 @@ import cz.judas.jan.haml.template.TemplateContext;
 import java.util.List;
 
 public class RubyObjectBase implements RubyObject {
-    private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator();
+    private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(ImmutableMultimap.of(
+            Iterable.class, new IterableEach()
+    ));
 
     private final Object javaObject;
 

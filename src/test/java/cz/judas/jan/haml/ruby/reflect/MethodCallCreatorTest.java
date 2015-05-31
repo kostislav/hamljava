@@ -22,7 +22,7 @@ public class MethodCallCreatorTest {
 
     @Before
     public void setUp() throws Exception {
-        methodCallCreator = new MethodCallCreator();
+        methodCallCreator = new MethodCallCreator(ImmutableMultimap.of());
     }
 
     @Test
