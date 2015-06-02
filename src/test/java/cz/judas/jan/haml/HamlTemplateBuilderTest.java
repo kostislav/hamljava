@@ -31,9 +31,11 @@ public class HamlTemplateBuilderTest {
 
     @Test
     public void textLinesAreNotEscaped() throws Exception {
-        assertParses(
-                "%p\n\t<div id=\"blah\">Blah!</div>",
-                "<p><div id=\"blah\">Blah!</div></p>"
+        HamlTemplate template = templateBuilder.buildFrom("%p\n\t<div id=\"blah\">Blah!</div>");
+
+        assertThat(
+                template.evaluate(false, Collections.emptyMap()),
+                is("<p><div id=\"blah\">Blah!</div></p>")
         );
     }
 
@@ -137,7 +139,7 @@ public class HamlTemplateBuilderTest {
 
     @Test
     public void callsInnerTemplate() throws Exception {
-        HamlTemplate layoutTemplate = templateBuilder.buildFrom("%html\n\t%body\n\t\t= yield");
+        HamlTemplate layoutTemplate = templateBuilder.buildFrom("%html\n\t%body\n\t\t!= yield");
         HamlTemplate innerTemplate = templateBuilder.buildFrom("%div blah bleh");
 
         String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);

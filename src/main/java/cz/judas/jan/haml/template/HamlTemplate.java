@@ -14,15 +14,23 @@ public class HamlTemplate {
     }
 
     public String evaluate(Map<String, ?> fieldValues) {
-        return evaluate(fieldValues, RubyBlock.EMPTY);
+        return evaluate(true, fieldValues, RubyBlock.EMPTY);
+    }
+
+    public String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues) {
+        return evaluate(escapeByDefault, fieldValues, RubyBlock.EMPTY);
     }
 
     public String evaluate(Map<String, ?> fieldValues, HamlTemplate innerTemplate) {
-        return evaluate(fieldValues, new HamlNodeBlock(innerTemplate.rootNode));
+        return evaluate(true, fieldValues, innerTemplate);
     }
 
-    private String evaluate(Map<String, ?> fieldValues, RubyBlock block) {
-        HtmlOutput htmlOutput = new HtmlOutput(false); // TODO make configurable
+    public String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, HamlTemplate innerTemplate) {
+        return evaluate(escapeByDefault, fieldValues, new HamlNodeBlock(innerTemplate.rootNode));
+    }
+
+    private String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, RubyBlock block) {
+        HtmlOutput htmlOutput = new HtmlOutput(escapeByDefault);
         rootNode.evaluate(
                 htmlOutput,
                 new TemplateContext(
