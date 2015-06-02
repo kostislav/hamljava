@@ -120,7 +120,7 @@ public class HamlTreeBuilder {
         if (context == null) {
             return null;
         } else {
-            return context.WORD().getText();
+            return context.getText().substring(1);
         }
     }
 

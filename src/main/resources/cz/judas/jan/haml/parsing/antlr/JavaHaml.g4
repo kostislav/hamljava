@@ -35,7 +35,7 @@ realHtmlTag: tagName? attribute* tagContent? (NL | childTags);
 
 tagContent: textContent | rubyContent;
 
-tagName: PERCENT WORD;
+tagName: PERCENT (WORD | HTML_ELEMENT);
 
 attribute: idAttribute | classAttribute | attributeHash | htmlAttributes;
 
@@ -138,6 +138,8 @@ blockArguments: (localVariable whitespace? COMMA whitespace?)* localVariable;
 
 // Lexer rules
 
+FAT_ARROW: '=>';
+
 EXCLAMATION: '!';
 DOT: '.';
 COMMA: ',';
@@ -155,13 +157,17 @@ DOUBLE_QUOTE: '"';
 DASH: '-';
 PIPE: '|';
 BACKSLASH: '\\';
-FAT_ARROW: '=>';
-NUMBER: ('0'..'9')+;
+NUMBER: (DIGIT)+;
 DO: 'do';
-WORD : ('a'..'z' | 'A'..'Z' | '0'..'9' | '-')+;
+WORD : (ASCII_LETTER | DIGIT | '-')+;
+HTML_ELEMENT: (ASCII_LETTER | DIGIT ':' | '_' | '-')+;
 SPACE: ' ';
-WHITESPACE: (' ' | '\t')+;
+WHITESPACE: WHITESPACE_CHAR+;
 
-NL: ('\r'? '\n' (' ' | '\t')*);
+NL: ('\r'? '\n' WHITESPACE_CHAR*);
 
 UNKNOWN: .;
+
+fragment DIGIT: '0'..'9';
+fragment ASCII_LETTER: 'a'..'z' | 'A'..'Z';
+fragment WHITESPACE_CHAR: ' ' | '\t';
