@@ -29,7 +29,7 @@ public class HamlTreeBuilder {
 
         return new RootNode(
                 doctype(documentContext),
-                Iterables.transform(documentContext.htmlTag(), this::tag)
+                Iterables.transform(documentContext.line(), this::line)
         );
     }
 
@@ -38,9 +38,9 @@ public class HamlTreeBuilder {
                 .map(context -> context.actualDoctype().getText());
     }
 
-    private HamlNode tag(JavaHamlParser.HtmlTagContext context) {
+    private HamlNode line(JavaHamlParser.LineContext context) {
         return Alternatives
-                .either(context.realHtmlTag(), this::realHtmlTag)
+                .either(context.htmlElement(), this::htmlElement)
                 .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.hamlSpecialChar().getText() + text.text().getText())))
                 .or(context.plainText(), this::plainText)
                 .or(context.code(), code -> new CodeNode(codeNode(code)))
@@ -76,29 +76,30 @@ public class HamlTreeBuilder {
         return CompoundStringExpression.from(builder.build());
     }
 
-    private HamlNode realHtmlTag(JavaHamlParser.RealHtmlTagContext context) {
-        String tagName = tagName(context.tagName());
-        List<RubyHashExpression> attributes = attributes(context.attribute());
-        List<HamlNode> children = childTags(context);
-        RubyExpression content = tagContent(context.tagContent());
-
-        if (tagName == null && attributes.isEmpty() && children.isEmpty()) {
-            return new TextNode(content);
-        } else {
-            return new HtmlNode(
-                    tagName == null ? "div" : tagName,
-                    attributes,
-                    content,
-                    children
-            );
+    private HamlNode htmlElement(JavaHamlParser.HtmlElementContext context) {
+        String tagName = elementName(context.elementName());
+        ImmutableList.Builder<RubyHashExpression> attributeBuilder = ImmutableList.builder();
+        if(context.classAttribute() != null) {
+            attributeBuilder.add(classAttribute(context.classAttribute()));
         }
+        if(context.idAttribute() != null) {
+            attributeBuilder.add(idAttribute(context.idAttribute()));
+        }
+        attributeBuilder.addAll(attributes(context.attribute()));
+
+        return new HtmlNode(
+                tagName,
+                attributeBuilder.build(),
+                elementContent(context.elementContent()),
+                childTags(context)
+        );
     }
 
     private ImmutableList<RubyHashExpression> attributes(List<JavaHamlParser.AttributeContext> context) {
         return FluentIterable.from(context).transform(this::attributeHash).toList();
     }
 
-    private RubyExpression tagContent(JavaHamlParser.TagContentContext context) {
+    private RubyExpression elementContent(JavaHamlParser.ElementContentContext context) {
         if (context != null) {
             return Alternatives
                     .either(context.rubyContent(), rubyContent -> expression(rubyContent.expression()))
@@ -108,7 +109,7 @@ public class HamlTreeBuilder {
         return ConstantRubyExpression.EMPTY_STRING;
     }
 
-    private List<HamlNode> childTags(JavaHamlParser.RealHtmlTagContext context) {
+    private List<HamlNode> childTags(JavaHamlParser.HtmlElementContext context) {
         if (context.childTags() != null) {
             return children(context.childTags());
         } else {
@@ -116,9 +117,9 @@ public class HamlTreeBuilder {
         }
     }
 
-    private String tagName(JavaHamlParser.TagNameContext context) {
+    private String elementName(JavaHamlParser.ElementNameContext context) {
         if (context == null) {
-            return null;
+            return "div";
         } else {
             return context.getText().substring(1);
         }
@@ -151,24 +152,32 @@ public class HamlTreeBuilder {
     }
 
     private List<HamlNode> children(JavaHamlParser.ChildTagsContext context) {
-        return FluentIterable.from(context.htmlTag())
-                .transform(this::tag)
+        return FluentIterable.from(context.line())
+                .transform(this::line)
                 .toList();
     }
 
     private RubyHashExpression attributeHash(JavaHamlParser.AttributeContext context) {
         return Alternatives
-                .either(context.classAttribute(), classAttribute -> RubyHashExpression.singleEntryHash(
-                        ConstantRubyExpression.symbol("class"),
-                        ConstantRubyExpression.string(classAttribute.WORD().getText())
-                ))
-                .or(context.idAttribute(), idAttribute -> RubyHashExpression.singleEntryHash(
-                        ConstantRubyExpression.symbol("id"),
-                        ConstantRubyExpression.string(idAttribute.WORD().getText())
-                ))
+                .either(context.classAttribute(), this::classAttribute)
+                .or(context.idAttribute(), this::idAttribute)
                 .or(context.attributeHash(), this::rubyAttributeHash)
                 .or(context.htmlAttributes(), this::htmlStyleAttributes)
                 .orException();
+    }
+
+    private RubyHashExpression classAttribute(JavaHamlParser.ClassAttributeContext classAttribute) {
+        return RubyHashExpression.singleEntryHash(
+                ConstantRubyExpression.symbol("class"),
+                ConstantRubyExpression.string(classAttribute.getText().substring(1))
+        );
+    }
+
+    private RubyHashExpression idAttribute(JavaHamlParser.IdAttributeContext idAttribute) {
+        return RubyHashExpression.singleEntryHash(
+                ConstantRubyExpression.symbol("id"),
+                ConstantRubyExpression.string(idAttribute.getText().substring(1))
+        );
     }
 
     private RubyHashExpression htmlStyleAttributes(JavaHamlParser.HtmlAttributesContext context) {

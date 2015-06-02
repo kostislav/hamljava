@@ -13,7 +13,7 @@ tokens { INDENT, DEDENT }
     .nl(NL)
     .indent(JavaHamlParser.INDENT)
     .dedent(JavaHamlParser.DEDENT)
-    .pullToken(JavaHamlLexer.super::nextToken);
+    .pullToken(super::nextToken);
 
   @Override
   public Token nextToken() {
@@ -23,19 +23,19 @@ tokens { INDENT, DEDENT }
 
 // HAML
 
-document: doctype? htmlTag+;
+document: doctype? line+;
 
 doctype: EXCLAMATION EXCLAMATION EXCLAMATION SPACE actualDoctype NL;
 
 actualDoctype: WORD | NUMBER;
 
-htmlTag: realHtmlTag | code | escapedText NL | rubyContent NL | plainText NL;
+line: htmlElement | code | escapedText NL | rubyContent NL | plainText NL;
 
-realHtmlTag: tagName? attribute* tagContent? (NL | childTags);
+htmlElement: (elementName | idAttribute | classAttribute) attribute* elementContent? (NL | childTags);
 
-tagContent: textContent | rubyContent;
+elementContent: textContent | rubyContent;
 
-tagName: PERCENT (WORD | HTML_ELEMENT);
+elementName: PERCENT (WORD | HTML_ELEMENT);
 
 attribute: idAttribute | classAttribute | attributeHash | htmlAttributes;
 
@@ -65,7 +65,7 @@ rubyContent: EQUALS_SIGN whitespace? expression;
 
 code: DASH whitespace expression ((whitespace block) | NL);
 
-childTags: INDENT htmlTag+ DEDENT;
+childTags: INDENT line+ DEDENT;
 
 whitespace: SPACE+ | WHITESPACE;
 
