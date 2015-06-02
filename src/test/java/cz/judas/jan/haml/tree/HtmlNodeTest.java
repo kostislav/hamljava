@@ -9,6 +9,7 @@ import java.util.Collections;
 
 import static cz.judas.jan.haml.testutil.Expressions.string;
 import static cz.judas.jan.haml.testutil.Expressions.symbol;
+import static cz.judas.jan.haml.testutil.Nodes.textNode;
 import static cz.judas.jan.haml.testutil.ShortCollections.list;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -22,7 +23,7 @@ public class HtmlNodeTest {
                         RubyHashExpression.singleEntryHash(symbol("class"), string("abc")),
                         RubyHashExpression.singleEntryHash(symbol("class"), string("def"))
                 ),
-                string("content"),
+                textNode(string("content")),
                 Collections.emptyList()
         );
         HtmlOutput htmlOutput = new HtmlOutput(false);
@@ -40,7 +41,7 @@ public class HtmlNodeTest {
                         RubyHashExpression.singleEntryHash(symbol("id"), string("abc")),
                         RubyHashExpression.singleEntryHash(symbol("id"), string("def"))
                 ),
-                string("content"),
+                textNode(string("content")),
                 Collections.emptyList()
         );
         HtmlOutput htmlOutput = new HtmlOutput(false);

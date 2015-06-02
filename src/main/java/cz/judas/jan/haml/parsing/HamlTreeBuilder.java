@@ -44,7 +44,7 @@ public class HamlTreeBuilder {
                 .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.hamlSpecialChar().getText() + text.text().getText())))
                 .or(context.plainText(), this::plainText)
                 .or(context.code(), code -> new CodeNode(codeNode(code)))
-                .or(context.rubyContent(), ruby -> new TextNode(expression(ruby.expression())))
+                .or(context.rubyContent(), this::rubyContent)
                 .orException();
     }
 
@@ -79,10 +79,10 @@ public class HamlTreeBuilder {
     private HamlNode htmlElement(JavaHamlParser.HtmlElementContext context) {
         String tagName = elementName(context.elementName());
         ImmutableList.Builder<RubyHashExpression> attributeBuilder = ImmutableList.builder();
-        if(context.classAttribute() != null) {
+        if (context.classAttribute() != null) {
             attributeBuilder.add(classAttribute(context.classAttribute()));
         }
-        if(context.idAttribute() != null) {
+        if (context.idAttribute() != null) {
             attributeBuilder.add(idAttribute(context.idAttribute()));
         }
         attributeBuilder.addAll(attributes(context.attribute()));
@@ -99,14 +99,18 @@ public class HamlTreeBuilder {
         return FluentIterable.from(context).transform(this::attributeHash).toList();
     }
 
-    private RubyExpression elementContent(JavaHamlParser.ElementContentContext context) {
+    private HamlNode elementContent(JavaHamlParser.ElementContentContext context) {
         if (context != null) {
             return Alternatives
-                    .either(context.rubyContent(), rubyContent -> expression(rubyContent.expression()))
-                    .or(context.textContent(), textContent -> text(textContent.text()))
+                    .either(context.rubyContent(), this::rubyContent)
+                    .or(context.textContent(), textContent -> new TextNode(text(textContent.text())))
                     .orException();
         }
-        return ConstantRubyExpression.EMPTY_STRING;
+        return EmptyNode.INSTANCE;
+    }
+
+    private TextNode rubyContent(JavaHamlParser.RubyContentContext rubyContent) {
+        return new TextNode(expression(rubyContent.expression()));
     }
 
     private List<HamlNode> childTags(JavaHamlParser.HtmlElementContext context) {
@@ -273,7 +277,7 @@ public class HamlTreeBuilder {
         PossibleMethodCall result = null;
         for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
             Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
-            if(arguments == null) {
+            if (arguments == null) {
                 result = new PropertyAccessExpression(target, singleMethodCallContext.methodName().getText());
             } else {
                 result = new MethodCallExpression(

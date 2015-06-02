@@ -20,7 +20,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
-                ConstantRubyExpression.EMPTY_STRING,
+                EmptyNode.INSTANCE,
                 Collections.emptyList()
         );
     }
@@ -29,7 +29,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
-                ConstantRubyExpression.EMPTY_STRING,
+                EmptyNode.INSTANCE,
                 children
         );
     }
@@ -38,7 +38,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 mapToHash(attributes),
-                ConstantRubyExpression.EMPTY_STRING,
+                EmptyNode.INSTANCE,
                 Arrays.asList(children)
         );
     }
@@ -47,12 +47,21 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 mapToHash(attributes),
-                content,
+                new TextNode(content),
                 Collections.emptyList()
         );
     }
 
     public static HtmlNode node(String name, List<RubyHashExpression> attributes, RubyExpression content) {
+        return new HtmlNode(
+                name,
+                attributes,
+                new TextNode(content),
+                Collections.emptyList()
+        );
+    }
+
+    public static HtmlNode node(String name, List<RubyHashExpression> attributes, HamlNode content) {
         return new HtmlNode(
                 name,
                 attributes,
@@ -65,7 +74,7 @@ public class Nodes {
         return new HtmlNode(
                 name,
                 Collections.emptyList(),
-                content,
+                new TextNode(content),
                 Collections.emptyList()
         );
     }

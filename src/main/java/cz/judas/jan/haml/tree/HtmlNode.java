@@ -6,7 +6,6 @@ import com.google.common.collect.Maps;
 import cz.judas.jan.haml.ruby.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
-import cz.judas.jan.haml.tree.ruby.RubyExpression;
 import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -21,13 +20,13 @@ import java.util.Map;
 public class HtmlNode implements HamlNode {
     private final String tagName;
     private final List<RubyHashExpression> attributes;
-    private final RubyExpression textContent;
+    private final HamlNode content;
     private final List<HamlNode> children;
 
-    public HtmlNode(String tagName, List<RubyHashExpression> attributes, RubyExpression textContent, Iterable<? extends HamlNode> children) {
+    public HtmlNode(String tagName, List<RubyHashExpression> attributes, HamlNode content, Iterable<? extends HamlNode> children) {
         this.tagName = tagName;
         this.attributes = ImmutableList.copyOf(attributes);
-        this.textContent = textContent;
+        this.content = content;
         this.children = ImmutableList.copyOf(children);
     }
 
@@ -49,7 +48,7 @@ public class HtmlNode implements HamlNode {
         }
 
         htmlOutput.addChar('>');
-        htmlOutput.add(textContent.evaluate(htmlOutput, templateContext));
+        content.evaluate(htmlOutput, templateContext);
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext);
         }
