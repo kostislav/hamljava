@@ -61,7 +61,11 @@ text: textEntry+;
 
 textEntry: interpolatedExpression | (BACKSLASH HASH LEFT_BRACE) | (HASH ~LEFT_BRACE) | ~(HASH | NL);
 
-rubyContent: EQUALS_SIGN whitespace? expression;
+rubyContent: unescapedRubyContent | regularRubyContent;
+
+unescapedRubyContent: EXCLAMATION regularRubyContent;
+
+regularRubyContent: EQUALS_SIGN whitespace? expression;
 
 code: DASH whitespace expression ((whitespace block) | NL);
 

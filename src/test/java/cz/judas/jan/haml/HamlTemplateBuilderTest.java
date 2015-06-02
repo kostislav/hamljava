@@ -171,6 +171,14 @@ public class HamlTemplateBuilderTest {
         );
     }
 
+    @Test
+    public void explicitUnescaping() throws Exception {
+        assertParses(
+                "%div!= '<p>a</p>'",
+                "<div><p>a</p></div>"
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }

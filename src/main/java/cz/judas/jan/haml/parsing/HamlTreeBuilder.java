@@ -105,12 +105,24 @@ public class HamlTreeBuilder {
                     .either(context.rubyContent(), this::rubyContent)
                     .or(context.textContent(), textContent -> new TextNode(text(textContent.text())))
                     .orException();
+        } else {
+            return EmptyNode.INSTANCE;
         }
-        return EmptyNode.INSTANCE;
     }
 
-    private TextNode rubyContent(JavaHamlParser.RubyContentContext rubyContent) {
-        return new TextNode(expression(rubyContent.expression()));
+    private HamlNode rubyContent(JavaHamlParser.RubyContentContext rubyContent) {
+        return Alternatives
+                .either(rubyContent.regularRubyContent(), this::regularRubyContent)
+                .or(rubyContent.unescapedRubyContent(), this::unescapedRubyContent)
+                .orException();
+    }
+
+    private UnescapedNode unescapedRubyContent(JavaHamlParser.UnescapedRubyContentContext escaped) {
+        return new UnescapedNode(expression(escaped.regularRubyContent().expression()));
+    }
+
+    private HamlNode regularRubyContent(JavaHamlParser.RegularRubyContentContext regular) {
+        return new TextNode(expression(regular.expression()));
     }
 
     private List<HamlNode> childTags(JavaHamlParser.HtmlElementContext context) {
