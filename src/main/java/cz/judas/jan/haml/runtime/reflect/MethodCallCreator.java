@@ -1,8 +1,8 @@
-package cz.judas.jan.haml.ruby.reflect;
+package cz.judas.jan.haml.runtime.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
+import cz.judas.jan.haml.runtime.methods.AdditionalMethod;
 
 import java.lang.reflect.Method;
 import java.util.Map;

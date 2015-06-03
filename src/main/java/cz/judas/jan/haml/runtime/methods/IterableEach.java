@@ -1,8 +1,8 @@
-package cz.judas.jan.haml.ruby.methods;
+package cz.judas.jan.haml.runtime.methods;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyConstants;
+import cz.judas.jan.haml.runtime.RubyBlock;
+import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 

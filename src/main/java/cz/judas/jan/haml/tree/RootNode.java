@@ -2,7 +2,7 @@ package cz.judas.jan.haml.tree;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import cz.judas.jan.haml.ruby.RubyConstants;
+import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import lombok.EqualsAndHashCode;

@@ -1,6 +1,8 @@
-package cz.judas.jan.haml.ruby.methods;
+package cz.judas.jan.haml.runtime.methods;
 
-import cz.judas.jan.haml.ruby.*;
+import cz.judas.jan.haml.runtime.Incompatibility;
+import cz.judas.jan.haml.runtime.RubyBlock;
+import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.testutil.MockHtmlOutput;

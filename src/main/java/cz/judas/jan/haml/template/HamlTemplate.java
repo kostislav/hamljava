@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.template;
 
-import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.tree.HamlNode;
 import cz.judas.jan.haml.tree.HamlNodeBlock;
 

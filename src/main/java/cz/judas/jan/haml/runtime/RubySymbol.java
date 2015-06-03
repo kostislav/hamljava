@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.ruby;
+package cz.judas.jan.haml.runtime;
 
 import lombok.EqualsAndHashCode;
 

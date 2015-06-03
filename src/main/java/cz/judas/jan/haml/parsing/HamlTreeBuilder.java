@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.haml.parsing.antlr.JavaHamlLexer;
 import cz.judas.jan.haml.parsing.antlr.JavaHamlParser;
-import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.tree.*;
 import cz.judas.jan.haml.tree.ruby.*;
 import org.antlr.v4.runtime.ANTLRInputStream;

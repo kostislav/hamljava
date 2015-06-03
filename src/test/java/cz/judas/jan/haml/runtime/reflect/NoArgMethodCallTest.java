@@ -1,6 +1,6 @@
-package cz.judas.jan.haml.ruby.reflect;
+package cz.judas.jan.haml.runtime.reflect;
 
-import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.testutil.MockHtmlOutput;
 import cz.judas.jan.haml.testutil.MockTemplateContext;
 import org.junit.Test;

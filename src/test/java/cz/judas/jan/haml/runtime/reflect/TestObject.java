@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.ruby.reflect;
+package cz.judas.jan.haml.runtime.reflect;
 
 @SuppressWarnings("UnusedDeclaration")
 public class TestObject {

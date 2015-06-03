@@ -6,10 +6,10 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
-import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.methods.IterableEach;
-import cz.judas.jan.haml.ruby.reflect.MethodCall;
-import cz.judas.jan.haml.ruby.reflect.MethodCallCreator;
+import cz.judas.jan.haml.runtime.RubyBlock;
+import cz.judas.jan.haml.runtime.methods.IterableEach;
+import cz.judas.jan.haml.runtime.reflect.MethodCall;
+import cz.judas.jan.haml.runtime.reflect.MethodCallCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 

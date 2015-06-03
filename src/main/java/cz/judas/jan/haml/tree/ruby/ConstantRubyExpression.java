@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.tree.ruby;
 
-import cz.judas.jan.haml.ruby.RubyConstants;
-import cz.judas.jan.haml.ruby.RubySymbol;
+import cz.judas.jan.haml.runtime.RubyConstants;
+import cz.judas.jan.haml.runtime.RubySymbol;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import lombok.EqualsAndHashCode;

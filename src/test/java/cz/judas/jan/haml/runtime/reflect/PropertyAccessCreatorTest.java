@@ -1,9 +1,9 @@
-package cz.judas.jan.haml.ruby.reflect;
+package cz.judas.jan.haml.runtime.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
-import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.RubyConstants;
-import cz.judas.jan.haml.ruby.methods.AdditionalMethod;
+import cz.judas.jan.haml.runtime.RubyBlock;
+import cz.judas.jan.haml.runtime.RubyConstants;
+import cz.judas.jan.haml.runtime.methods.AdditionalMethod;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.testutil.MockHtmlOutput;

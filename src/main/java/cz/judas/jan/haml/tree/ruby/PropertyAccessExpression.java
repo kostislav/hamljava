@@ -4,9 +4,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMultimap;
-import cz.judas.jan.haml.ruby.RubyBlock;
-import cz.judas.jan.haml.ruby.reflect.PropertyAccess;
-import cz.judas.jan.haml.ruby.reflect.PropertyAccessCreator;
+import cz.judas.jan.haml.runtime.RubyBlock;
+import cz.judas.jan.haml.runtime.reflect.PropertyAccess;
+import cz.judas.jan.haml.runtime.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 

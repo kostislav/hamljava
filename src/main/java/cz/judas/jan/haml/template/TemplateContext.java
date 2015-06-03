@@ -1,7 +1,7 @@
 package cz.judas.jan.haml.template;
 
 import com.google.common.collect.ImmutableMap;
-import cz.judas.jan.haml.ruby.RubyBlock;
+import cz.judas.jan.haml.runtime.RubyBlock;
 
 import java.util.Collections;
 import java.util.HashMap;

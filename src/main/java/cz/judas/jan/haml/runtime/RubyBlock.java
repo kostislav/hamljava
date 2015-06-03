@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.ruby;
+package cz.judas.jan.haml.runtime;
 
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
