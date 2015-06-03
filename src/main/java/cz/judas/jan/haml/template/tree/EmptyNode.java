@@ -7,7 +7,6 @@ public class EmptyNode implements HamlNode{
     public static final EmptyNode INSTANCE = new EmptyNode();
 
     @Override
-    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return null;
+    public void evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
     }
 }

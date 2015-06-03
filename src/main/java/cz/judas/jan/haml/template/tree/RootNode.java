@@ -2,7 +2,6 @@ package cz.judas.jan.haml.template.tree;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import lombok.EqualsAndHashCode;
@@ -28,13 +27,11 @@ public class RootNode implements HamlNode {
     }
 
     @Override
-    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public void evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         doctype.ifPresent(doctype -> htmlOutput.addUnescaped(DOCTYPES.get(doctype)).addChar('\n'));
 
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext);
         }
-
-        return RubyConstants.NIL;
     }
 }

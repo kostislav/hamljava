@@ -3,7 +3,6 @@ package cz.judas.jan.haml.template.tree;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
@@ -31,7 +30,7 @@ public class HtmlNode implements HamlNode {
     }
 
     @Override
-    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public void evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         htmlOutput.addChar('<').addUnescaped(tagName);
 
         Attributes attributes = mergeAttributes(htmlOutput, templateContext);
@@ -53,8 +52,6 @@ public class HtmlNode implements HamlNode {
             child.evaluate(htmlOutput, templateContext);
         }
         htmlOutput.addUnescaped("</").addUnescaped(tagName).addChar('>');
-
-        return RubyConstants.NIL;
     }
 
     private Attributes mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {

@@ -1,6 +1,5 @@
 package cz.judas.jan.haml.template.tree;
 
-import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.template.tree.ruby.RubyExpression;
@@ -17,9 +16,7 @@ public class UnescapedNode implements HamlNode {
     }
 
     @Override
-    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public void evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         htmlOutput.addUnescaped(content.evaluate(htmlOutput, templateContext));
-
-        return RubyConstants.NIL;
     }
 }

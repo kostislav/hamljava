@@ -16,7 +16,7 @@ public class CodeNode implements HamlNode {
     }
 
     @Override
-    public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        return code.evaluate(htmlOutput, templateContext);
+    public void evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
+        code.evaluate(htmlOutput, templateContext);
     }
 }
