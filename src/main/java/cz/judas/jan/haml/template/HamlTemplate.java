@@ -1,8 +1,8 @@
 package cz.judas.jan.haml.template;
 
 import cz.judas.jan.haml.runtime.RubyBlock;
-import cz.judas.jan.haml.tree.HamlNode;
-import cz.judas.jan.haml.tree.HamlNodeBlock;
+import cz.judas.jan.haml.template.tree.HamlNode;
+import cz.judas.jan.haml.template.tree.HamlNodeBlock;
 
 import java.util.Map;
 

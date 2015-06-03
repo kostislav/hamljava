@@ -1,8 +1,8 @@
-package cz.judas.jan.haml.tree;
+package cz.judas.jan.haml.template.tree;
 
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
-import cz.judas.jan.haml.tree.ruby.RubyExpression;
+import cz.judas.jan.haml.template.tree.ruby.RubyExpression;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

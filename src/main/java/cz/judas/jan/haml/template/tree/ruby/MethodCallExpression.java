@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree.ruby;
+package cz.judas.jan.haml.template.tree.ruby;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

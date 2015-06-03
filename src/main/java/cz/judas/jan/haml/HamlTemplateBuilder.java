@@ -2,7 +2,7 @@ package cz.judas.jan.haml;
 
 import cz.judas.jan.haml.parsing.HamlTreeBuilder;
 import cz.judas.jan.haml.template.HamlTemplate;
-import cz.judas.jan.haml.tree.RootNode;
+import cz.judas.jan.haml.template.tree.RootNode;
 
 import java.io.*;
 import java.nio.charset.Charset;

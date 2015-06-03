@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree;
+package cz.judas.jan.haml.template.tree;
 
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;

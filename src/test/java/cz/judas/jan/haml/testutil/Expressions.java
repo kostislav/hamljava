@@ -1,8 +1,8 @@
 package cz.judas.jan.haml.testutil;
 
-import cz.judas.jan.haml.tree.ruby.ConstantRubyExpression;
-import cz.judas.jan.haml.tree.ruby.RubyExpression;
-import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
+import cz.judas.jan.haml.template.tree.ruby.ConstantRubyExpression;
+import cz.judas.jan.haml.template.tree.ruby.RubyExpression;
+import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
 
 @SuppressWarnings("UtilityClass")
 public class Expressions {

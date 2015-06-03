@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree.ruby;
+package cz.judas.jan.haml.template.tree.ruby;
 
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;

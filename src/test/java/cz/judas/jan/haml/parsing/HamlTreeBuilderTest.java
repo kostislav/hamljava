@@ -1,10 +1,10 @@
 package cz.judas.jan.haml.parsing;
 
-import cz.judas.jan.haml.tree.EmptyNode;
-import cz.judas.jan.haml.tree.RootNode;
-import cz.judas.jan.haml.tree.ruby.FieldReferenceExpression;
-import cz.judas.jan.haml.tree.ruby.HashEntry;
-import cz.judas.jan.haml.tree.ruby.RubyHashExpression;
+import cz.judas.jan.haml.template.tree.EmptyNode;
+import cz.judas.jan.haml.template.tree.RootNode;
+import cz.judas.jan.haml.template.tree.ruby.FieldReferenceExpression;
+import cz.judas.jan.haml.template.tree.ruby.HashEntry;
+import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
 import org.junit.Before;
 import org.junit.Test;
 

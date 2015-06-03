@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree.ruby;
+package cz.judas.jan.haml.template.tree.ruby;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.tree.ruby;
+package cz.judas.jan.haml.template.tree.ruby;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

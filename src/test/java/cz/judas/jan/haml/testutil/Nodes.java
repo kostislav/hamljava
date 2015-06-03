@@ -1,8 +1,10 @@
 package cz.judas.jan.haml.testutil;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.haml.tree.*;
-import cz.judas.jan.haml.tree.ruby.*;
+import cz.judas.jan.haml.template.tree.*;
+import cz.judas.jan.haml.template.tree.ruby.HashEntry;
+import cz.judas.jan.haml.template.tree.ruby.RubyExpression;
+import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
 
 import java.util.*;
 
