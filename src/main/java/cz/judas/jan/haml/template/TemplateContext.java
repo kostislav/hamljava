@@ -12,10 +12,6 @@ public class TemplateContext {
     private final Map<String, Object> localVariables;
     private final RubyBlock block;
 
-    public TemplateContext(Map<String, ?> fieldValues) {
-        this(fieldValues, RubyBlock.EMPTY);
-    }
-
     public TemplateContext(Map<String, ?> fieldValues, RubyBlock block) {
         this(fieldValues, Collections.emptyMap(), block);
     }
