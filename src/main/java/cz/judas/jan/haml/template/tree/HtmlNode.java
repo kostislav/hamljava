@@ -3,7 +3,7 @@ package cz.judas.jan.haml.template.tree;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.output.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
 import lombok.EqualsAndHashCode;

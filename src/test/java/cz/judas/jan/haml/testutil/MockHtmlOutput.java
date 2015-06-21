@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.testutil;
 
-import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.output.HtmlOutput;
 
 @SuppressWarnings("UtilityClass")
 public class MockHtmlOutput {

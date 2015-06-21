@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.runtime.reflect.PropertyAccess;
 import cz.judas.jan.haml.runtime.reflect.PropertyAccessCreator;
-import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.output.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

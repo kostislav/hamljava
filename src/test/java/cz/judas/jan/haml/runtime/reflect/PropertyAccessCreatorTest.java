@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.runtime.methods.AdditionalMethod;
-import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.output.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import cz.judas.jan.haml.testutil.MockHtmlOutput;
 import cz.judas.jan.haml.testutil.MockTemplateContext;

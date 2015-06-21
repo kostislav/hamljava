@@ -1,4 +1,4 @@
-package cz.judas.jan.haml.template;
+package cz.judas.jan.haml.output;
 
 import org.junit.Test;
 

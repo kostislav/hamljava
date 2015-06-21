@@ -1,5 +1,6 @@
 package cz.judas.jan.haml.template;
 
+import cz.judas.jan.haml.output.HtmlOutput;
 import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.template.tree.HamlNode;
 import cz.judas.jan.haml.template.tree.HamlNodeBlock;

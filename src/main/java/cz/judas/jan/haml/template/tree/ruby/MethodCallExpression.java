@@ -10,7 +10,7 @@ import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.runtime.methods.IterableEach;
 import cz.judas.jan.haml.runtime.reflect.MethodCall;
 import cz.judas.jan.haml.runtime.reflect.MethodCallCreator;
-import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.output.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

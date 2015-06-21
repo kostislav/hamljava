@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.template.tree;
 
-import cz.judas.jan.haml.template.HtmlOutput;
+import cz.judas.jan.haml.output.HtmlOutput;
 import cz.judas.jan.haml.testutil.MockTemplateContext;
 import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
 import org.junit.Test;
