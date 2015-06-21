@@ -59,7 +59,7 @@ plainText: text;
 
 text: textEntry+;
 
-textEntry: interpolatedExpression | (BACKSLASH HASH LEFT_BRACE) | (HASH ~LEFT_BRACE) | ~(HASH | NL);
+textEntry: interpolatedExpression | (BACKSLASH HASH LEFT_BRACE) | (HASH ~LEFT_BRACE) | ~(HASH | NL | DEDENT);
 
 rubyContent: unescapedRubyContent | regularRubyContent;
 
