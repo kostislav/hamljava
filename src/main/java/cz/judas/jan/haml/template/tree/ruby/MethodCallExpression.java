@@ -12,9 +12,13 @@ import cz.judas.jan.haml.runtime.reflect.MethodCall;
 import cz.judas.jan.haml.runtime.reflect.MethodCallCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
+@EqualsAndHashCode
+@ToString(exclude="cache")
 public class MethodCallExpression implements PossibleMethodCall {
     private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(ImmutableMultimap.of(
             Iterable.class, new IterableEach()

@@ -9,9 +9,13 @@ import cz.judas.jan.haml.runtime.reflect.PropertyAccess;
 import cz.judas.jan.haml.runtime.reflect.PropertyAccessCreator;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Collections;
 
+@EqualsAndHashCode
+@ToString
 public class PropertyAccessExpression implements PossibleMethodCall {
     private static final PropertyAccessCreator PROPERTY_ACCESS_CREATOR = new PropertyAccessCreator(ImmutableMultimap.of());
 

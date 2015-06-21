@@ -6,10 +6,14 @@ import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Iterator;
 import java.util.List;
 
+@EqualsAndHashCode
+@ToString
 public class BlockExpression implements RubyBlock {
     private final List<HamlNode> children;
     private final List<String> argumentNames;

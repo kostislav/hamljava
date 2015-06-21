@@ -3,10 +3,14 @@ package cz.judas.jan.haml.template.tree.ruby;
 import com.google.common.collect.ImmutableList;
 import cz.judas.jan.haml.template.HtmlOutput;
 import cz.judas.jan.haml.template.TemplateContext;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Collection;
 import java.util.List;
 
+@EqualsAndHashCode
+@ToString
 public class CompoundStringExpression implements RubyExpression {
     private final List<RubyExpression> parts;
 
