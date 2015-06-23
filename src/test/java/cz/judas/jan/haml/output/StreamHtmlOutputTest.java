@@ -5,10 +5,10 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class HtmlOutputTest {
+public class StreamHtmlOutputTest {
     @Test
     public void addUnescapedDoesNotEscape() throws Exception {
-        HtmlOutput htmlOutput = new HtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
 
         htmlOutput.addUnescaped("<bleh>");
 
@@ -17,7 +17,7 @@ public class HtmlOutputTest {
 
     @Test
     public void addEscapedDoesEscape() throws Exception {
-        HtmlOutput htmlOutput = new HtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
 
         htmlOutput.addEscaped("<>&\"'");
 
@@ -26,7 +26,7 @@ public class HtmlOutputTest {
 
     @Test
     public void addEscapesIfDefaultEscapingIsOn() throws Exception {
-        HtmlOutput htmlOutput = new HtmlOutput(true);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(true);
 
         htmlOutput.add("<>&\"'");
 
@@ -35,7 +35,7 @@ public class HtmlOutputTest {
 
     @Test
     public void addDoesNotEscapesIfDefaultEscapingIsOff() throws Exception {
-        HtmlOutput htmlOutput = new HtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
 
         htmlOutput.add("<>&\"'");
 
@@ -44,7 +44,7 @@ public class HtmlOutputTest {
 
     @Test
     public void createsHtmlTag() throws Exception {
-        HtmlOutput htmlOutput = new HtmlOutput(true);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(true);
 
         htmlOutput.htmlTag(
                 "a",

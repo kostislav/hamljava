@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.runtime.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
+import cz.judas.jan.haml.output.StreamHtmlOutput;
 import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.runtime.methods.AdditionalMethod;
@@ -58,7 +59,7 @@ public class PropertyAccessCreatorTest {
         propertyAccessCreator = new PropertyAccessCreator(ImmutableMultimap.of(
                 Iterable.class, new TestAdditionalMethod()
         ));
-        HtmlOutput htmlOutput = new HtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
 
         PropertyAccess propertyAccess = propertyAccessCreator.createFor(List.class, "myMethod");
         propertyAccess.get(list("a", "b"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);

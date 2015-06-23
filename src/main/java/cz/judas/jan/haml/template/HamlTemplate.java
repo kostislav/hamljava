@@ -1,6 +1,6 @@
 package cz.judas.jan.haml.template;
 
-import cz.judas.jan.haml.output.HtmlOutput;
+import cz.judas.jan.haml.output.StreamHtmlOutput;
 import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.template.tree.HamlNode;
 import cz.judas.jan.haml.template.tree.HamlNodeBlock;
@@ -31,7 +31,7 @@ public class HamlTemplate {
     }
 
     private String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, RubyBlock block) {
-        HtmlOutput htmlOutput = new HtmlOutput(escapeByDefault);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(escapeByDefault);
         rootNode.evaluate(
                 htmlOutput,
                 new TemplateContext(

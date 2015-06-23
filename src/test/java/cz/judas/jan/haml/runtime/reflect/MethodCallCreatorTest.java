@@ -1,6 +1,7 @@
 package cz.judas.jan.haml.runtime.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
+import cz.judas.jan.haml.output.StreamHtmlOutput;
 import cz.judas.jan.haml.runtime.RubyBlock;
 import cz.judas.jan.haml.runtime.RubyConstants;
 import cz.judas.jan.haml.runtime.methods.AdditionalMethod;
@@ -42,7 +43,7 @@ public class MethodCallCreatorTest {
         methodCallCreator = new MethodCallCreator(ImmutableMultimap.of(
                 Iterable.class, new TestAdditionalMethod()
         ));
-        HtmlOutput htmlOutput = new HtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
 
         MethodCall propertyAccess = methodCallCreator.createFor(List.class, "myMethod", 1);
         propertyAccess.invoke("kk", list("a"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);

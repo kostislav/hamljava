@@ -1,8 +1,8 @@
 package cz.judas.jan.haml.template.tree;
 
-import cz.judas.jan.haml.output.HtmlOutput;
-import cz.judas.jan.haml.testutil.MockTemplateContext;
+import cz.judas.jan.haml.output.StreamHtmlOutput;
 import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
+import cz.judas.jan.haml.testutil.MockTemplateContext;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -26,7 +26,7 @@ public class HtmlNodeTest {
                 textNode(string("content")),
                 Collections.emptyList()
         );
-        HtmlOutput htmlOutput = new HtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
 
         htmlNode.evaluate(htmlOutput, MockTemplateContext.EMPTY);
 
@@ -44,7 +44,7 @@ public class HtmlNodeTest {
                 textNode(string("content")),
                 Collections.emptyList()
         );
-        HtmlOutput htmlOutput = new HtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
 
         htmlNode.evaluate(htmlOutput, MockTemplateContext.EMPTY);
 
