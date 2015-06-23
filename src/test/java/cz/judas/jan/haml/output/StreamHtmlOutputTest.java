@@ -1,15 +1,21 @@
 package cz.judas.jan.haml.output;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class StreamHtmlOutputTest {
+    private StreamHtmlOutput htmlOutput;
+
+    @Before
+    public void setUp() throws Exception {
+        htmlOutput = new StreamHtmlOutput(true);
+    }
+
     @Test
     public void addUnescapedDoesNotEscape() throws Exception {
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
-
         htmlOutput.addUnescaped("<bleh>");
 
         assertThat(htmlOutput.build(), is("<bleh>"));
@@ -17,7 +23,7 @@ public class StreamHtmlOutputTest {
 
     @Test
     public void addEscapedDoesEscape() throws Exception {
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
+        htmlOutput = new StreamHtmlOutput(false);
 
         htmlOutput.addEscaped("<>&\"'");
 
@@ -26,8 +32,6 @@ public class StreamHtmlOutputTest {
 
     @Test
     public void addEscapesIfDefaultEscapingIsOn() throws Exception {
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(true);
-
         htmlOutput.add("<>&\"'");
 
         assertThat(htmlOutput.build(), is("&lt;&gt;&amp;&quot;&#39;"));
@@ -44,8 +48,6 @@ public class StreamHtmlOutputTest {
 
     @Test
     public void createsHtmlTag() throws Exception {
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(true);
-
         htmlOutput.htmlTag(
                 "a",
                 (attributeBuilder) -> attributeBuilder.attribute("href", "http://someurl.com"),
@@ -53,5 +55,25 @@ public class StreamHtmlOutputTest {
         );
 
         assertThat(htmlOutput.build(), is("<a href=\"http://someurl.com\">&gt;&gt; Click here &lt;&lt;</a>"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addingContentFailsForVoidTag() throws Exception {
+        htmlOutput.htmlTag(
+                "input",
+                (attributeBuilder) -> {},
+                (bodyBuilder) -> bodyBuilder.add("something")
+        );
+    }
+
+    @Test
+    public void properlyClosesVoidTag() throws Exception {
+        htmlOutput.htmlTag(
+                "img",
+                (attributeBuilder) -> attributeBuilder.attribute("src", "http://img"),
+                (bodyBuilder) -> {}
+        );
+
+        assertThat(htmlOutput.build(), is("<img src=\"http://img\" />"));
     }
 }

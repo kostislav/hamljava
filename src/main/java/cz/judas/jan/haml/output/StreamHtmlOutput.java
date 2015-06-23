@@ -1,10 +1,17 @@
 package cz.judas.jan.haml.output;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.html.HtmlEscapers;
 
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class StreamHtmlOutput implements HtmlOutput {
+    private static final Set<String> VOID_ELEMENTS = ImmutableSet.of(
+            "area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"
+    );
+    private static final HtmlOutput VOID_OUTPUT = new VoidTagHtmlOutput();
+
     private final StringBuilder stringBuilder = new StringBuilder();
     private final boolean escapeByDefault;
     private final TagAttributeBuilder addAttribute = this::addAttribute;
@@ -44,9 +51,14 @@ public class StreamHtmlOutput implements HtmlOutput {
     public HtmlOutput htmlTag(String name, Consumer<TagAttributeBuilder> attributeBuilder, Consumer<HtmlOutput> bodyBuilder) {
         stringBuilder.append('<').append(name);
         attributeBuilder.accept(addAttribute);
-        stringBuilder.append('>');
-        bodyBuilder.accept(this);
-        stringBuilder.append("</").append(name).append('>');
+        if(VOID_ELEMENTS.contains(name)) {
+            stringBuilder.append(" />");
+            bodyBuilder.accept(VOID_OUTPUT);
+        } else {
+            stringBuilder.append('>');
+            bodyBuilder.accept(this);
+            stringBuilder.append("</").append(name).append('>');
+        }
         return this;
     }
 
