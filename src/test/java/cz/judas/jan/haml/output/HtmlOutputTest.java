@@ -41,4 +41,17 @@ public class HtmlOutputTest {
 
         assertThat(htmlOutput.build(), is("<>&\"'"));
     }
+
+    @Test
+    public void createsHtmlTag() throws Exception {
+        HtmlOutput htmlOutput = new HtmlOutput(true);
+
+        htmlOutput.htmlTag(
+                "a",
+                (attributeBuilder) -> attributeBuilder.attribute("href", "http://someurl.com"),
+                (bodyBuilder) -> bodyBuilder.add(">> Click here <<")
+        );
+
+        assertThat(htmlOutput.build(), is("<a href=\"http://someurl.com\">&gt;&gt; Click here &lt;&lt;</a>"));
+    }
 }

@@ -31,27 +31,27 @@ public class HtmlNode implements HamlNode {
 
     @Override
     public void evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
-        htmlOutput.addChar('<').addUnescaped(tagName);
-
-        Attributes attributes = mergeAttributes(htmlOutput, templateContext);
-        if(attributes.hasId()) {
-            htmlOutput.addUnescaped(" id=\"").add(attributes.joinedIds()).addChar('"');
-        }
-        if (attributes.hasClasses()) {
-            htmlOutput.addUnescaped(" class=\"").add(attributes.joinedClasses()).addChar('"');
-        }
-        for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
-            String attributeName = entry.getKey();
-            Object attributeValue = entry.getValue();
-            htmlOutput.addChar(' ').add(attributeName).addUnescaped("=\"").add(attributeValue).addChar('"');
-        }
-
-        htmlOutput.addChar('>');
-        content.evaluate(htmlOutput, templateContext);
-        for (HamlNode child : children) {
-            child.evaluate(htmlOutput, templateContext);
-        }
-        htmlOutput.addUnescaped("</").addUnescaped(tagName).addChar('>');
+        htmlOutput.htmlTag(
+                tagName,
+                (attributeBuilder) -> {
+                    Attributes attributes = mergeAttributes(htmlOutput, templateContext);
+                    if (attributes.hasId()) {
+                        attributeBuilder.attribute("id", attributes.joinedIds());
+                    }
+                    if (attributes.hasClasses()) {
+                        attributeBuilder.attribute("class", attributes.joinedClasses());
+                    }
+                    for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
+                        attributeBuilder.attribute(entry.getKey(), entry.getValue().toString());
+                    }
+                },
+                (bodyBuilder) -> {
+                    content.evaluate(bodyBuilder, templateContext);
+                    for (HamlNode child : children) {
+                        child.evaluate(bodyBuilder, templateContext);
+                    }
+                }
+        );
     }
 
     private Attributes mergeAttributes(HtmlOutput htmlOutput, TemplateContext templateContext) {
