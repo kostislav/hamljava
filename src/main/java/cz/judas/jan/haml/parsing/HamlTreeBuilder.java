@@ -85,7 +85,8 @@ public class HamlTreeBuilder {
         if (context.idAttribute() != null) {
             attributeBuilder.add(idAttribute(context.idAttribute()));
         }
-        attributeBuilder.addAll(attributes(context.attribute()));
+        attributeBuilder.addAll(FluentIterable.from(context.shortAttribute()).transform(this::shortAttribute));
+        attributeBuilder.addAll(FluentIterable.from(context.longAttribute()).transform(this::longAttribute));
 
         return new HtmlNode(
                 tagName,
@@ -93,10 +94,6 @@ public class HamlTreeBuilder {
                 elementContent(context.elementContent()),
                 childTags(context)
         );
-    }
-
-    private ImmutableList<RubyHashExpression> attributes(List<JavaHamlParser.AttributeContext> context) {
-        return FluentIterable.from(context).transform(this::attributeHash).toList();
     }
 
     private HamlNode elementContent(JavaHamlParser.ElementContentContext context) {
@@ -173,11 +170,16 @@ public class HamlTreeBuilder {
                 .toList();
     }
 
-    private RubyHashExpression attributeHash(JavaHamlParser.AttributeContext context) {
+    private RubyHashExpression shortAttribute(JavaHamlParser.ShortAttributeContext context) {
         return Alternatives
                 .either(context.classAttribute(), this::classAttribute)
                 .or(context.idAttribute(), this::idAttribute)
-                .or(context.attributeHash(), this::rubyAttributeHash)
+                .orException();
+    }
+
+    private RubyHashExpression longAttribute(JavaHamlParser.LongAttributeContext context) {
+        return Alternatives
+                .either(context.attributeHash(), this::rubyAttributeHash)
                 .or(context.htmlAttributes(), this::htmlStyleAttributes)
                 .orException();
     }

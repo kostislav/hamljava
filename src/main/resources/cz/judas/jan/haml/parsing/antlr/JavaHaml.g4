@@ -31,13 +31,15 @@ actualDoctype: WORD | NUMBER;
 
 line: htmlElement | code | escapedText NL | rubyContent NL | plainText NL;
 
-htmlElement: (elementName | idAttribute | classAttribute) attribute* elementContent? (NL | childTags);
+htmlElement: (elementName | idAttribute | classAttribute) shortAttribute* longAttribute* elementContent? (NL | childTags);
 
 elementContent: textContent | rubyContent;
 
 elementName: PERCENT (WORD | HTML_ELEMENT);
 
-attribute: idAttribute | classAttribute | attributeHash | htmlAttributes;
+shortAttribute: idAttribute | classAttribute;
+
+longAttribute: attributeHash | htmlAttributes;
 
 classAttribute: DOT WORD;
 
