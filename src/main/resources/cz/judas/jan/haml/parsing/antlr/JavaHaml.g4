@@ -115,7 +115,9 @@ emptyDoubleQuotedString: DOUBLE_QUOTE DOUBLE_QUOTE;
 
 nonEmptyDoubleQuotedString: DOUBLE_QUOTE doubleQuotedStringContent DOUBLE_QUOTE;
 
-doubleQuotedStringContent: (~DOUBLE_QUOTE)+;
+doubleQuotedStringContent: doubleQuotedStringElement+;
+
+doubleQuotedStringElement: interpolatedExpression | (BACKSLASH HASH LEFT_BRACE) | (HASH ~LEFT_BRACE) | (BACKSLASH DOUBLE_QUOTE) | ~(HASH | NL | DEDENT | DOUBLE_QUOTE);
 
 interpolatedExpression: HASH LEFT_BRACE expression RIGHT_BRACE;
 

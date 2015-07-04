@@ -189,6 +189,17 @@ public class HamlTemplateBuilderTest {
         );
     }
 
+    @Test
+    public void interpolationInStrings() throws Exception {
+        assertParses(
+                "%span(class=\"widget_#{@person.name}\")",
+                map(
+                        "person", new Person("franco", 43)
+                ),
+                "<span class=\"widget_franco\"></span>"
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }

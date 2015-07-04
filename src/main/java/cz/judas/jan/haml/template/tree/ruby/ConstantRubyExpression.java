@@ -9,6 +9,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class ConstantRubyExpression implements RubyExpression {
+    public static final ConstantRubyExpression EMPTY_STRING = new ConstantRubyExpression("");
     public static final ConstantRubyExpression TRUE = new ConstantRubyExpression(true);
 
     private final Object value;

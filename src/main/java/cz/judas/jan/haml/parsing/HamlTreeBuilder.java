@@ -57,23 +57,10 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression text(JavaHamlParser.TextContext context) {
-        ImmutableList.Builder<RubyExpression> builder = ImmutableList.builder();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (JavaHamlParser.TextEntryContext entryContext : context.textEntry()) {
-            if (entryContext.interpolatedExpression() != null) {
-                if (stringBuilder.length() > 0) {
-                    builder.add(new ConstantRubyExpression(stringBuilder.toString()));
-                    stringBuilder = new StringBuilder();
-                }
-                builder.add(expression(entryContext.interpolatedExpression().expression()));
-            } else {
-                stringBuilder.append(entryContext.getText());
-            }
-        }
-        if (stringBuilder.length() > 0) {
-            builder.add(new ConstantRubyExpression(stringBuilder.toString()));
-        }
-        return CompoundStringExpression.from(builder.build());
+        return stringWithInterpolation(Iterables.transform(
+                context.textEntry(),
+                TextEntry::new
+        ));
     }
 
     private HamlNode htmlElement(JavaHamlParser.HtmlElementContext context) {
@@ -263,7 +250,7 @@ public class HamlTreeBuilder {
         return Alternatives
                 .either(context.symbol(), this::symbol)
                 .or(context.singleQuotedString(), string -> new ConstantRubyExpression(singleQuotedString(string)))
-                .or(context.doubleQuotedString(), string -> new ConstantRubyExpression(doubleQuotedString(string)))
+                .or(context.doubleQuotedString(), this::doubleQuotedString)
                 .or(context.fieldReference(), this::fieldReference)
                 .or(context.methodCall(), this::methodCall)
                 .or(context.intValue(), value -> new ConstantRubyExpression(Integer.parseInt(value.getText())))
@@ -282,12 +269,43 @@ public class HamlTreeBuilder {
                 .orException();
     }
 
-    private String doubleQuotedString(JavaHamlParser.DoubleQuotedStringContext context) {
-        return nonEmptyDoubleQuotedString(context.nonEmptyDoubleQuotedString());
+    private RubyExpression doubleQuotedString(JavaHamlParser.DoubleQuotedStringContext context) {
+        return Alternatives
+                .either(context.emptyDoubleQuotedString(), this::emptyDoubleQuotedString)
+                .or(context.nonEmptyDoubleQuotedString(), this::nonEmptyDoubleQuotedString)
+                .orException();
     }
 
-    private String nonEmptyDoubleQuotedString(JavaHamlParser.NonEmptyDoubleQuotedStringContext context) {
-        return context.doubleQuotedStringContent().getText();
+    @SuppressWarnings("UnusedParameters")
+    private RubyExpression emptyDoubleQuotedString(JavaHamlParser.EmptyDoubleQuotedStringContext context) {
+        return ConstantRubyExpression.EMPTY_STRING;
+    }
+
+    private RubyExpression nonEmptyDoubleQuotedString(JavaHamlParser.NonEmptyDoubleQuotedStringContext context) {
+        return stringWithInterpolation(Iterables.transform(
+                context.doubleQuotedStringContent().doubleQuotedStringElement(),
+                DoubleQuotedStringElement::new
+        ));
+    }
+
+    private RubyExpression stringWithInterpolation(Iterable<? extends WithInterpolatedString> context) {
+        ImmutableList.Builder<RubyExpression> builder = ImmutableList.builder();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (WithInterpolatedString entryContext : context) {
+            if (entryContext.interpolatedExpression() != null) {
+                if (stringBuilder.length() > 0) {
+                    builder.add(new ConstantRubyExpression(stringBuilder.toString()));
+                    stringBuilder = new StringBuilder();
+                }
+                builder.add(expression(entryContext.interpolatedExpression().expression()));
+            } else {
+                stringBuilder.append(entryContext.getText());
+            }
+        }
+        if (stringBuilder.length() > 0) {
+            builder.add(new ConstantRubyExpression(stringBuilder.toString()));
+        }
+        return CompoundStringExpression.from(builder.build());
     }
 
     private String singleQuotedString(JavaHamlParser.SingleQuotedStringContext context) {
@@ -338,5 +356,47 @@ public class HamlTreeBuilder {
                 .either(context.fieldReference(), this::fieldReference)
                 .or(context.localVariable(), this::localVariable)
                 .orException();
+    }
+
+    private interface WithInterpolatedString {
+        JavaHamlParser.InterpolatedExpressionContext interpolatedExpression();
+
+        String getText();
+    }
+
+    private static class DoubleQuotedStringElement implements WithInterpolatedString {
+        private final JavaHamlParser.DoubleQuotedStringElementContext context;
+
+        private DoubleQuotedStringElement(JavaHamlParser.DoubleQuotedStringElementContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public JavaHamlParser.InterpolatedExpressionContext interpolatedExpression() {
+            return context.interpolatedExpression();
+        }
+
+        @Override
+        public String getText() {
+            return context.getText();
+        }
+    }
+
+    private static class TextEntry implements WithInterpolatedString {
+        private final JavaHamlParser.TextEntryContext context;
+
+        private TextEntry(JavaHamlParser.TextEntryContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public JavaHamlParser.InterpolatedExpressionContext interpolatedExpression() {
+            return context.interpolatedExpression();
+        }
+
+        @Override
+        public String getText() {
+            return context.getText();
+        }
     }
 }
