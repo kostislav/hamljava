@@ -41,7 +41,7 @@ public class HamlTreeBuilder {
     private HamlNode line(JavaHamlParser.LineContext context) {
         return Alternatives
                 .either(context.htmlElement(), this::htmlElement)
-                .or(context.escapedText(), text -> new TextNode(ConstantRubyExpression.string(text.hamlSpecialChar().getText() + text.text().getText())))
+                .or(context.escapedText(), text -> new TextNode(new ConstantRubyExpression(text.hamlSpecialChar().getText() + text.text().getText())))
                 .or(context.plainText(), this::plainText)
                 .or(context.code(), code -> new CodeNode(codeNode(code)))
                 .or(context.rubyContent(), this::rubyContent)
@@ -62,7 +62,7 @@ public class HamlTreeBuilder {
         for (JavaHamlParser.TextEntryContext entryContext : context.textEntry()) {
             if (entryContext.interpolatedExpression() != null) {
                 if (stringBuilder.length() > 0) {
-                    builder.add(ConstantRubyExpression.string(stringBuilder.toString()));
+                    builder.add(new ConstantRubyExpression(stringBuilder.toString()));
                     stringBuilder = new StringBuilder();
                 }
                 builder.add(expression(entryContext.interpolatedExpression().expression()));
@@ -71,7 +71,7 @@ public class HamlTreeBuilder {
             }
         }
         if (stringBuilder.length() > 0) {
-            builder.add(ConstantRubyExpression.string(stringBuilder.toString()));
+            builder.add(new ConstantRubyExpression(stringBuilder.toString()));
         }
         return CompoundStringExpression.from(builder.build());
     }
@@ -185,14 +185,14 @@ public class HamlTreeBuilder {
     private RubyHashExpression classAttribute(JavaHamlParser.ClassAttributeContext classAttribute) {
         return RubyHashExpression.singleEntryHash(
                 ConstantRubyExpression.symbol("class"),
-                ConstantRubyExpression.string(classAttribute.getText().substring(1))
+                new ConstantRubyExpression(classAttribute.getText().substring(1))
         );
     }
 
     private RubyHashExpression idAttribute(JavaHamlParser.IdAttributeContext idAttribute) {
         return RubyHashExpression.singleEntryHash(
                 ConstantRubyExpression.symbol("id"),
-                ConstantRubyExpression.string(idAttribute.getText().substring(1))
+                new ConstantRubyExpression(idAttribute.getText().substring(1))
         );
     }
 
@@ -262,11 +262,11 @@ public class HamlTreeBuilder {
     private RubyExpression expression(JavaHamlParser.ExpressionContext context) {
         return Alternatives
                 .either(context.symbol(), this::symbol)
-                .or(context.singleQuotedString(), string -> ConstantRubyExpression.string(singleQuotedString(string)))
-                .or(context.doubleQuotedString(), string -> ConstantRubyExpression.string(doubleQuotedString(string)))
+                .or(context.singleQuotedString(), string -> new ConstantRubyExpression(singleQuotedString(string)))
+                .or(context.doubleQuotedString(), string -> new ConstantRubyExpression(doubleQuotedString(string)))
                 .or(context.fieldReference(), this::fieldReference)
                 .or(context.methodCall(), this::methodCall)
-                .or(context.intValue(), value -> ConstantRubyExpression.integer(Integer.parseInt(value.getText())))
+                .or(context.intValue(), value -> new ConstantRubyExpression(Integer.parseInt(value.getText())))
                 .or(context.localVariable(), this::localVariable)
                 .orException();
     }

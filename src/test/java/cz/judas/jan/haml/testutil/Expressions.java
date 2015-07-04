@@ -7,7 +7,7 @@ import cz.judas.jan.haml.template.tree.ruby.RubyHashExpression;
 @SuppressWarnings("UtilityClass")
 public class Expressions {
     public static RubyExpression string(String value) {
-        return ConstantRubyExpression.string(value);
+        return new ConstantRubyExpression(value);
     }
 
     public static RubyExpression bool(boolean value) {

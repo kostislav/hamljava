@@ -22,16 +22,7 @@ public class ConstantRubyExpression implements RubyExpression {
         return value;
     }
 
-    // TODO unnecessary
-    public static ConstantRubyExpression string(String value) {
-        return new ConstantRubyExpression(value);
-    }
-
     public static ConstantRubyExpression symbol(String value) {
         return new ConstantRubyExpression(new RubySymbol(value));
-    }
-
-    public static ConstantRubyExpression integer(int value) {
-        return new ConstantRubyExpression(value);
     }
 }
