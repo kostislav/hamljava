@@ -76,4 +76,26 @@ public class StreamHtmlOutputTest {
 
         assertThat(htmlOutput.build(), is("<img src=\"http://img\" />"));
     }
+
+    @Test
+    public void setsBooleanAttributeIfTrue() throws Exception {
+        htmlOutput.htmlTag(
+                "input",
+                (attributeBuilder) -> attributeBuilder.attribute("autofocus", true),
+                (bodyBuilder) -> {}
+        );
+
+        assertThat(htmlOutput.build(), is("<input autofocus=\"autofocus\" />"));
+    }
+
+    @Test
+    public void skipsBooleanAttributeIfFalse() throws Exception {
+        htmlOutput.htmlTag(
+                "input",
+                (attributeBuilder) -> attributeBuilder.attribute("autofocus", false),
+                (bodyBuilder) -> {}
+        );
+
+        assertThat(htmlOutput.build(), is("<input />"));
+    }
 }

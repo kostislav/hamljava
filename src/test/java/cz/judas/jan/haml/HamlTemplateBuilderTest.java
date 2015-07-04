@@ -181,6 +181,14 @@ public class HamlTemplateBuilderTest {
         );
     }
 
+    @Test
+    public void booleanHtmlAttributes() throws Exception {
+        assertParses(
+                "%input(name='what' autofocus)",
+                "<input name=\"what\" autofocus=\"autofocus\" />"
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }

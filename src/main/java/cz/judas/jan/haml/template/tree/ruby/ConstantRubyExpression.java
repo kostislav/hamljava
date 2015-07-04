@@ -1,8 +1,7 @@
 package cz.judas.jan.haml.template.tree.ruby;
 
-import cz.judas.jan.haml.runtime.RubyConstants;
-import cz.judas.jan.haml.runtime.RubySymbol;
 import cz.judas.jan.haml.output.HtmlOutput;
+import cz.judas.jan.haml.runtime.RubySymbol;
 import cz.judas.jan.haml.template.TemplateContext;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -10,7 +9,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class ConstantRubyExpression implements RubyExpression {
-    public static final ConstantRubyExpression EMPTY_STRING = new ConstantRubyExpression(RubyConstants.EMPTY_STRING);
+    public static final ConstantRubyExpression TRUE = new ConstantRubyExpression(true);
 
     private final Object value;
 

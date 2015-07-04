@@ -206,9 +206,23 @@ public class HamlTreeBuilder {
     }
 
     private HashEntry htmlStyleAttributeEntry(JavaHamlParser.HtmlAttributeEntryContext context) {
+        return Alternatives
+            .either(context.keyValueHtmlAttributeEntry(), this::keyValueHtmlAttributeEntry)
+            .or(context.booleanHtmlAttributeEntry(), this::booleanHtmlAttributeEntry)
+            .orException();
+    }
+
+    private HashEntry keyValueHtmlAttributeEntry(JavaHamlParser.KeyValueHtmlAttributeEntryContext context) {
         return new HashEntry(
                 ConstantRubyExpression.symbol(context.htmlAttributeKey().getText()),
                 expression(context.expression())
+        );
+    }
+
+    private HashEntry booleanHtmlAttributeEntry(JavaHamlParser.BooleanHtmlAttributeEntryContext context) {
+        return new HashEntry(
+                ConstantRubyExpression.symbol(context.htmlAttributeKey().getText()),
+                ConstantRubyExpression.TRUE
         );
     }
 

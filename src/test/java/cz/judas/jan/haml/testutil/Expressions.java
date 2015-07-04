@@ -10,6 +10,10 @@ public class Expressions {
         return ConstantRubyExpression.string(value);
     }
 
+    public static RubyExpression bool(boolean value) {
+        return new ConstantRubyExpression(value);
+    }
+
     public static RubyExpression symbol(String value) {
         return ConstantRubyExpression.symbol(value);
     }

@@ -45,7 +45,11 @@ idAttribute: HASH WORD;
 
 htmlAttributes: LEFT_BRACKET whitespace? (htmlAttributeEntry whitespace?)* htmlAttributeEntry whitespace? RIGHT_BRACKET ;
 
-htmlAttributeEntry: htmlAttributeKey EQUALS_SIGN expression;
+htmlAttributeEntry: keyValueHtmlAttributeEntry | booleanHtmlAttributeEntry;
+
+keyValueHtmlAttributeEntry: htmlAttributeKey EQUALS_SIGN expression;
+
+booleanHtmlAttributeEntry: htmlAttributeKey;
 
 htmlAttributeKey: WORD | (WORD COLON WORD);
 

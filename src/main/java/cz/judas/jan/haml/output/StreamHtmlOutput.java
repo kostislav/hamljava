@@ -71,9 +71,19 @@ public class StreamHtmlOutput implements HtmlOutput {
         return stringBuilder.toString();
     }
 
-    private void addAttribute(String name, String value) {
+    private void addAttribute(String name, Object value) {
+        String actualValue;
+        if(value instanceof Boolean) {
+            if(value.equals(Boolean.TRUE)) {
+                actualValue = name;
+            } else {
+                return;
+            }
+        } else {
+            actualValue = value.toString();
+        }
         stringBuilder.append(' ').append(name).append("=\"");
-        add(value);
+        add(actualValue);
         stringBuilder.append('"');
     }
 }

@@ -42,7 +42,7 @@ public class HtmlNode implements HamlNode {
                         attributeBuilder.attribute("class", attributes.joinedClasses());
                     }
                     for (Map.Entry<String, Object> entry : attributes.otherAttributes().entrySet()) {
-                        attributeBuilder.attribute(entry.getKey(), entry.getValue().toString());
+                        attributeBuilder.attribute(entry.getKey(), entry.getValue());
                     }
                 },
                 (bodyBuilder) -> {
@@ -70,7 +70,7 @@ public class HtmlNode implements HamlNode {
                         ids.add(value.toString());
                         break;
                     default:
-                        mergedAttributes.put(attributeName, value.toString());
+                        mergedAttributes.put(attributeName, value);
                         break;
                 }
             });

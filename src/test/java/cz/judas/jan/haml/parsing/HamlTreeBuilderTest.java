@@ -203,6 +203,13 @@ public class HamlTreeBuilderTest {
         ));
     }
 
+    @Test
+    public void booleanHtmlAttributes() throws Exception {
+        assertParses("%input(name='what' autofocus)", root(
+                node("input", map(symbol("name"), string("what"), symbol("autofocus"), bool(true)))
+        ));
+    }
+
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(new StringReader(input)), is(tree));
     }
