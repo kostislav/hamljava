@@ -19,11 +19,20 @@ public class Alternatives<T> {
 
     public T orException() {
         for (Alternative<?, T> alternative : alternatives) {
-            if (alternative.value != null) {
+            if (alternative.isNonNull()) {
                 return alternative.value();
             }
         }
         throw new IllegalArgumentException("No alternative found");
+    }
+
+    public T orDefault(T defaultValue) {
+        for (Alternative<?, T> alternative : alternatives) {
+            if (alternative.isNonNull()) {
+                return alternative.value();
+            }
+        }
+        return defaultValue;
     }
 
     private static class Alternative<I, O> {
@@ -33,6 +42,10 @@ public class Alternatives<T> {
         private Alternative(I value, Function<I, O> transform) {
             this.value = value;
             this.transform = transform;
+        }
+
+        public boolean isNonNull() {
+            return value != null;
         }
 
         public O value() {

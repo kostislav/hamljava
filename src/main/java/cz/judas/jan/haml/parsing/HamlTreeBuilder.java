@@ -123,11 +123,9 @@ public class HamlTreeBuilder {
     }
 
     private List<HamlNode> childTags(JavaHamlParser.HtmlElementContext context) {
-        if (context.childTags() != null) {
-            return children(context.childTags());
-        } else {
-            return Collections.emptyList();
-        }
+        return Alternatives
+                .either(context.childTags(), this::children)
+                .orDefault(Collections.emptyList());
     }
 
     private String elementName(JavaHamlParser.ElementNameContext context) {
@@ -209,9 +207,9 @@ public class HamlTreeBuilder {
 
     private HashEntry htmlStyleAttributeEntry(JavaHamlParser.HtmlAttributeEntryContext context) {
         return Alternatives
-            .either(context.keyValueHtmlAttributeEntry(), this::keyValueHtmlAttributeEntry)
-            .or(context.booleanHtmlAttributeEntry(), this::booleanHtmlAttributeEntry)
-            .orException();
+                .either(context.keyValueHtmlAttributeEntry(), this::keyValueHtmlAttributeEntry)
+                .or(context.booleanHtmlAttributeEntry(), this::booleanHtmlAttributeEntry)
+                .orException();
     }
 
     private HashEntry keyValueHtmlAttributeEntry(JavaHamlParser.KeyValueHtmlAttributeEntryContext context) {

@@ -33,4 +33,14 @@ public class AlternativesTest {
                 .or((Integer)null, value -> "y" + value)
                 .orException();
     }
+
+    @Test
+    public void usesDefaultIfAllAreNull() throws Exception {
+        String result = Alternatives
+                .either((Integer)null, value -> "x" + value)
+                .or((Integer)null, value -> "y" + value)
+                .orDefault("0");
+
+        assertThat(result, is("0"));
+    }
 }
