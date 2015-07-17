@@ -74,7 +74,7 @@
                 <version>4.5</version>
                 <configuration>
                     <sourceDirectory>${basedir}/src/main/resources/</sourceDirectory>
-                    <outputDirectory>${project.build.directory}/target/generated-sources/</outputDirectory>
+                    <outputDirectory>${basedir}/target/generated-sources/</outputDirectory>
                     <listener>false</listener>
                 </configuration>
                 <executions>
