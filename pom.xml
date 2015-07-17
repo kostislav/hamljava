@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.judas.jan</groupId>
-    <artifactId>haml</artifactId>
+    <artifactId>hamljava</artifactId>
     <version>0.5-SNAPSHOT</version>
 
     <properties>
