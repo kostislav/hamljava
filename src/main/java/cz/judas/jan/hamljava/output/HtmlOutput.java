@@ -12,6 +12,4 @@ public interface HtmlOutput {
     HtmlOutput add(Object value);
 
     HtmlOutput htmlTag(String name, Consumer<TagAttributeBuilder> attributeBuilder, Consumer<HtmlOutput> bodyBuilder);
-
-    HtmlOutput newChild();
 }

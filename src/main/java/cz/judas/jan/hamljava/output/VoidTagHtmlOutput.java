@@ -29,9 +29,4 @@ public class VoidTagHtmlOutput implements HtmlOutput {
     public HtmlOutput htmlTag(String name, Consumer<TagAttributeBuilder> attributeBuilder, Consumer<HtmlOutput> bodyBuilder) {
         throw new IllegalArgumentException(ERROR_MESSAGE);
     }
-
-    @Override
-    public HtmlOutput newChild() {
-        throw new IllegalArgumentException(ERROR_MESSAGE);
-    }
 }

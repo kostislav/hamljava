@@ -62,11 +62,6 @@ public class StreamHtmlOutput implements HtmlOutput {
         return this;
     }
 
-    @Override
-    public HtmlOutput newChild() {
-        return new StreamHtmlOutput(escapeByDefault);
-    }
-
     public String build() {
         return stringBuilder.toString();
     }
