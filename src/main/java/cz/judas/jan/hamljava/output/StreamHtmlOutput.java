@@ -3,7 +3,6 @@ package cz.judas.jan.hamljava.output;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.html.HtmlEscapers;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -81,29 +80,4 @@ public class StreamHtmlOutput implements HtmlOutput {
         writer.append('"');
     }
 
-    private static class QuietWriter {
-        private final Writer writer;
-
-        private QuietWriter(Writer writer) {
-            this.writer = writer;
-        }
-
-        public QuietWriter append(char c) {
-            try {
-                writer.append(c);
-                return this;
-            } catch (IOException e) {
-                throw new RuntimeException("Could not write", e);
-            }
-        }
-
-        public QuietWriter append(String s) {
-            try {
-                writer.append(s);
-                return this;
-            } catch (IOException e) {
-                throw new RuntimeException("Could not write", e);
-            }
-        }
-    }
 }
