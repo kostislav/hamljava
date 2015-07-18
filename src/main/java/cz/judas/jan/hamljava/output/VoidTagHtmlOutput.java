@@ -7,26 +7,26 @@ public class VoidTagHtmlOutput implements HtmlOutput {
 
     @Override
     public HtmlOutput addChar(char c) {
-        throw new IllegalArgumentException(ERROR_MESSAGE);
+        throw new IllegalStateException(ERROR_MESSAGE);
     }
 
     @Override
     public HtmlOutput addUnescaped(Object value) {
-        throw new IllegalArgumentException(ERROR_MESSAGE);
+        throw new IllegalStateException(ERROR_MESSAGE);
     }
 
     @Override
     public HtmlOutput addEscaped(Object value) {
-        throw new IllegalArgumentException(ERROR_MESSAGE);
+        throw new IllegalStateException(ERROR_MESSAGE);
     }
 
     @Override
     public HtmlOutput add(Object value) {
-        throw new IllegalArgumentException(ERROR_MESSAGE);
+        throw new IllegalStateException(ERROR_MESSAGE);
     }
 
     @Override
     public HtmlOutput htmlTag(String name, Consumer<TagAttributeBuilder> attributeBuilder, Consumer<HtmlOutput> bodyBuilder) {
-        throw new IllegalArgumentException(ERROR_MESSAGE);
+        throw new IllegalStateException(ERROR_MESSAGE);
     }
 }

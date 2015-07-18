@@ -61,7 +61,7 @@ public class StreamHtmlOutputTest {
         assertThat(writer.toString(), is("<a href=\"http://someurl.com\">&gt;&gt; Click here &lt;&lt;</a>"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void addingContentFailsForVoidTag() throws Exception {
         htmlOutput.htmlTag(
                 "input",
