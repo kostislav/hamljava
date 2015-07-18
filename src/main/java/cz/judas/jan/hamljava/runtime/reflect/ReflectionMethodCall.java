@@ -1,6 +1,6 @@
 package cz.judas.jan.hamljava.runtime.reflect;
 
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.template.TemplateContext;
 
@@ -16,7 +16,7 @@ public class ReflectionMethodCall implements MethodCall {
     }
 
     @Override
-    public Object invoke(Object target, List<?> args, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object invoke(Object target, List<?> args, UnboundRubyMethod block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         try {
             return method.invoke(target, args.toArray(new Object[args.size()]));
         } catch (IllegalAccessException | InvocationTargetException e) {

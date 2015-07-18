@@ -2,7 +2,7 @@ package cz.judas.jan.hamljava.runtime.reflect;
 
 import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.hamljava.output.StreamHtmlOutput;
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethod;
 import cz.judas.jan.hamljava.output.HtmlOutput;
@@ -31,7 +31,7 @@ public class MethodCallCreatorTest {
     public void findsCorrectMethod() throws Exception {
         MethodCall methodCall = methodCallCreator.createFor(TestObject.class, "methodWithArgs", 2);
 
-        assertThat(methodCall.invoke(new TestObject(1, 2), list(12, "p"), RubyBlock.EMPTY, MockHtmlOutput.create(), MockTemplateContext.EMPTY), is((Object)"abc12p"));
+        assertThat(methodCall.invoke(new TestObject(1, 2), list(12, "p"), UnboundRubyMethod.EMPTY_BLOCK, MockHtmlOutput.create(), MockTemplateContext.EMPTY), is((Object)"abc12p"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -48,14 +48,14 @@ public class MethodCallCreatorTest {
         StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
         MethodCall propertyAccess = methodCallCreator.createFor(List.class, "myMethod", 1);
-        propertyAccess.invoke("kk", list("a"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);
+        propertyAccess.invoke("kk", list("a"), UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, MockTemplateContext.EMPTY);
 
         assertThat(writer.toString(), is("added kk a"));
     }
 
     private static class TestAdditionalMethod implements AdditionalMethod<String> {
         @Override
-        public Object invoke(String target, List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+        public Object invoke(String target, List<?> arguments, UnboundRubyMethod block, HtmlOutput htmlOutput, TemplateContext templateContext) {
             htmlOutput.addUnescaped("added " + target + " " + arguments.get(0));
             return RubyConstants.NIL;
         }

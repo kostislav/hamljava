@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import cz.judas.jan.hamljava.parsing.antlr.JavaHamlLexer;
 import cz.judas.jan.hamljava.parsing.antlr.JavaHamlParser;
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.tree.*;
 import cz.judas.jan.hamljava.template.tree.ruby.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -328,7 +328,7 @@ public class HamlTreeBuilder {
                         target,
                         singleMethodCallContext.methodName().getText(),
                         arguments,
-                        RubyBlock.EMPTY
+                        UnboundRubyMethod.EMPTY_BLOCK
                 );
             }
             target = result;

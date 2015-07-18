@@ -4,7 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMultimap;
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.reflect.PropertyAccess;
 import cz.judas.jan.hamljava.runtime.reflect.PropertyAccessCreator;
 import cz.judas.jan.hamljava.output.HtmlOutput;
@@ -33,11 +33,11 @@ public class PropertyAccessExpression implements PossibleMethodCall {
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         Object targetObject = target.evaluate(htmlOutput, templateContext);
-        return cache.getUnchecked(targetObject.getClass()).get(targetObject, RubyBlock.EMPTY, htmlOutput, templateContext);
+        return cache.getUnchecked(targetObject.getClass()).get(targetObject, UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, templateContext);
     }
 
     @Override
-    public MethodCallExpression withBlock(RubyBlock block) {
+    public MethodCallExpression withBlock(UnboundRubyMethod block) {
         return new MethodCallExpression(target, name, Collections.emptyList(), block);
     }
 }

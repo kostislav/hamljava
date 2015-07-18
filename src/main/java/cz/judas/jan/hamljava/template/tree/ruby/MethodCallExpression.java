@@ -6,7 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.methods.IterableEach;
 import cz.judas.jan.hamljava.runtime.reflect.MethodCall;
 import cz.judas.jan.hamljava.runtime.reflect.MethodCallCreator;
@@ -25,12 +25,12 @@ public class MethodCallExpression implements PossibleMethodCall {
     ));
 
     private final String methodName;
-    private final RubyBlock block;
+    private final UnboundRubyMethod block;
     private final RubyExpression target;
     private final List<RubyExpression> arguments;
     private final LoadingCache<Class<?>, MethodCall> cache;
 
-    public MethodCallExpression(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments, RubyBlock block) {
+    public MethodCallExpression(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments, UnboundRubyMethod block) {
         this.target = target;
         this.methodName = methodName;
         this.block = block;
@@ -52,7 +52,7 @@ public class MethodCallExpression implements PossibleMethodCall {
     }
 
     @Override
-    public MethodCallExpression withBlock(RubyBlock block) {
+    public MethodCallExpression withBlock(UnboundRubyMethod block) {
         return new MethodCallExpression(target, methodName, arguments, block);
     }
 }

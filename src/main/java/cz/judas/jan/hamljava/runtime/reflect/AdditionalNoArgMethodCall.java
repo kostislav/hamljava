@@ -1,6 +1,6 @@
 package cz.judas.jan.hamljava.runtime.reflect;
 
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethod;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.template.TemplateContext;
@@ -16,7 +16,7 @@ public class AdditionalNoArgMethodCall implements PropertyAccess {
     }
 
     @Override
-    public Object get(Object target, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object get(Object target, UnboundRubyMethod block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         return method.invoke(target, Collections.emptyList(), block, htmlOutput, templateContext);
     }
 }

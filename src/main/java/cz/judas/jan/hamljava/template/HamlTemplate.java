@@ -1,7 +1,7 @@
 package cz.judas.jan.hamljava.template;
 
 import cz.judas.jan.hamljava.output.StreamHtmlOutput;
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.tree.HamlNode;
 import cz.judas.jan.hamljava.template.tree.HamlNodeBlock;
 
@@ -16,11 +16,11 @@ public class HamlTemplate {
     }
 
     public String evaluate(Map<String, ?> fieldValues) {
-        return evaluate(true, fieldValues, RubyBlock.EMPTY);
+        return evaluate(true, fieldValues, UnboundRubyMethod.EMPTY_BLOCK);
     }
 
     public String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues) {
-        return evaluate(escapeByDefault, fieldValues, RubyBlock.EMPTY);
+        return evaluate(escapeByDefault, fieldValues, UnboundRubyMethod.EMPTY_BLOCK);
     }
 
     public String evaluate(Map<String, ?> fieldValues, HamlTemplate innerTemplate) {
@@ -31,7 +31,7 @@ public class HamlTemplate {
         return evaluate(escapeByDefault, fieldValues, new HamlNodeBlock(innerTemplate.rootNode));
     }
 
-    private String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, RubyBlock block) {
+    private String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, UnboundRubyMethod block) {
         StringWriter writer = new StringWriter();
         StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, escapeByDefault);
         rootNode.evaluate(

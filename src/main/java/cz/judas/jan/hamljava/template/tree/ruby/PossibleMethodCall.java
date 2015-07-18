@@ -1,7 +1,7 @@
 package cz.judas.jan.hamljava.template.tree.ruby;
 
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 
 public interface PossibleMethodCall extends RubyExpression {
-    RubyExpression withBlock(RubyBlock block);
+    RubyExpression withBlock(UnboundRubyMethod block);
 }

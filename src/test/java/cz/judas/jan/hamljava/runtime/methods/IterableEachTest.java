@@ -1,7 +1,7 @@
 package cz.judas.jan.hamljava.runtime.methods;
 
 import cz.judas.jan.hamljava.runtime.Incompatibility;
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.template.TemplateContext;
@@ -20,7 +20,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class IterableEachTest {
-
     private IterableEach iterableEach;
 
     @Before
@@ -48,12 +47,12 @@ public class IterableEachTest {
         assertThat(result, is((Object)RubyConstants.NIL));
     }
 
-    private static class CapturingBlock implements RubyBlock {
+    private static class CapturingBlock implements UnboundRubyMethod {
         private final List<List<Object>> arguments = new ArrayList<>();
 
         @SuppressWarnings("unchecked")
         @Override
-        public Object invoke(List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+        public Object invoke(List<?> arguments, UnboundRubyMethod block, HtmlOutput htmlOutput, TemplateContext templateContext) {
             this.arguments.add((List<Object>)arguments);
             return RubyConstants.NIL;
         }

@@ -2,7 +2,7 @@ package cz.judas.jan.hamljava.template.tree;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.template.TemplateContext;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @EqualsAndHashCode
 @ToString
-public class BlockExpression implements RubyBlock {
+public class BlockExpression implements UnboundRubyMethod {
     private final List<HamlNode> children;
     private final List<String> argumentNames;
 
@@ -24,7 +24,7 @@ public class BlockExpression implements RubyBlock {
     }
 
     @Override
-    public Object invoke(List<?> arguments, RubyBlock block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+    public Object invoke(List<?> arguments, UnboundRubyMethod block, HtmlOutput htmlOutput, TemplateContext templateContext) {
         ImmutableMap<String, Object> localVariables = assignNamesTo(arguments);
         for (HamlNode child : children) {
             child.evaluate(htmlOutput, templateContext.withLocalVariables(localVariables));
