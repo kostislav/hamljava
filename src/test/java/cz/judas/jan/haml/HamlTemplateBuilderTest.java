@@ -139,7 +139,7 @@ public class HamlTemplateBuilderTest {
 
     @Test
     public void callsInnerTemplate() throws Exception {
-        HamlTemplate layoutTemplate = templateBuilder.buildFrom("%html\n\t%body\n\t\t!= yield");
+        HamlTemplate layoutTemplate = templateBuilder.buildFrom("%html\n\t%body\n\t\t- yield");
         HamlTemplate innerTemplate = templateBuilder.buildFrom("%div blah bleh");
 
         String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);
