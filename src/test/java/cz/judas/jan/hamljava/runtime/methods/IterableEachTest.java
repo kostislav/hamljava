@@ -45,7 +45,7 @@ public class IterableEachTest {
     public void returnsNil() throws Exception {
         Object result = iterableEach.invoke(list("abc", "def"), Collections.emptyList(), new CapturingBlock(), MockHtmlOutput.create(), MockTemplateContext.EMPTY);
 
-        assertThat(result, is(RubyConstants.NIL));
+        assertThat(result, is((Object)RubyConstants.NIL));
     }
 
     private static class CapturingBlock implements RubyBlock {

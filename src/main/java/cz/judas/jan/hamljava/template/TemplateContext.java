@@ -2,8 +2,8 @@ package cz.judas.jan.hamljava.template;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
-import cz.judas.jan.hamljava.runtime.Nil;
 import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.RubyConstants;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class TemplateContext {
     }
 
     public Object getField(String name) {
-        return MoreObjects.firstNonNull(fieldValues.get(name), Nil.INSTANCE);
+        return MoreObjects.firstNonNull(fieldValues.get(name), RubyConstants.NIL);
     }
 
     public Object getVariable(String name) {

@@ -1,7 +1,7 @@
 package cz.judas.jan.hamljava.template;
 
-import cz.judas.jan.hamljava.runtime.Nil;
 import cz.judas.jan.hamljava.runtime.RubyBlock;
+import cz.judas.jan.hamljava.runtime.RubyConstants;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -26,7 +26,7 @@ public class TemplateContextTest {
     public void returnsNilForNonExistentField() throws Exception {
         TemplateContext templateContext = new TemplateContext(Collections.emptyMap(), RubyBlock.EMPTY);
 
-        assertThat(templateContext.getField("value1"), is((Object)Nil.INSTANCE));
+        assertThat(templateContext.getField("value1"), is((Object) RubyConstants.NIL));
     }
 
     @Test
@@ -35,7 +35,7 @@ public class TemplateContextTest {
         fields.put("value2", null);
         TemplateContext templateContext = new TemplateContext(fields, RubyBlock.EMPTY);
 
-        assertThat(templateContext.getField("value2"), is((Object)Nil.INSTANCE));
+        assertThat(templateContext.getField("value2"), is((Object) RubyConstants.NIL));
     }
 
     @Test(expected = IllegalArgumentException.class)
