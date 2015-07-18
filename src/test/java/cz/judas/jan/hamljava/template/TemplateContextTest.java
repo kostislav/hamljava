@@ -37,4 +37,11 @@ public class TemplateContextTest {
 
         assertThat(templateContext.getField("value2"), is((Object)Nil.INSTANCE));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failsForNonExistentLocalVariable() throws Exception {
+        TemplateContext templateContext = new TemplateContext(Collections.emptyMap(), RubyBlock.EMPTY);
+
+        templateContext.getVariable("abc");
+    }
 }
