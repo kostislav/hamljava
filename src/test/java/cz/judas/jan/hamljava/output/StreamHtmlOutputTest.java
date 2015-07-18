@@ -3,47 +3,51 @@ package cz.judas.jan.hamljava.output;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.StringWriter;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class StreamHtmlOutputTest {
     private StreamHtmlOutput htmlOutput;
+    private StringWriter writer;
 
     @Before
     public void setUp() throws Exception {
-        htmlOutput = new StreamHtmlOutput(true);
+        writer = new StringWriter();
+        htmlOutput = new StreamHtmlOutput(writer, true);
     }
 
     @Test
     public void addUnescapedDoesNotEscape() throws Exception {
         htmlOutput.addUnescaped("<bleh>");
 
-        assertThat(htmlOutput.build(), is("<bleh>"));
+        assertThat(writer.toString(), is("<bleh>"));
     }
 
     @Test
     public void addEscapedDoesEscape() throws Exception {
-        htmlOutput = new StreamHtmlOutput(false);
+        htmlOutput = new StreamHtmlOutput(writer, false);
 
         htmlOutput.addEscaped("<>&\"'");
 
-        assertThat(htmlOutput.build(), is("&lt;&gt;&amp;&quot;&#39;"));
+        assertThat(writer.toString(), is("&lt;&gt;&amp;&quot;&#39;"));
     }
 
     @Test
     public void addEscapesIfDefaultEscapingIsOn() throws Exception {
         htmlOutput.add("<>&\"'");
 
-        assertThat(htmlOutput.build(), is("&lt;&gt;&amp;&quot;&#39;"));
+        assertThat(writer.toString(), is("&lt;&gt;&amp;&quot;&#39;"));
     }
 
     @Test
     public void addDoesNotEscapesIfDefaultEscapingIsOff() throws Exception {
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
         htmlOutput.add("<>&\"'");
 
-        assertThat(htmlOutput.build(), is("<>&\"'"));
+        assertThat(writer.toString(), is("<>&\"'"));
     }
 
     @Test
@@ -54,7 +58,7 @@ public class StreamHtmlOutputTest {
                 (bodyBuilder) -> bodyBuilder.add(">> Click here <<")
         );
 
-        assertThat(htmlOutput.build(), is("<a href=\"http://someurl.com\">&gt;&gt; Click here &lt;&lt;</a>"));
+        assertThat(writer.toString(), is("<a href=\"http://someurl.com\">&gt;&gt; Click here &lt;&lt;</a>"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -74,7 +78,7 @@ public class StreamHtmlOutputTest {
                 (bodyBuilder) -> {}
         );
 
-        assertThat(htmlOutput.build(), is("<img src=\"http://img\" />"));
+        assertThat(writer.toString(), is("<img src=\"http://img\" />"));
     }
 
     @Test
@@ -85,7 +89,7 @@ public class StreamHtmlOutputTest {
                 (bodyBuilder) -> {}
         );
 
-        assertThat(htmlOutput.build(), is("<input autofocus=\"autofocus\" />"));
+        assertThat(writer.toString(), is("<input autofocus=\"autofocus\" />"));
     }
 
     @Test
@@ -96,6 +100,6 @@ public class StreamHtmlOutputTest {
                 (bodyBuilder) -> {}
         );
 
-        assertThat(htmlOutput.build(), is("<input />"));
+        assertThat(writer.toString(), is("<input />"));
     }
 }

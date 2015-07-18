@@ -5,6 +5,7 @@ import cz.judas.jan.hamljava.template.tree.ruby.RubyHashExpression;
 import cz.judas.jan.hamljava.testutil.MockTemplateContext;
 import org.junit.Test;
 
+import java.io.StringWriter;
 import java.util.Collections;
 
 import static cz.judas.jan.hamljava.testutil.Expressions.string;
@@ -26,11 +27,12 @@ public class HtmlNodeTest {
                 textNode(string("content")),
                 Collections.emptyList()
         );
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
+        StringWriter writer = new StringWriter();
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
         htmlNode.evaluate(htmlOutput, MockTemplateContext.EMPTY);
 
-        assertThat(htmlOutput.build(), is("<div class=\"abc def\">content</div>"));
+        assertThat(writer.toString(), is("<div class=\"abc def\">content</div>"));
     }
 
     @Test
@@ -44,10 +46,11 @@ public class HtmlNodeTest {
                 textNode(string("content")),
                 Collections.emptyList()
         );
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
+        StringWriter writer = new StringWriter();
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
         htmlNode.evaluate(htmlOutput, MockTemplateContext.EMPTY);
 
-        assertThat(htmlOutput.build(), is("<div id=\"abc_def\">content</div>"));
+        assertThat(writer.toString(), is("<div id=\"abc_def\">content</div>"));
     }
 }

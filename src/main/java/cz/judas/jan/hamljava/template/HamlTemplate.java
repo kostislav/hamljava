@@ -5,6 +5,7 @@ import cz.judas.jan.hamljava.runtime.RubyBlock;
 import cz.judas.jan.hamljava.template.tree.HamlNode;
 import cz.judas.jan.hamljava.template.tree.HamlNodeBlock;
 
+import java.io.StringWriter;
 import java.util.Map;
 
 public class HamlTemplate {
@@ -31,7 +32,8 @@ public class HamlTemplate {
     }
 
     private String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, RubyBlock block) {
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(escapeByDefault);
+        StringWriter writer = new StringWriter();
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, escapeByDefault);
         rootNode.evaluate(
                 htmlOutput,
                 new TemplateContext(
@@ -39,6 +41,6 @@ public class HamlTemplate {
                         block
                 )
         );
-        return htmlOutput.build();
+        return writer.toString();
     }
 }

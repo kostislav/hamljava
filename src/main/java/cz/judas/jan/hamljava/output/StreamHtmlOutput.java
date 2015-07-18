@@ -3,6 +3,8 @@ package cz.judas.jan.hamljava.output;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.html.HtmlEscapers;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -12,29 +14,30 @@ public class StreamHtmlOutput implements HtmlOutput {
     );
     private static final HtmlOutput VOID_OUTPUT = new VoidTagHtmlOutput();
 
-    private final StringBuilder stringBuilder = new StringBuilder();
+    private final QuietWriter writer;
     private final boolean escapeByDefault;
     private final TagAttributeBuilder addAttribute = this::addAttribute;
 
-    public StreamHtmlOutput(boolean escapeByDefault) {
+    public StreamHtmlOutput(Writer writer, boolean escapeByDefault) {
+        this.writer = new QuietWriter(writer);
         this.escapeByDefault = escapeByDefault;
     }
 
     @Override
     public HtmlOutput addChar(char c) {
-        stringBuilder.append(c);
+        writer.append(c);
         return this;
     }
 
     @Override
     public HtmlOutput addUnescaped(Object value) {
-        stringBuilder.append(value);
+        writer.append(value.toString());
         return this;
     }
 
     @Override
     public HtmlOutput addEscaped(Object value) {
-        stringBuilder.append(HtmlEscapers.htmlEscaper().escape(value.toString()));
+        writer.append(HtmlEscapers.htmlEscaper().escape(value.toString()));
         return this;
     }
 
@@ -49,21 +52,17 @@ public class StreamHtmlOutput implements HtmlOutput {
 
     @Override
     public HtmlOutput htmlTag(String name, Consumer<TagAttributeBuilder> attributeBuilder, Consumer<HtmlOutput> bodyBuilder) {
-        stringBuilder.append('<').append(name);
+        writer.append('<').append(name);
         attributeBuilder.accept(addAttribute);
         if(VOID_ELEMENTS.contains(name)) {
-            stringBuilder.append(" />");
+            writer.append(" />");
             bodyBuilder.accept(VOID_OUTPUT);
         } else {
-            stringBuilder.append('>');
+            writer.append('>');
             bodyBuilder.accept(this);
-            stringBuilder.append("</").append(name).append('>');
+            writer.append("</").append(name).append('>');
         }
         return this;
-    }
-
-    public String build() {
-        return stringBuilder.toString();
     }
 
     private void addAttribute(String name, Object value) {
@@ -77,8 +76,34 @@ public class StreamHtmlOutput implements HtmlOutput {
         } else {
             actualValue = value.toString();
         }
-        stringBuilder.append(' ').append(name).append("=\"");
+        writer.append(' ').append(name).append("=\"");
         add(actualValue);
-        stringBuilder.append('"');
+        writer.append('"');
+    }
+
+    private static class QuietWriter {
+        private final Writer writer;
+
+        private QuietWriter(Writer writer) {
+            this.writer = writer;
+        }
+
+        public QuietWriter append(char c) {
+            try {
+                writer.append(c);
+                return this;
+            } catch (IOException e) {
+                throw new RuntimeException("Could not write", e);
+            }
+        }
+
+        public QuietWriter append(String s) {
+            try {
+                writer.append(s);
+                return this;
+            } catch (IOException e) {
+                throw new RuntimeException("Could not write", e);
+            }
+        }
     }
 }

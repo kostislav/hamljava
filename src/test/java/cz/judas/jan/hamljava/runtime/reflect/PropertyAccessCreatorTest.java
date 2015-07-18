@@ -12,6 +12,7 @@ import cz.judas.jan.hamljava.testutil.MockTemplateContext;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.StringWriter;
 import java.util.List;
 
 import static cz.judas.jan.hamljava.testutil.ShortCollections.list;
@@ -59,12 +60,13 @@ public class PropertyAccessCreatorTest {
         propertyAccessCreator = new PropertyAccessCreator(ImmutableMultimap.of(
                 Iterable.class, new TestAdditionalMethod()
         ));
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
+        StringWriter writer = new StringWriter();
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
         PropertyAccess propertyAccess = propertyAccessCreator.createFor(List.class, "myMethod");
         propertyAccess.get(list("a", "b"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);
 
-        assertThat(htmlOutput.build(), is("added a\nadded b\n"));
+        assertThat(writer.toString(), is("added a\nadded b\n"));
     }
 
     private static class TestAdditionalMethod implements AdditionalMethod<Iterable<?>> {

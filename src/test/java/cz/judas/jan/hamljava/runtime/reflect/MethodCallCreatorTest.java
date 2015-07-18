@@ -12,6 +12,7 @@ import cz.judas.jan.hamljava.testutil.MockTemplateContext;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.StringWriter;
 import java.util.List;
 
 import static cz.judas.jan.hamljava.testutil.ShortCollections.list;
@@ -43,12 +44,13 @@ public class MethodCallCreatorTest {
         methodCallCreator = new MethodCallCreator(ImmutableMultimap.of(
                 Iterable.class, new TestAdditionalMethod()
         ));
-        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(false);
+        StringWriter writer = new StringWriter();
+        StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
         MethodCall propertyAccess = methodCallCreator.createFor(List.class, "myMethod", 1);
         propertyAccess.invoke("kk", list("a"), RubyBlock.EMPTY, htmlOutput, MockTemplateContext.EMPTY);
 
-        assertThat(htmlOutput.build(), is("added kk a"));
+        assertThat(writer.toString(), is("added kk a"));
     }
 
     private static class TestAdditionalMethod implements AdditionalMethod<String> {
