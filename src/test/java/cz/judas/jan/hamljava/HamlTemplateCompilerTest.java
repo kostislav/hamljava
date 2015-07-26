@@ -13,12 +13,12 @@ import static cz.judas.jan.hamljava.testutil.ShortCollections.map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class HamlTemplateBuilderTest {
-    private HamlTemplateBuilder templateBuilder;
+public class HamlTemplateCompilerTest {
+    private HamlTemplateCompiler templateBuilder;
 
     @Before
     public void setUp() throws Exception {
-        templateBuilder = new HamlTemplateBuilder();
+        templateBuilder = new HamlTemplateCompiler();
     }
 
     @Test
@@ -31,7 +31,7 @@ public class HamlTemplateBuilderTest {
 
     @Test
     public void textLinesAreNotEscaped() throws Exception {
-        HamlTemplate template = templateBuilder.buildFrom("%p\n\t<div id=\"blah\">Blah!</div>");
+        HamlTemplate template = templateBuilder.compile("%p\n\t<div id=\"blah\">Blah!</div>");
 
         assertThat(
                 template.evaluate(false, Collections.emptyMap()),
@@ -139,8 +139,8 @@ public class HamlTemplateBuilderTest {
 
     @Test
     public void callsInnerTemplate() throws Exception {
-        HamlTemplate layoutTemplate = templateBuilder.buildFrom("%html\n\t%body\n\t\t- yield");
-        HamlTemplate innerTemplate = templateBuilder.buildFrom("%div blah bleh");
+        HamlTemplate layoutTemplate = templateBuilder.compile("%html\n\t%body\n\t\t- yield");
+        HamlTemplate innerTemplate = templateBuilder.compile("%div blah bleh");
 
         String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);
 
@@ -206,7 +206,7 @@ public class HamlTemplateBuilderTest {
 
     private void assertParses(String input, Map<String, ?> fieldValues, String expected) {
         assertThat(
-                templateBuilder.buildFrom(input).evaluate(fieldValues),
+                templateBuilder.compile(input).evaluate(fieldValues),
                 is(expected)
         );
     }
