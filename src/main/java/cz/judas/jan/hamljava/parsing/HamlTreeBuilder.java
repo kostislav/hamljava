@@ -102,11 +102,11 @@ public class HamlTreeBuilder {
     }
 
     private UnescapedNode unescapedRubyContent(JavaHamlParser.UnescapedRubyContentContext escaped) {
-        return new UnescapedNode(expression(escaped.regularRubyContent().expression()));
+        return new UnescapedNode(statement(escaped.regularRubyContent().statement()));
     }
 
-    private HamlNode regularRubyContent(JavaHamlParser.RegularRubyContentContext regular) {
-        return new TextNode(expression(regular.expression()));
+    private HamlNode regularRubyContent(JavaHamlParser.RegularRubyContentContext context) {
+        return new TextNode(statement(context.statement()));
     }
 
     private List<HamlNode> childTags(JavaHamlParser.HtmlElementContext context) {
@@ -123,9 +123,9 @@ public class HamlTreeBuilder {
         }
     }
 
-    private RubyExpression codeNode(JavaHamlParser.CodeContext codeContext) {
-        RubyExpression expression = expression(codeContext.expression());
-        JavaHamlParser.BlockContext blockContext = codeContext.block();
+    private RubyExpression codeNode(JavaHamlParser.CodeContext context) {
+        RubyExpression expression = statement(context.statement());
+        JavaHamlParser.BlockContext blockContext = context.block();
         if (blockContext != null) {
             PossibleMethodCall methodCallExpression = (PossibleMethodCall) expression;
             return methodCallExpression.withBlock(block(blockContext));
@@ -244,6 +244,10 @@ public class HamlTreeBuilder {
                 expression(context.keyExpression().expression()),
                 expression(context.valueExpression().expression())
         );
+    }
+
+    private RubyExpression statement(JavaHamlParser.StatementContext context) {
+        return expression(context.expression());
     }
 
     private RubyExpression expression(JavaHamlParser.ExpressionContext context) {

@@ -71,9 +71,9 @@ rubyContent: unescapedRubyContent | regularRubyContent;
 
 unescapedRubyContent: EXCLAMATION regularRubyContent;
 
-regularRubyContent: EQUALS_SIGN whitespace? expression;
+regularRubyContent: EQUALS_SIGN whitespace? statement;
 
-code: DASH whitespace expression ((whitespace block) | NL);
+code: DASH whitespace statement ((whitespace block) | NL);
 
 childTags: INDENT line+ DEDENT;
 
@@ -100,6 +100,8 @@ keyExpression: expression;
 valueExpression: expression;
 
 attributeKey: WORD COLON;
+
+statement: expression;
 
 expression: localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference | intValue;
 
