@@ -319,7 +319,7 @@ public class HamlTreeBuilder {
     private PossibleMethodCall methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = methodTarget(context.methodTarget());
         PossibleMethodCall result = null;
-        for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
+        for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.functionCall().singleMethodCall()) {
             Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
             if (arguments == null) {
                 result = new PropertyAccessExpression(target, singleMethodCallContext.methodName().getText());

@@ -125,13 +125,15 @@ intValue: NUMBER;
 
 fieldReference: AT_SIGN WORD;
 
-methodCall: methodTarget singleMethodCall+;
+methodCall: methodTarget DOT functionCall;
 
 methodTarget: fieldReference | localVariable;
 
+functionCall: singleMethodCall (DOT singleMethodCall)*;
+
 localVariable: WORD;
 
-singleMethodCall: DOT methodName (whitespace? methodParameters)?;
+singleMethodCall: methodName (whitespace? methodParameters)?;
 
 methodParameters: methodParametersWithBrackets | emptyMethodParameters | methodParametersWithoutBrackets;
 
