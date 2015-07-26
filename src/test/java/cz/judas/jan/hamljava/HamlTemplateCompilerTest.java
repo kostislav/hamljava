@@ -1,6 +1,7 @@
 package cz.judas.jan.hamljava;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.CompiledHamlTemplate;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class HamlTemplateCompilerTest {
         CompiledHamlTemplate template = templateBuilder.compile("%p\n\t<div id=\"blah\">Blah!</div>");
 
         assertThat(
-                template.evaluate(false, Collections.emptyMap()),
+                template.evaluate(false, Collections.emptyMap(), Collections.emptyMap()),
                 is("<p><div id=\"blah\">Blah!</div></p>")
         );
     }
@@ -142,7 +143,7 @@ public class HamlTemplateCompilerTest {
         CompiledHamlTemplate layoutTemplate = templateBuilder.compile("%html\n\t%body\n\t\t- yield");
         CompiledHamlTemplate innerTemplate = templateBuilder.compile("%div blah bleh");
 
-        String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);
+        String html = layoutTemplate.evaluate(Collections.emptyMap(), Collections.<String, UnboundRubyMethod>emptyMap(), innerTemplate);
 
         assertThat(html, is("<html><body><div>blah bleh</div></body></html>"));
     }
@@ -206,7 +207,7 @@ public class HamlTemplateCompilerTest {
 
     private void assertParses(String input, Map<String, ?> fieldValues, String expected) {
         assertThat(
-                templateBuilder.compile(input).evaluate(fieldValues),
+                templateBuilder.compile(input).evaluate(fieldValues, Collections.<String, UnboundRubyMethod>emptyMap()),
                 is(expected)
         );
     }
