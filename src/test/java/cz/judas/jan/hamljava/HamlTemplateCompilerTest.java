@@ -1,7 +1,7 @@
 package cz.judas.jan.hamljava;
 
 import com.google.common.collect.ImmutableList;
-import cz.judas.jan.hamljava.template.HamlTemplate;
+import cz.judas.jan.hamljava.template.CompiledHamlTemplate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void textLinesAreNotEscaped() throws Exception {
-        HamlTemplate template = templateBuilder.compile("%p\n\t<div id=\"blah\">Blah!</div>");
+        CompiledHamlTemplate template = templateBuilder.compile("%p\n\t<div id=\"blah\">Blah!</div>");
 
         assertThat(
                 template.evaluate(false, Collections.emptyMap()),
@@ -139,8 +139,8 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void callsInnerTemplate() throws Exception {
-        HamlTemplate layoutTemplate = templateBuilder.compile("%html\n\t%body\n\t\t- yield");
-        HamlTemplate innerTemplate = templateBuilder.compile("%div blah bleh");
+        CompiledHamlTemplate layoutTemplate = templateBuilder.compile("%html\n\t%body\n\t\t- yield");
+        CompiledHamlTemplate innerTemplate = templateBuilder.compile("%div blah bleh");
 
         String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);
 
