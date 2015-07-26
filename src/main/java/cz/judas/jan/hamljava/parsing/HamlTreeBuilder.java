@@ -41,11 +41,26 @@ public class HamlTreeBuilder {
     private HamlNode line(JavaHamlParser.LineContext context) {
         return Alternatives
                 .either(context.htmlElement(), this::htmlElement)
-                .or(context.escapedText(), text -> new TextNode(new ConstantRubyExpression(text.hamlSpecialChar().getText() + text.text().getText())))
+                .or(context.escapedText(), this::escapedText)
                 .or(context.plainText(), this::plainText)
-                .or(context.code(), code -> new CodeNode(codeNode(code)))
+                .or(context.code(), this::code)
                 .or(context.rubyContent(), this::rubyContent)
                 .orException();
+    }
+
+    private CodeNode code(JavaHamlParser.CodeContext context) {
+        RubyExpression statement = statement(context.statement());
+        JavaHamlParser.BlockContext blockContext = context.block();
+        if (blockContext != null) {
+            PossibleMethodCall methodCallExpression = (PossibleMethodCall) statement;
+            return new CodeNode(methodCallExpression.withBlock(block(blockContext)));
+        } else {
+            return new CodeNode(statement);
+        }
+    }
+
+    private TextNode escapedText(JavaHamlParser.EscapedTextContext context) {
+        return new TextNode(new ConstantRubyExpression(context.hamlSpecialChar().getText() + context.text().getText()));
     }
 
     private TextNode plainText(JavaHamlParser.PlainTextContext context) {
@@ -87,22 +102,26 @@ public class HamlTreeBuilder {
         if (context != null) {
             return Alternatives
                     .either(context.rubyContent(), this::rubyContent)
-                    .or(context.textContent(), textContent -> new TextNode(text(textContent.text())))
+                    .or(context.textContent(), this::textContent)
                     .orException();
         } else {
             return EmptyNode.INSTANCE;
         }
     }
 
-    private HamlNode rubyContent(JavaHamlParser.RubyContentContext rubyContent) {
+    private TextNode textContent(JavaHamlParser.TextContentContext context) {
+        return new TextNode(text(context.text()));
+    }
+
+    private HamlNode rubyContent(JavaHamlParser.RubyContentContext context) {
         return Alternatives
-                .either(rubyContent.regularRubyContent(), this::regularRubyContent)
-                .or(rubyContent.unescapedRubyContent(), this::unescapedRubyContent)
+                .either(context.regularRubyContent(), this::regularRubyContent)
+                .or(context.unescapedRubyContent(), this::unescapedRubyContent)
                 .orException();
     }
 
-    private UnescapedNode unescapedRubyContent(JavaHamlParser.UnescapedRubyContentContext escaped) {
-        return new UnescapedNode(statement(escaped.regularRubyContent().statement()));
+    private UnescapedNode unescapedRubyContent(JavaHamlParser.UnescapedRubyContentContext context) {
+        return new UnescapedNode(statement(context.regularRubyContent().statement()));
     }
 
     private HamlNode regularRubyContent(JavaHamlParser.RegularRubyContentContext context) {
@@ -120,17 +139,6 @@ public class HamlTreeBuilder {
             return "div";
         } else {
             return context.getText().substring(1);
-        }
-    }
-
-    private RubyExpression codeNode(JavaHamlParser.CodeContext context) {
-        RubyExpression expression = statement(context.statement());
-        JavaHamlParser.BlockContext blockContext = context.block();
-        if (blockContext != null) {
-            PossibleMethodCall methodCallExpression = (PossibleMethodCall) expression;
-            return methodCallExpression.withBlock(block(blockContext));
-        } else {
-            return expression;
         }
     }
 
@@ -169,17 +177,17 @@ public class HamlTreeBuilder {
                 .orException();
     }
 
-    private RubyHashExpression classAttribute(JavaHamlParser.ClassAttributeContext classAttribute) {
+    private RubyHashExpression classAttribute(JavaHamlParser.ClassAttributeContext context) {
         return RubyHashExpression.singleEntryHash(
                 ConstantRubyExpression.symbol("class"),
-                new ConstantRubyExpression(classAttribute.getText().substring(1))
+                new ConstantRubyExpression(context.getText().substring(1))
         );
     }
 
-    private RubyHashExpression idAttribute(JavaHamlParser.IdAttributeContext idAttribute) {
+    private RubyHashExpression idAttribute(JavaHamlParser.IdAttributeContext context) {
         return RubyHashExpression.singleEntryHash(
                 ConstantRubyExpression.symbol("id"),
-                new ConstantRubyExpression(idAttribute.getText().substring(1))
+                new ConstantRubyExpression(context.getText().substring(1))
         );
     }
 
@@ -213,14 +221,14 @@ public class HamlTreeBuilder {
         );
     }
 
-    private RubyHashExpression rubyAttributeHash(JavaHamlParser.AttributeHashContext parseTree) {
-        return new RubyHashExpression(hashEntries(parseTree));
+    private RubyHashExpression rubyAttributeHash(JavaHamlParser.AttributeHashContext context) {
+        return new RubyHashExpression(hashEntries(context));
     }
 
-    private Iterable<HashEntry> hashEntries(JavaHamlParser.AttributeHashContext parseTree) {
+    private Iterable<HashEntry> hashEntries(JavaHamlParser.AttributeHashContext context) {
         return Alternatives
-                .either(parseTree.newStyleHashEntries(), this::newStyleHashEntries)
-                .or(parseTree.oldStyleHashEntries(), this::oldStyleHashEntries)
+                .either(context.newStyleHashEntries(), this::newStyleHashEntries)
+                .or(context.oldStyleHashEntries(), this::oldStyleHashEntries)
                 .orException();
     }
 
@@ -228,8 +236,8 @@ public class HamlTreeBuilder {
         return Iterables.transform(context.newStyleHashEntry(), this::hashEntry);
     }
 
-    private Iterable<HashEntry> oldStyleHashEntries(JavaHamlParser.OldStyleHashEntriesContext hashEntries) {
-        return Iterables.transform(hashEntries.oldStyleHashEntry(), this::hashEntry);
+    private Iterable<HashEntry> oldStyleHashEntries(JavaHamlParser.OldStyleHashEntriesContext context) {
+        return Iterables.transform(context.oldStyleHashEntry(), this::hashEntry);
     }
 
     private HashEntry hashEntry(JavaHamlParser.NewStyleHashEntryContext context) {
@@ -262,8 +270,8 @@ public class HamlTreeBuilder {
                 .orException();
     }
 
-    private RubyExpression localVariable(JavaHamlParser.LocalVariableContext variable) {
-        return new LocalVariableExpression(variable.getText());
+    private RubyExpression localVariable(JavaHamlParser.LocalVariableContext context) {
+        return new LocalVariableExpression(context.getText());
     }
 
     private RubyExpression symbol(JavaHamlParser.SymbolContext context) {
