@@ -29,11 +29,11 @@ doctype: EXCLAMATION EXCLAMATION EXCLAMATION SPACE actualDoctype NL;
 
 actualDoctype: WORD | NUMBER;
 
-line: htmlElement | code | escapedText NL | rubyContent NL | plainText NL;
+line: htmlElement | code | escapedText NL | rubyContent | plainText NL;
 
 htmlElement: elementDefinition elementContent;
 
-elementContent: (textContent (NL | childTags)) | (rubyContent NL) | NL | childTags;
+elementContent: (textContent (NL | childTags)) | rubyContent | NL | childTags;
 
 elementDefinition: (elementName | idAttribute | classAttribute) shortAttribute* longAttribute*;
 
@@ -73,7 +73,7 @@ rubyContent: unescapedRubyContent | regularRubyContent;
 
 unescapedRubyContent: EXCLAMATION regularRubyContent;
 
-regularRubyContent: EQUALS_SIGN whitespace? statement;
+regularRubyContent: EQUALS_SIGN whitespace? statement NL;
 
 code: DASH whitespace statement ((whitespace block) | NL);
 
