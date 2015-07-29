@@ -33,7 +33,7 @@ line: htmlElement | code | escapedText NL | rubyContent NL | plainText NL;
 
 htmlElement: elementDefinition elementContent;
 
-elementContent: (textContent | rubyContent)? (NL | childTags);
+elementContent: (textContent (NL | childTags)) | (rubyContent NL) | NL | childTags;
 
 elementDefinition: (elementName | idAttribute | classAttribute) shortAttribute* longAttribute*;
 
