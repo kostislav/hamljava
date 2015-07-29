@@ -79,7 +79,32 @@ public class HamlTreeBuilder {
     }
 
     private HamlNode htmlElement(JavaHamlParser.HtmlElementContext context) {
-        String tagName = elementName(context.elementName());
+        TagDefinition tagDefinition = elementDefinition(context.elementDefinition());
+        ContentDefinition contentDefinition = contentDefinition(context);
+
+        return new HtmlNode(
+                tagDefinition.getTagName(),
+                tagDefinition.getAttributes(),
+                contentDefinition.getDirectContent(),
+                contentDefinition.getChildren()
+        );
+    }
+
+    private TagDefinition elementDefinition(JavaHamlParser.ElementDefinitionContext context) {
+        return new TagDefinition(
+                elementName(context.elementName()),
+                attributes(context)
+        );
+    }
+
+    private ContentDefinition contentDefinition(JavaHamlParser.HtmlElementContext context) {
+        return new ContentDefinition(
+                elementContent(context.elementContent()),
+                childTags(context)
+        );
+    }
+
+    private List<RubyHashExpression> attributes(JavaHamlParser.ElementDefinitionContext context) {
         ImmutableList.Builder<RubyHashExpression> attributeBuilder = ImmutableList.builder();
         if (context.classAttribute() != null) {
             attributeBuilder.add(classAttribute(context.classAttribute()));
@@ -89,13 +114,7 @@ public class HamlTreeBuilder {
         }
         attributeBuilder.addAll(FluentIterable.from(context.shortAttribute()).transform(this::shortAttribute));
         attributeBuilder.addAll(FluentIterable.from(context.longAttribute()).transform(this::longAttribute));
-
-        return new HtmlNode(
-                tagName,
-                attributeBuilder.build(),
-                elementContent(context.elementContent()),
-                childTags(context)
-        );
+        return attributeBuilder.build();
     }
 
     private HamlNode elementContent(JavaHamlParser.ElementContentContext context) {
@@ -409,6 +428,42 @@ public class HamlTreeBuilder {
         @Override
         public String getText() {
             return context.getText();
+        }
+    }
+
+    private static class TagDefinition {
+        private final String tagName;
+        private final List<RubyHashExpression> attributes;
+
+        private TagDefinition(String tagName, List<RubyHashExpression> attributes) {
+            this.tagName = tagName;
+            this.attributes = ImmutableList.copyOf(attributes);
+        }
+
+        private String getTagName() {
+            return tagName;
+        }
+
+        private List<RubyHashExpression> getAttributes() {
+            return ImmutableList.copyOf(attributes);
+        }
+    }
+
+    private static class ContentDefinition {
+        private final HamlNode directContent;
+        private final List<HamlNode> children;
+
+        private ContentDefinition(HamlNode directContent, List<HamlNode> children) {
+            this.directContent = directContent;
+            this.children = ImmutableList.copyOf(children);
+        }
+
+        private HamlNode getDirectContent() {
+            return directContent;
+        }
+
+        private List<HamlNode> getChildren() {
+            return ImmutableList.copyOf(children);
         }
     }
 }

@@ -31,7 +31,9 @@ actualDoctype: WORD | NUMBER;
 
 line: htmlElement | code | escapedText NL | rubyContent NL | plainText NL;
 
-htmlElement: (elementName | idAttribute | classAttribute) shortAttribute* longAttribute* elementContent? (NL | childTags);
+htmlElement: elementDefinition elementContent? (NL | childTags);
+
+elementDefinition: (elementName | idAttribute | classAttribute) shortAttribute* longAttribute*;
 
 elementContent: textContent | rubyContent;
 
