@@ -49,14 +49,7 @@ public class HamlTreeBuilder {
     }
 
     private CodeNode code(JavaHamlParser.CodeContext context) {
-        RubyExpression statement = statement(context.statement());
-        JavaHamlParser.BlockContext blockContext = context.block();
-        if (blockContext != null) {
-            PossibleMethodCall methodCallExpression = (PossibleMethodCall) statement;
-            return new CodeNode(methodCallExpression.withBlock(block(blockContext)));
-        } else {
-            return new CodeNode(statement);
-        }
+        return new CodeNode(statement(context.statement()));
     }
 
     private TextNode escapedText(JavaHamlParser.EscapedTextContext context) {
@@ -266,7 +259,14 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression statement(JavaHamlParser.StatementContext context) {
-        return expression(context.expression());
+        RubyExpression expression = expression(context.expression());
+        JavaHamlParser.BlockContext blockContext = context.block();
+        if (blockContext != null) {
+            PossibleMethodCall methodCallExpression = (PossibleMethodCall) expression;
+            return methodCallExpression.withBlock(block(blockContext));
+        } else {
+            return expression;
+        }
     }
 
     private RubyExpression expression(JavaHamlParser.ExpressionContext context) {
