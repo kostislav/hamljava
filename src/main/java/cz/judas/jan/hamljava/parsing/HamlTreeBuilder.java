@@ -80,7 +80,7 @@ public class HamlTreeBuilder {
 
     private HamlNode htmlElement(JavaHamlParser.HtmlElementContext context) {
         TagDefinition tagDefinition = elementDefinition(context.elementDefinition());
-        ContentDefinition contentDefinition = contentDefinition(context);
+        ContentDefinition contentDefinition = contentDefinition(context.elementContent());
 
         return new HtmlNode(
                 tagDefinition.getTagName(),
@@ -97,9 +97,12 @@ public class HamlTreeBuilder {
         );
     }
 
-    private ContentDefinition contentDefinition(JavaHamlParser.HtmlElementContext context) {
+    private ContentDefinition contentDefinition(JavaHamlParser.ElementContentContext context) {
         return new ContentDefinition(
-                elementContent(context.elementContent()),
+                Alternatives
+                        .either(context.textContent(), this::textContent)
+                        .or(context.rubyContent(), this::rubyContent)
+                        .orDefault(EmptyNode.INSTANCE),
                 childTags(context)
         );
     }
@@ -117,18 +120,7 @@ public class HamlTreeBuilder {
         return attributeBuilder.build();
     }
 
-    private HamlNode elementContent(JavaHamlParser.ElementContentContext context) {
-        if (context != null) {
-            return Alternatives
-                    .either(context.rubyContent(), this::rubyContent)
-                    .or(context.textContent(), this::textContent)
-                    .orException();
-        } else {
-            return EmptyNode.INSTANCE;
-        }
-    }
-
-    private TextNode textContent(JavaHamlParser.TextContentContext context) {
+    private HamlNode textContent(JavaHamlParser.TextContentContext context) {
         return new TextNode(text(context.text()));
     }
 
@@ -147,7 +139,7 @@ public class HamlTreeBuilder {
         return new TextNode(statement(context.statement()));
     }
 
-    private List<HamlNode> childTags(JavaHamlParser.HtmlElementContext context) {
+    private List<HamlNode> childTags(JavaHamlParser.ElementContentContext context) {
         return Alternatives
                 .either(context.childTags(), this::children)
                 .orDefault(Collections.emptyList());

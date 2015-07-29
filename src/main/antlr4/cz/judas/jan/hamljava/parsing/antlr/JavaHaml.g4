@@ -31,11 +31,11 @@ actualDoctype: WORD | NUMBER;
 
 line: htmlElement | code | escapedText NL | rubyContent NL | plainText NL;
 
-htmlElement: elementDefinition elementContent? (NL | childTags);
+htmlElement: elementDefinition elementContent;
+
+elementContent: (textContent | rubyContent)? (NL | childTags);
 
 elementDefinition: (elementName | idAttribute | classAttribute) shortAttribute* longAttribute*;
-
-elementContent: textContent | rubyContent;
 
 elementName: PERCENT (WORD | HTML_ELEMENT);
 
