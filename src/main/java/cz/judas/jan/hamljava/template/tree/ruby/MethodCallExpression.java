@@ -19,7 +19,7 @@ import java.util.List;
 
 @EqualsAndHashCode
 @ToString(exclude="cache")
-public class MethodCallExpression implements PossibleMethodCall {
+public class MethodCallExpression implements PossibleFunctionCall {
     private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(ImmutableMultimap.of(
             Iterable.class, new IterableEach()
     ));

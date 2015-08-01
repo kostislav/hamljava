@@ -16,7 +16,7 @@ import java.util.Collections;
 
 @EqualsAndHashCode
 @ToString
-public class PropertyAccessExpression implements PossibleMethodCall {
+public class PropertyAccessExpression implements PossibleFunctionCall {
     private static final PropertyAccessCreator PROPERTY_ACCESS_CREATOR = new PropertyAccessCreator(ImmutableMultimap.of());
 
     private final RubyExpression target;

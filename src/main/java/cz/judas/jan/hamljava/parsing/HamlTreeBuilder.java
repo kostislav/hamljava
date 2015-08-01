@@ -339,9 +339,9 @@ public class HamlTreeBuilder {
         return new FieldReferenceExpression(context.WORD().getText());
     }
 
-    private PossibleMethodCall methodCall(JavaHamlParser.MethodCallContext context) {
+    private PossibleFunctionCall methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = methodTarget(context.methodTarget());
-        PossibleMethodCall result = null;
+        PossibleFunctionCall result = null;
         for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.functionCall().singleMethodCall()) {
             Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
             if (arguments == null) {
