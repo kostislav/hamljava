@@ -10,7 +10,7 @@ import java.util.Collections;
 
 @EqualsAndHashCode
 @ToString
-public class FunctionOrVariableExpression implements RubyExpression {
+public class FunctionOrVariableExpression implements PossibleFunctionCall {
     private final String name;
 
     public FunctionOrVariableExpression(String name) {
@@ -24,5 +24,10 @@ public class FunctionOrVariableExpression implements RubyExpression {
         } else {
             return templateContext.getVariable(name);
         }
+    }
+
+    @Override
+    public RubyExpression withBlock(UnboundRubyMethod block) {
+        return null;
     }
 }

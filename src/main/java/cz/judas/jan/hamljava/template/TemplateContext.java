@@ -38,8 +38,21 @@ public class TemplateContext {
         return value;
     }
 
+    public boolean hasVariable(String name) {
+        return localVariables.containsKey(name);
+    }
+
     public UnboundRubyMethod getBlock() {
         return block;
+    }
+
+    public UnboundRubyMethod getFunction(String name) {
+        UnboundRubyMethod function = functions.get(name);
+        if(function == null) {
+            throw new IllegalArgumentException("Function " + name + " not found");
+        } else {
+            return function;
+        }
     }
 
     public TemplateContext withLocalVariables(Map<String, ?> localVariables) {
