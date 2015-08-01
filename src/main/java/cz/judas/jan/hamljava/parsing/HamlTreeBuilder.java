@@ -259,14 +259,14 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression statement(JavaHamlParser.StatementContext context) {
-        RubyExpression expression = expression(context.expression());
-        JavaHamlParser.BlockContext blockContext = context.block();
-        if (blockContext != null) {
-            PossibleMethodCall methodCallExpression = (PossibleMethodCall) expression;
-            return methodCallExpression.withBlock(block(blockContext));
-        } else {
-            return expression;
-        }
+        return Alternatives
+                .either(context.expression(), this::expression)
+                .or(context.methodWithBlock(), this::methodWithBlock)
+                .orException();
+    }
+
+    private RubyExpression methodWithBlock(JavaHamlParser.MethodWithBlockContext context) {
+        return methodCall(context.methodCall()).withBlock(block(context.block()));
     }
 
     private RubyExpression expression(JavaHamlParser.ExpressionContext context) {
