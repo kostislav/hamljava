@@ -10,10 +10,10 @@ import java.util.Collections;
 
 @EqualsAndHashCode
 @ToString
-public class LocalVariableExpression implements RubyExpression {
+public class FunctionOrVariableExpression implements RubyExpression {
     private final String name;
 
-    public LocalVariableExpression(String name) {
+    public FunctionOrVariableExpression(String name) {
         this.name = name;
     }
 

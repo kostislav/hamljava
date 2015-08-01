@@ -282,7 +282,7 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression localVariable(JavaHamlParser.LocalVariableContext context) {
-        return new LocalVariableExpression(context.getText());
+        return new FunctionOrVariableExpression(context.getText());
     }
 
     private RubyExpression symbol(JavaHamlParser.SymbolContext context) {
