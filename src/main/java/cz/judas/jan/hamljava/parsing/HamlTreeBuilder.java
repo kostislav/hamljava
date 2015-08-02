@@ -262,8 +262,14 @@ public class HamlTreeBuilder {
         return Alternatives
                 .either(context.expression(), this::expression)
                 .or(context.methodWithBlock(), this::methodWithBlock)
+                .or(context.functionWithBlock(), this::functionCallWithBlock)
                 .orException();
     }
+
+    private RubyExpression functionCallWithBlock(JavaHamlParser.FunctionWithBlockContext context) {
+        return functionCall(context.functionCall()).withBlock(block(context.block()));
+    }
+
 
     private RubyExpression methodWithBlock(JavaHamlParser.MethodWithBlockContext context) {
         return methodCall(context.methodCall()).withBlock(block(context.block()));
@@ -355,6 +361,34 @@ public class HamlTreeBuilder {
                 );
             }
             target = result;
+        }
+        return result;
+    }
+
+    private PossibleFunctionCall functionCall(JavaHamlParser.FunctionCallContext context) {
+        RubyExpression target = null;
+        PossibleFunctionCall result = null;
+        for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
+            Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
+            if (arguments == null) {
+                result = new FunctionOrVariableExpression(singleMethodCallContext.methodName().getText());
+            } else {
+                if(target == null) {
+                    result = new FunctionCallExpression(
+                            singleMethodCallContext.methodName().getText(),
+                            arguments,
+                            UnboundRubyMethod.EMPTY_BLOCK
+                    );
+                } else {
+                    result = new MethodCallExpression(
+                            target,
+                            singleMethodCallContext.methodName().getText(),
+                            arguments,
+                            UnboundRubyMethod.EMPTY_BLOCK
+                    );
+                }
+                target = result;
+            }
         }
         return result;
     }

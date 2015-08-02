@@ -28,6 +28,6 @@ public class FunctionOrVariableExpression implements PossibleFunctionCall {
 
     @Override
     public RubyExpression withBlock(UnboundRubyMethod block) {
-        return null;
+        return new FunctionCallExpression(name, Collections.emptyList(), block);
     }
 }

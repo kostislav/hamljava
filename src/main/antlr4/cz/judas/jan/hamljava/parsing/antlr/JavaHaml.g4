@@ -103,9 +103,11 @@ valueExpression: expression;
 
 attributeKey: WORD COLON;
 
-statement: methodWithBlock | (expression NL);
+statement: methodWithBlock | functionWithBlock | (expression NL);
 
 methodWithBlock: methodCall whitespace block;
+
+functionWithBlock: functionCall whitespace block;
 
 expression: localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference | intValue;
 

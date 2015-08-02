@@ -1,12 +1,16 @@
 package cz.judas.jan.hamljava;
 
 import com.google.common.collect.ImmutableList;
+import cz.judas.jan.hamljava.output.HtmlOutput;
+import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.CompiledHamlTemplate;
+import cz.judas.jan.hamljava.template.TemplateContext;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static cz.judas.jan.hamljava.testutil.ShortCollections.list;
@@ -201,6 +205,20 @@ public class HamlTemplateCompilerTest {
         );
     }
 
+    @Test
+    public void customGlobalFunction() throws Exception {
+        CompiledHamlTemplate template = templateBuilder.compile("%ul\n\t- func do |v|\n\t\t%li= v");
+        assertThat(
+                template.evaluate(
+                        Collections.emptyMap(),
+                        map(
+                                "func", new DoubleYieldFunction()
+                        )
+                ),
+                is("<ul><li>aa</li><li>bb</li></ul>")
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }
@@ -236,6 +254,15 @@ public class HamlTemplateCompilerTest {
 
         public String name(String fakeName) {
             return "I am " + fakeName;
+        }
+    }
+
+    private static class DoubleYieldFunction implements UnboundRubyMethod {
+        @Override
+        public Object invoke(List<?> arguments, UnboundRubyMethod block, HtmlOutput htmlOutput, TemplateContext templateContext) {
+            block.invoke(list("aa"), EMPTY_BLOCK, htmlOutput, templateContext);
+            block.invoke(list("bb"), EMPTY_BLOCK, htmlOutput, templateContext);
+            return RubyConstants.NIL;
         }
     }
 }
