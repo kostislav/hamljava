@@ -18,6 +18,7 @@ import java.io.Reader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class HamlTreeBuilder {
     public RootNode buildTreeFrom(Reader input) throws IOException {
@@ -347,11 +348,49 @@ public class HamlTreeBuilder {
 
     private PossibleFunctionCall methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = methodTarget(context.methodTarget());
-        PossibleFunctionCall result = null;
-        for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.functionCall().singleMethodCall()) {
+        return functionOrMethodCall(
+                context.singleMethodCall(),
+                context.chainedMethodCalls(),
+                (name) -> new PropertyAccessExpression(target, name),
+                (name, arguments, block) -> new MethodCallExpression(target, name, arguments, block)
+        );
+    }
+
+    private PossibleFunctionCall functionCall(JavaHamlParser.FunctionCallContext context) {
+        return functionOrMethodCall(
+                context.singleMethodCall(),
+                context.chainedMethodCalls(),
+                FunctionOrVariableExpression::new,
+                FunctionCallExpression::new
+        );
+    }
+
+    private PossibleFunctionCall functionOrMethodCall(
+            JavaHamlParser.SingleMethodCallContext singleMethodCallContext,
+            JavaHamlParser.ChainedMethodCallsContext chainedMethodCallsContext,
+            Function<String, PossibleFunctionCall> nonFunctionCreator,
+            FunctionOrMethodCall functionCreator
+    ) {
+        PossibleFunctionCall result;
+        Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
+        if (arguments == null) {
+            result = nonFunctionCreator.apply(singleMethodCallContext.methodName().getText());
+        } else {
+            result = functionCreator.create(
+                    singleMethodCallContext.methodName().getText(),
+                    arguments,
+                    UnboundRubyMethod.EMPTY_BLOCK
+            );
+        }
+        return chainedMethodCalls(result, chainedMethodCallsContext);
+    }
+
+    private PossibleFunctionCall chainedMethodCalls(PossibleFunctionCall target, JavaHamlParser.ChainedMethodCallsContext context) {
+        PossibleFunctionCall result = target;
+        for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
             Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
             if (arguments == null) {
-                result = new PropertyAccessExpression(target, singleMethodCallContext.methodName().getText());
+                result = new PropertyAccessExpression(result, singleMethodCallContext.methodName().getText());
             } else {
                 result = new MethodCallExpression(
                         target,
@@ -359,34 +398,6 @@ public class HamlTreeBuilder {
                         arguments,
                         UnboundRubyMethod.EMPTY_BLOCK
                 );
-            }
-            target = result;
-        }
-        return result;
-    }
-
-    private PossibleFunctionCall functionCall(JavaHamlParser.FunctionCallContext context) {
-        RubyExpression target = null;
-        PossibleFunctionCall result = null;
-        for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
-            Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
-            if (arguments == null) {
-                result = new FunctionOrVariableExpression(singleMethodCallContext.methodName().getText());
-            } else {
-                if(target == null) {
-                    result = new FunctionCallExpression(
-                            singleMethodCallContext.methodName().getText(),
-                            arguments,
-                            UnboundRubyMethod.EMPTY_BLOCK
-                    );
-                } else {
-                    result = new MethodCallExpression(
-                            target,
-                            singleMethodCallContext.methodName().getText(),
-                            arguments,
-                            UnboundRubyMethod.EMPTY_BLOCK
-                    );
-                }
                 target = result;
             }
         }
@@ -419,6 +430,10 @@ public class HamlTreeBuilder {
         JavaHamlParser.InterpolatedExpressionContext interpolatedExpression();
 
         String getText();
+    }
+
+    private interface FunctionOrMethodCall {
+        PossibleFunctionCall create(String name, Iterable<? extends RubyExpression> arguments, UnboundRubyMethod block);
     }
 
     private static class DoubleQuotedStringElement implements WithInterpolatedString {

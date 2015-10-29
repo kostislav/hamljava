@@ -133,11 +133,13 @@ intValue: NUMBER;
 
 fieldReference: AT_SIGN WORD;
 
-methodCall: methodTarget DOT functionCall;
+methodCall: methodTarget DOT singleMethodCall chainedMethodCalls;
 
 methodTarget: fieldReference | localVariable;
 
-functionCall: singleMethodCall (DOT singleMethodCall)*;
+functionCall: singleMethodCall chainedMethodCalls;
+
+chainedMethodCalls: (DOT singleMethodCall)*;
 
 localVariable: WORD;
 
