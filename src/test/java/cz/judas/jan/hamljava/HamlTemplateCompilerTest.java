@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
-import cz.judas.jan.hamljava.template.CompiledHamlTemplate;
 import cz.judas.jan.hamljava.template.LinkedHamlTemplate;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import org.junit.Before;
@@ -39,7 +38,7 @@ public class HamlTemplateCompilerTest {
     public void textLinesAreNotEscaped() throws Exception {
         LinkedHamlTemplate template = templateBuilder
                 .compile("%p\n\t<div id=\"blah\">Blah!</div>")
-                .link(Collections.emptyMap());
+                .linkEmpty();
 
         assertThat(
                 template.evaluate(false, Collections.emptyMap()),
@@ -210,10 +209,11 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void customGlobalFunction() throws Exception {
-        CompiledHamlTemplate compiledTemplate = templateBuilder.compile("%ul\n\t- func do |v|\n\t\t%li= v");
-        LinkedHamlTemplate template = compiledTemplate.link(map(
-                "func", new DoubleYieldFunction()
-        ));
+        LinkedHamlTemplate template = templateBuilder
+                .compile("%ul\n\t- func do |v|\n\t\t%li= v")
+                .link(map(
+                        "func", new DoubleYieldFunction()
+                ));
         assertThat(
                 template.evaluate(
                         Collections.emptyMap()
@@ -228,13 +228,13 @@ public class HamlTemplateCompilerTest {
 
     private void assertParses(String input, Map<String, ?> fieldValues, String expected) {
         assertThat(
-                templateBuilder.compile(input).link(Collections.emptyMap()).evaluate(fieldValues),
+                templateBuilder.compile(input).linkEmpty().evaluate(fieldValues),
                 is(expected)
         );
     }
 
-    private LinkedHamlTemplate compileAndLink(String template) { // TODO
-        return templateBuilder.compile(template).link(Collections.emptyMap());
+    private LinkedHamlTemplate compileAndLink(String template) {
+        return templateBuilder.compile(template).linkEmpty();
     }
 
     @SuppressWarnings("UnusedDeclaration")
