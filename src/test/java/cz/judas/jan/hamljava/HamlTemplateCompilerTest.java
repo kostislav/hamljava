@@ -5,6 +5,7 @@ import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.CompiledHamlTemplate;
+import cz.judas.jan.hamljava.template.LinkedHamlTemplate;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,10 +37,12 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void textLinesAreNotEscaped() throws Exception {
-        CompiledHamlTemplate template = templateBuilder.compile("%p\n\t<div id=\"blah\">Blah!</div>");
+        LinkedHamlTemplate template = templateBuilder
+                .compile("%p\n\t<div id=\"blah\">Blah!</div>")
+                .link(Collections.emptyMap());
 
         assertThat(
-                template.evaluate(false, Collections.emptyMap(), Collections.emptyMap()),
+                template.evaluate(false, Collections.emptyMap()),
                 is("<p><div id=\"blah\">Blah!</div></p>")
         );
     }
@@ -144,10 +147,10 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void callsInnerTemplate() throws Exception {
-        CompiledHamlTemplate layoutTemplate = templateBuilder.compile("%html\n\t%body\n\t\t- yield");
-        CompiledHamlTemplate innerTemplate = templateBuilder.compile("%div blah bleh");
+        LinkedHamlTemplate layoutTemplate = compileAndLink("%html\n\t%body\n\t\t- yield");
+        LinkedHamlTemplate innerTemplate = compileAndLink("%div blah bleh");
 
-        String html = layoutTemplate.evaluate(Collections.emptyMap(), Collections.<String, UnboundRubyMethod>emptyMap(), innerTemplate);
+        String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);
 
         assertThat(html, is("<html><body><div>blah bleh</div></body></html>"));
     }
@@ -207,13 +210,13 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void customGlobalFunction() throws Exception {
-        CompiledHamlTemplate template = templateBuilder.compile("%ul\n\t- func do |v|\n\t\t%li= v");
+        CompiledHamlTemplate compiledTemplate = templateBuilder.compile("%ul\n\t- func do |v|\n\t\t%li= v");
+        LinkedHamlTemplate template = compiledTemplate.link(map(
+                "func", new DoubleYieldFunction()
+        ));
         assertThat(
                 template.evaluate(
-                        Collections.emptyMap(),
-                        map(
-                                "func", new DoubleYieldFunction()
-                        )
+                        Collections.emptyMap()
                 ),
                 is("<ul><li>aa</li><li>bb</li></ul>")
         );
@@ -225,9 +228,13 @@ public class HamlTemplateCompilerTest {
 
     private void assertParses(String input, Map<String, ?> fieldValues, String expected) {
         assertThat(
-                templateBuilder.compile(input).evaluate(fieldValues, Collections.<String, UnboundRubyMethod>emptyMap()),
+                templateBuilder.compile(input).link(Collections.emptyMap()).evaluate(fieldValues),
                 is(expected)
         );
+    }
+
+    private LinkedHamlTemplate compileAndLink(String template) { // TODO
+        return templateBuilder.compile(template).link(Collections.emptyMap());
     }
 
     @SuppressWarnings("UnusedDeclaration")
