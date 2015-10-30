@@ -7,6 +7,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalMethods;
 import cz.judas.jan.hamljava.runtime.methods.IterableEach;
 import cz.judas.jan.hamljava.runtime.reflect.MethodCall;
 import cz.judas.jan.hamljava.runtime.reflect.MethodCallCreator;
@@ -20,9 +21,9 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString(exclude="cache")
 public class MethodCallExpression implements PossibleFunctionCall {
-    private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(ImmutableMultimap.of(
+    private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(new AdditionalMethods(ImmutableMultimap.of(
             Iterable.class, new IterableEach()
-    ));
+    )));
 
     private final String methodName;
     private final UnboundRubyMethod block;

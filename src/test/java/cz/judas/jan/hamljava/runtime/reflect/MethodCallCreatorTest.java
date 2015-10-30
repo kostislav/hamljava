@@ -6,6 +6,7 @@ import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethod;
 import cz.judas.jan.hamljava.output.HtmlOutput;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalMethods;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import cz.judas.jan.hamljava.testutil.MockHtmlOutput;
 import cz.judas.jan.hamljava.testutil.MockTemplateContext;
@@ -24,7 +25,7 @@ public class MethodCallCreatorTest {
 
     @Before
     public void setUp() throws Exception {
-        methodCallCreator = new MethodCallCreator(ImmutableMultimap.of());
+        methodCallCreator = new MethodCallCreator(AdditionalMethods.EMPTY);
     }
 
     @Test
@@ -41,9 +42,9 @@ public class MethodCallCreatorTest {
 
     @Test
     public void findsAdditionalMethods() throws Exception {
-        methodCallCreator = new MethodCallCreator(ImmutableMultimap.of(
+        methodCallCreator = new MethodCallCreator(new AdditionalMethods(ImmutableMultimap.of(
                 Iterable.class, new TestAdditionalMethod()
-        ));
+        )));
         StringWriter writer = new StringWriter();
         StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 

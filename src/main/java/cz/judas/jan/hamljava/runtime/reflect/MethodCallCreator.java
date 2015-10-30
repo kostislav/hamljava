@@ -1,17 +1,15 @@
 package cz.judas.jan.hamljava.runtime.reflect;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethod;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalMethods;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
 public class MethodCallCreator {
-    private final Multimap<Class<?>, AdditionalMethod<?>> additionalMethods;
+    private final AdditionalMethods additionalMethods;
 
-    public MethodCallCreator(Multimap<? extends Class<?>, ? extends AdditionalMethod<?>> additionalMethods) {
-        this.additionalMethods = ImmutableMultimap.copyOf(additionalMethods);
+    public MethodCallCreator(AdditionalMethods additionalMethods) {
+        this.additionalMethods = additionalMethods;
     }
 
     public MethodCall createFor(Class<?> targetClass, String methodName, int argumentCount) {
@@ -22,10 +20,8 @@ public class MethodCallCreator {
             }
         }
 
-        for (Map.Entry<Class<?>, AdditionalMethod<?>> entry : additionalMethods.entries()) {
-            if(entry.getKey().isAssignableFrom(targetClass)) {
-                return new AdditionalMethodCall(entry.getValue());
-            }
+        for (AdditionalMethod<?> method : additionalMethods.forClass(targetClass)) {
+            return new AdditionalMethodCall(method);
         }
 
         throw new IllegalArgumentException("Method with name " + methodName + " and " + argumentCount + " arguments not found on " + targetClass);
