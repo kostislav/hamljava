@@ -2,28 +2,35 @@ package cz.judas.jan.hamljava.runtime.methods;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 public class AdditionalMethods {
-    public static final AdditionalMethods EMPTY = new AdditionalMethods(ImmutableMap.of());
+    public static final AdditionalMethods EMPTY = new AdditionalMethods(Collections.emptySet());
 
-    private final Map<Class<?>, Map<String, ? extends AdditionalMethod<?>>> additionalMethods;
+    private final Map<Class<?>, AdditionalClassMethods<?>> additionalMethods;
 
-    public AdditionalMethods(Map<Class<?>, ? extends Map<String, ? extends AdditionalMethod<?>>> additionalMethods) {
-        this.additionalMethods = ImmutableMap.copyOf(additionalMethods);
+    public AdditionalMethods(Collection<? extends AdditionalClassMethods<?>> additionalMethods) {
+        ImmutableMap.Builder<Class<?>, AdditionalClassMethods<?>> builder = ImmutableMap.<Class<?>, AdditionalClassMethods<?>>builder();
+        for (AdditionalClassMethods<?> additionalClassMethods : additionalMethods) {
+            builder.put(additionalClassMethods.getEnhancedClass(), additionalClassMethods);
+        }
+        this.additionalMethods = builder.build();
     }
 
     @SuppressWarnings("unchecked")
     public <T> AdditionalMethod<T> find(Class<? extends T> targetClass, String name) {
-        for (Map.Entry<Class<?>, Map<String, ? extends AdditionalMethod<?>>> entry : additionalMethods.entrySet()) {
+        for (Map.Entry<Class<?>, AdditionalClassMethods<?>> entry : additionalMethods.entrySet()) {
             if(entry.getKey().isAssignableFrom(targetClass)) {
-                AdditionalMethod<?> method = entry.getValue().get(name);
-                if(method != null) {
-                    return (AdditionalMethod<T>)method;
+                Optional<? extends AdditionalMethod<?>> method = entry.getValue().withName(name);
+                if(method.isPresent()) {
+                    return (AdditionalMethod<T>)method.get();
                 }
             }
         }
 
-        throw new RuntimeException("Method " + name + " not found for class " + targetClass);
+        throw new RuntimeException("Method " + name + " not found for " + targetClass);
     }
 }

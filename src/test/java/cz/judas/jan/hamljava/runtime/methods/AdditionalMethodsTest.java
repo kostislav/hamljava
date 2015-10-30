@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static cz.judas.jan.hamljava.testutil.ShortCollections.map;
+import static cz.judas.jan.hamljava.testutil.ShortCollections.set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -14,8 +15,8 @@ public class AdditionalMethodsTest {
     @Before
     public void setUp() throws Exception {
         addXMethod = (target, arguments, block, htmlOutput, templateContext) -> target + "x";
-        additionalMethods = new AdditionalMethods(map(
-                CharSequence.class, map("add_x", addXMethod)
+        additionalMethods = new AdditionalMethods(set(
+                new AdditionalClassMethods<>(CharSequence.class, map("add_x", addXMethod))
         ));
     }
 

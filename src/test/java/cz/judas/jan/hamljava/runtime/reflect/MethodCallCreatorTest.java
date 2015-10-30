@@ -4,6 +4,7 @@ import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.output.StreamHtmlOutput;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalClassMethods;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethod;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethods;
 import cz.judas.jan.hamljava.template.TemplateContext;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static cz.judas.jan.hamljava.testutil.ShortCollections.list;
 import static cz.judas.jan.hamljava.testutil.ShortCollections.map;
+import static cz.judas.jan.hamljava.testutil.ShortCollections.set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -32,7 +34,7 @@ public class MethodCallCreatorTest {
     public void findsCorrectMethod() throws Exception {
         MethodCall methodCall = methodCallCreator.createFor(TestObject.class, "methodWithArgs", 2);
 
-        assertThat(methodCall.invoke(new TestObject(1, 2), list(12, "p"), UnboundRubyMethod.EMPTY_BLOCK, MockHtmlOutput.create(), MockTemplateContext.EMPTY), is((Object)"abc12p"));
+        assertThat(methodCall.invoke(new TestObject(1, 2), list(12, "p"), UnboundRubyMethod.EMPTY_BLOCK, MockHtmlOutput.create(), MockTemplateContext.EMPTY), is((Object) "abc12p"));
     }
 
     @Test(expected = RuntimeException.class)
@@ -42,13 +44,13 @@ public class MethodCallCreatorTest {
 
     @Test
     public void findsAdditionalMethods() throws Exception {
-        methodCallCreator = new MethodCallCreator(new AdditionalMethods(map(
-                Iterable.class, map("myMethod", new TestAdditionalMethod())
-        )));
+        methodCallCreator = new MethodCallCreator(new AdditionalMethods(set(
+                new AdditionalClassMethods<>(String.class, map("myMethod", new TestAdditionalMethod())
+                ))));
         StringWriter writer = new StringWriter();
         StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
-        MethodCall propertyAccess = methodCallCreator.createFor(List.class, "myMethod", 1);
+        MethodCall propertyAccess = methodCallCreator.createFor(String.class, "myMethod", 1);
         propertyAccess.invoke("kk", list("a"), UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, MockTemplateContext.EMPTY);
 
         assertThat(writer.toString(), is("added kk a"));
