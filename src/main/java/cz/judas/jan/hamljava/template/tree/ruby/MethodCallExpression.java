@@ -5,13 +5,14 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethods;
 import cz.judas.jan.hamljava.runtime.methods.IterableEach;
 import cz.judas.jan.hamljava.runtime.reflect.MethodCall;
 import cz.judas.jan.hamljava.runtime.reflect.MethodCallCreator;
-import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -19,10 +20,10 @@ import lombok.ToString;
 import java.util.List;
 
 @EqualsAndHashCode
-@ToString(exclude="cache")
+@ToString(exclude = "cache")
 public class MethodCallExpression implements PossibleFunctionCall {
-    private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(new AdditionalMethods(ImmutableMultimap.of(
-            Iterable.class, new IterableEach()
+    private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(new AdditionalMethods(ImmutableMap.of(
+            Iterable.class, ImmutableSet.of(new IterableEach())
     )));
 
     private final String methodName;
@@ -37,7 +38,7 @@ public class MethodCallExpression implements PossibleFunctionCall {
         this.block = block;
         this.arguments = ImmutableList.copyOf(arguments);
         cache = CacheBuilder.newBuilder()
-                .build(CacheLoader.from(key ->  METHOD_CALL_CREATOR.createFor(key, methodName, this.arguments.size())));
+                .build(CacheLoader.from(key -> METHOD_CALL_CREATOR.createFor(key, methodName, this.arguments.size())));
     }
 
     @Override

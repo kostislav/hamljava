@@ -1,6 +1,8 @@
 package cz.judas.jan.hamljava.runtime.reflect;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
 import cz.judas.jan.hamljava.output.StreamHtmlOutput;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
@@ -17,6 +19,8 @@ import java.io.StringWriter;
 import java.util.List;
 
 import static cz.judas.jan.hamljava.testutil.ShortCollections.list;
+import static cz.judas.jan.hamljava.testutil.ShortCollections.map;
+import static cz.judas.jan.hamljava.testutil.ShortCollections.set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -42,8 +46,8 @@ public class MethodCallCreatorTest {
 
     @Test
     public void findsAdditionalMethods() throws Exception {
-        methodCallCreator = new MethodCallCreator(new AdditionalMethods(ImmutableMultimap.of(
-                Iterable.class, new TestAdditionalMethod()
+        methodCallCreator = new MethodCallCreator(new AdditionalMethods(map(
+                Iterable.class, set(new TestAdditionalMethod())
         )));
         StringWriter writer = new StringWriter();
         StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
