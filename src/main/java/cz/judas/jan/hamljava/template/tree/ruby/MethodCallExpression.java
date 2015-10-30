@@ -6,7 +6,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalMethods;
@@ -23,7 +22,7 @@ import java.util.List;
 @ToString(exclude = "cache")
 public class MethodCallExpression implements PossibleFunctionCall {
     private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(new AdditionalMethods(ImmutableMap.of(
-            Iterable.class, ImmutableSet.of(new IterableEach())
+            Iterable.class, ImmutableMap.of("each", new IterableEach())
     )));
 
     private final String methodName;
