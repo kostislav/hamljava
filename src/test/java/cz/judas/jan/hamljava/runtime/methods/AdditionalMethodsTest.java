@@ -16,7 +16,7 @@ public class AdditionalMethodsTest {
     public void setUp() throws Exception {
         addXMethod = (target, arguments, block, htmlOutput, templateContext) -> target + "x";
         additionalMethods = new AdditionalMethods(set(
-                new AdditionalClassMethods<>(CharSequence.class, map("add_x", addXMethod))
+                AdditionalClassMethods.forClass(CharSequence.class, map("add_x", addXMethod))
         ));
     }
 

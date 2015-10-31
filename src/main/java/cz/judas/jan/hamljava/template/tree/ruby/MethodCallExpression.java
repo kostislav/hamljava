@@ -24,7 +24,7 @@ import java.util.List;
 @ToString(exclude = "cache")
 public class MethodCallExpression implements PossibleFunctionCall {
     private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(new AdditionalMethods(ImmutableSet.of(
-            new AdditionalClassMethods<>(Iterable.class, ImmutableMap.of("each", new IterableEach()))
+            AdditionalClassMethods.forGenericClass(Iterable.class, ImmutableMap.of("each", new IterableEach()))
     )));
 
     private final String methodName;

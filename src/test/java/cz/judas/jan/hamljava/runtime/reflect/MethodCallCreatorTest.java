@@ -45,8 +45,8 @@ public class MethodCallCreatorTest {
     @Test
     public void findsAdditionalMethods() throws Exception {
         methodCallCreator = new MethodCallCreator(new AdditionalMethods(set(
-                new AdditionalClassMethods<>(String.class, map("myMethod", new TestAdditionalMethod())
-                ))));
+                AdditionalClassMethods.forClass(String.class, map("myMethod", new TestAdditionalMethod()))
+        )));
         StringWriter writer = new StringWriter();
         StreamHtmlOutput htmlOutput = new StreamHtmlOutput(writer, false);
 
