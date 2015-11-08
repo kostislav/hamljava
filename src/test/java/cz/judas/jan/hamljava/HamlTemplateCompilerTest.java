@@ -20,12 +20,10 @@ import static org.hamcrest.Matchers.is;
 
 public class HamlTemplateCompilerTest {
     private HamlTemplateCompiler templateCompiler;
-    private HamlTemplateLinker templateLinker;
 
     @Before
     public void setUp() throws Exception {
-        templateCompiler = new HamlTemplateCompiler();
-        templateLinker = new HamlTemplateLinker(Collections.emptyMap());
+        templateCompiler = new HamlTemplateCompiler(Collections.emptyMap());
     }
 
     @Test
@@ -38,9 +36,7 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void textLinesAreNotEscaped() throws Exception {
-        LinkedHamlTemplate template = templateLinker.link(
-                templateCompiler.compile("%p\n\t<div id=\"blah\">Blah!</div>")
-        );
+        LinkedHamlTemplate template = templateCompiler.compile("%p\n\t<div id=\"blah\">Blah!</div>");
 
         assertThat(
                 template.evaluate(false, Collections.emptyMap()),
@@ -211,11 +207,12 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void customGlobalFunction() throws Exception {
-        LinkedHamlTemplate template = templateCompiler
-                .compile("%ul\n\t- func do |v|\n\t\t%li= v")
-                .link(map(
-                        "func", new DoubleYieldFunction()
-                ));
+        templateCompiler = new HamlTemplateCompiler(map(
+                "func", new DoubleYieldFunction()
+        ));
+
+        LinkedHamlTemplate template = templateCompiler.compile("%ul\n\t- func do |v|\n\t\t%li= v");
+
         assertThat(
                 template.evaluate(
                         Collections.emptyMap()
@@ -230,13 +227,13 @@ public class HamlTemplateCompilerTest {
 
     private void assertParses(String input, Map<String, ?> fieldValues, String expected) {
         assertThat(
-                templateLinker.link(templateCompiler.compile(input)).evaluate(fieldValues),
+                templateCompiler.compile(input).evaluate(fieldValues),
                 is(expected)
         );
     }
 
     private LinkedHamlTemplate compileAndLink(String template) {
-        return templateLinker.link(templateCompiler.compile(template));
+        return templateCompiler.compile(template);
     }
 
     @SuppressWarnings("UnusedDeclaration")
