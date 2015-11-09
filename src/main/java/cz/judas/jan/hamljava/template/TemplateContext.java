@@ -13,14 +13,12 @@ public class TemplateContext {
     private final Map<String, Object> fieldValues;
     private final Map<String, Object> localVariables;
     private final UnboundRubyMethod block;
-    private final Map<String, UnboundRubyMethod> functions;
 
-    public TemplateContext(Map<String, ?> fieldValues, Map<String, ? extends UnboundRubyMethod> functions, UnboundRubyMethod block) {
-        this(fieldValues, functions, Collections.emptyMap(), block);
+    public TemplateContext(Map<String, ?> fieldValues, UnboundRubyMethod block) {
+        this(fieldValues, Collections.emptyMap(), block);
     }
 
-    private TemplateContext(Map<String, ?> fieldValues, Map<String, ? extends UnboundRubyMethod> functions, Map<String, Object> localVariables, UnboundRubyMethod block) {
-        this.functions = ImmutableMap.copyOf(functions);
+    private TemplateContext(Map<String, ?> fieldValues, Map<String, Object> localVariables, UnboundRubyMethod block) {
         this.fieldValues = nullSafeCopy(fieldValues);
         this.localVariables = nullSafeCopy(localVariables);
         this.block = block;
@@ -46,19 +44,10 @@ public class TemplateContext {
         return block;
     }
 
-    public UnboundRubyMethod getFunction(String name) {
-        UnboundRubyMethod function = functions.get(name);
-        if(function == null) {
-            throw new IllegalArgumentException("Function " + name + " not found");
-        } else {
-            return function;
-        }
-    }
-
     public TemplateContext withLocalVariables(Map<String, ?> localVariables) {
         Map<String, Object> newScope = new HashMap<>(this.localVariables);
         newScope.putAll(localVariables);
-        return new TemplateContext(fieldValues, functions, ImmutableMap.copyOf(newScope), UnboundRubyMethod.EMPTY_BLOCK);
+        return new TemplateContext(fieldValues, ImmutableMap.copyOf(newScope), UnboundRubyMethod.EMPTY_BLOCK);
     }
 
     private ImmutableMap<String, Object> nullSafeCopy(Map<String, ?> fieldValues) {

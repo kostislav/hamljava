@@ -21,7 +21,11 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class HamlTreeBuilder {
-    private final FunctionalNodeBuilder functionalNodeBuilder = new FunctionalNodeBuilder();
+    private final FunctionalNodeBuilder functionalNodeBuilder;
+
+    public HamlTreeBuilder(FunctionalNodeBuilder functionalNodeBuilder) {
+        this.functionalNodeBuilder = functionalNodeBuilder;
+    }
 
     public RootNode buildTreeFrom(Reader input) throws IOException {
         JavaHamlLexer lexer = new JavaHamlLexer(new ANTLRInputStream(input));
@@ -362,7 +366,7 @@ public class HamlTreeBuilder {
         return functionOrMethodCall(
                 context.singleMethodCall(),
                 context.chainedMethodCalls(),
-                FunctionOrVariableExpression::new,
+                functionalNodeBuilder::localVariable,
                 functionalNodeBuilder::functionCall
         );
     }

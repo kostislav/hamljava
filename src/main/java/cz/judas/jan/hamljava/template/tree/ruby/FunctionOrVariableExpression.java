@@ -2,6 +2,7 @@ package cz.judas.jan.hamljava.template.tree.ruby;
 
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.output.HtmlOutput;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -12,9 +13,11 @@ import java.util.Collections;
 @ToString
 public class FunctionOrVariableExpression implements PossibleFunctionCall {
     private final String name;
+    private final AdditionalFunctions additionalFunctions;
 
-    public FunctionOrVariableExpression(String name) {
+    public FunctionOrVariableExpression(String name, AdditionalFunctions additionalFunctions) {
         this.name = name;
+        this.additionalFunctions = additionalFunctions;
     }
 
     @Override
@@ -28,6 +31,6 @@ public class FunctionOrVariableExpression implements PossibleFunctionCall {
 
     @Override
     public RubyExpression withBlock(UnboundRubyMethod block) {
-        return new FunctionCallExpression(name, Collections.emptyList(), block);
+        return new FunctionCallExpression(name, additionalFunctions, Collections.emptyList(), block);
     }
 }

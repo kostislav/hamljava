@@ -1,9 +1,6 @@
 package cz.judas.jan.hamljava.template;
 
-import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.tree.HamlNode;
-
-import java.util.Map;
 
 public class CompiledHamlTemplate {
     private final HamlNode rootNode;
@@ -12,7 +9,7 @@ public class CompiledHamlTemplate {
         this.rootNode = rootNode;
     }
 
-    public LinkedHamlTemplate link(Map<String, ? extends UnboundRubyMethod> functions) {
-        return new LinkedHamlTemplate(rootNode, functions);
+    public LinkedHamlTemplate link() {
+        return new LinkedHamlTemplate(rootNode);
     }
 }

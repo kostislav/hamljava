@@ -1,5 +1,6 @@
 package cz.judas.jan.hamljava.parsing;
 
+import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
 import cz.judas.jan.hamljava.template.tree.EmptyNode;
 import cz.judas.jan.hamljava.template.tree.RootNode;
 import cz.judas.jan.hamljava.template.tree.ruby.FieldReferenceExpression;
@@ -22,7 +23,11 @@ public class HamlTreeBuilderTest {
 
     @Before
     public void setUp() throws Exception {
-        treeBuilder = new HamlTreeBuilder();
+        treeBuilder = new HamlTreeBuilder(
+                new FunctionalNodeBuilder(
+                        AdditionalFunctions.EMPTY
+                )
+        );
     }
 
     @Test

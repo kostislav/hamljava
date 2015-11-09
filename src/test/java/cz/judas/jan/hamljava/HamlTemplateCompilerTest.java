@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
 import cz.judas.jan.hamljava.template.LinkedHamlTemplate;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class HamlTemplateCompilerTest {
 
     @Before
     public void setUp() throws Exception {
-        templateCompiler = new HamlTemplateCompiler(Collections.emptyMap());
+        templateCompiler = new HamlTemplateCompiler(AdditionalFunctions.EMPTY);
     }
 
     @Test
@@ -207,9 +208,9 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void customGlobalFunction() throws Exception {
-        templateCompiler = new HamlTemplateCompiler(map(
+        templateCompiler = new HamlTemplateCompiler(new AdditionalFunctions(map(
                 "func", new DoubleYieldFunction()
-        ));
+        )));
 
         LinkedHamlTemplate template = templateCompiler.compile("%ul\n\t- func do |v|\n\t\t%li= v");
 

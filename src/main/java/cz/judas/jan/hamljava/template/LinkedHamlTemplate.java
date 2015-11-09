@@ -1,6 +1,5 @@
 package cz.judas.jan.hamljava.template;
 
-import com.google.common.collect.ImmutableMap;
 import cz.judas.jan.hamljava.output.StreamHtmlOutput;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.tree.HamlNode;
@@ -11,11 +10,9 @@ import java.util.Map;
 
 public class LinkedHamlTemplate {
     private final HamlNode rootNode;
-    private final Map<String, ? extends UnboundRubyMethod> functions;
 
-    public LinkedHamlTemplate(HamlNode rootNode, Map<String, ? extends UnboundRubyMethod> functions) {
+    public LinkedHamlTemplate(HamlNode rootNode) {
         this.rootNode = rootNode;
-        this.functions = ImmutableMap.copyOf(functions);
     }
 
     public String evaluate(Map<String, ?> fieldValues) {
@@ -41,7 +38,6 @@ public class LinkedHamlTemplate {
                 htmlOutput,
                 new TemplateContext(
                         fieldValues,
-                        functions,
                         block
                 )
         );

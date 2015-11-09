@@ -7,5 +7,5 @@ import java.util.Collections;
 
 @SuppressWarnings("UtilityClass")
 public class MockTemplateContext {
-    public static final TemplateContext EMPTY = new TemplateContext(Collections.emptyMap(), Collections.emptyMap(), UnboundRubyMethod.EMPTY_BLOCK);
+    public static final TemplateContext EMPTY = new TemplateContext(Collections.emptyMap(), UnboundRubyMethod.EMPTY_BLOCK);
 }
