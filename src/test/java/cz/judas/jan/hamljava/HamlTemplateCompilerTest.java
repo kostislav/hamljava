@@ -5,7 +5,7 @@ import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
-import cz.judas.jan.hamljava.template.LinkedHamlTemplate;
+import cz.judas.jan.hamljava.template.HamlTemplate;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void textLinesAreNotEscaped() throws Exception {
-        LinkedHamlTemplate template = templateCompiler.compile("%p\n\t<div id=\"blah\">Blah!</div>");
+        HamlTemplate template = templateCompiler.compile("%p\n\t<div id=\"blah\">Blah!</div>");
 
         assertThat(
                 template.evaluate(false, Collections.emptyMap()),
@@ -145,8 +145,8 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void callsInnerTemplate() throws Exception {
-        LinkedHamlTemplate layoutTemplate = compileAndLink("%html\n\t%body\n\t\t- yield");
-        LinkedHamlTemplate innerTemplate = compileAndLink("%div blah bleh");
+        HamlTemplate layoutTemplate = compileAndLink("%html\n\t%body\n\t\t- yield");
+        HamlTemplate innerTemplate = compileAndLink("%div blah bleh");
 
         String html = layoutTemplate.evaluate(Collections.emptyMap(), innerTemplate);
 
@@ -212,7 +212,7 @@ public class HamlTemplateCompilerTest {
                 "func", new DoubleYieldFunction()
         )));
 
-        LinkedHamlTemplate template = templateCompiler.compile("%ul\n\t- func do |v|\n\t\t%li= v");
+        HamlTemplate template = templateCompiler.compile("%ul\n\t- func do |v|\n\t\t%li= v");
 
         assertThat(
                 template.evaluate(
@@ -233,7 +233,7 @@ public class HamlTemplateCompilerTest {
         );
     }
 
-    private LinkedHamlTemplate compileAndLink(String template) {
+    private HamlTemplate compileAndLink(String template) {
         return templateCompiler.compile(template);
     }
 

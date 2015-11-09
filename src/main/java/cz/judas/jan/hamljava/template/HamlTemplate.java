@@ -8,10 +8,10 @@ import cz.judas.jan.hamljava.template.tree.HamlNodeBlock;
 import java.io.StringWriter;
 import java.util.Map;
 
-public class LinkedHamlTemplate {
+public class HamlTemplate {
     private final HamlNode rootNode;
 
-    public LinkedHamlTemplate(HamlNode rootNode) {
+    public HamlTemplate(HamlNode rootNode) {
         this.rootNode = rootNode;
     }
 
@@ -23,11 +23,11 @@ public class LinkedHamlTemplate {
         return evaluate(escapeByDefault, fieldValues, UnboundRubyMethod.EMPTY_BLOCK);
     }
 
-    public String evaluate(Map<String, ?> fieldValues, LinkedHamlTemplate innerTemplate) {
+    public String evaluate(Map<String, ?> fieldValues, HamlTemplate innerTemplate) {
         return evaluate(true, fieldValues, innerTemplate);
     }
 
-    public String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, LinkedHamlTemplate innerTemplate) {
+    public String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, HamlTemplate innerTemplate) {
         return evaluate(escapeByDefault, fieldValues, new HamlNodeBlock(innerTemplate.rootNode));
     }
 
