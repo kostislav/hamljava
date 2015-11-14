@@ -25,7 +25,7 @@ public class FunctionOrVariableExpression implements PossibleFunctionCall {
         if(name.equals("yield")) {
             return templateContext.getBlock().invoke(Collections.emptyList(), UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, templateContext.withLocalVariables(Collections.emptyMap()));
         } else {
-            return templateContext.getVariable(name);
+            return templateContext.getVariable(name, additionalFunctions, htmlOutput);
         }
     }
 

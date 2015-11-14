@@ -1,11 +1,7 @@
 package cz.judas.jan.hamljava.runtime.methods;
 
-import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
-import cz.judas.jan.hamljava.template.TemplateContext;
 import org.junit.Test;
-
-import java.util.List;
 
 import static cz.judas.jan.hamljava.testutil.ShortCollections.map;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,18 +28,5 @@ public class AdditionalFunctionsTest {
         ));
 
         functions.withName("abc");
-    }
-
-    private static class ConstantFunction implements UnboundRubyMethod {
-        private final String value;
-
-        private ConstantFunction(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public Object invoke(List<?> arguments, UnboundRubyMethod block, HtmlOutput htmlOutput, TemplateContext templateContext) {
-            return value;
-        }
     }
 }

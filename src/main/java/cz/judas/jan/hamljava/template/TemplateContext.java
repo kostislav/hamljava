@@ -2,8 +2,10 @@ package cz.judas.jan.hamljava.template;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
+import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +34,14 @@ public class TemplateContext {
         Object value = localVariables.get(name);
         if (value == null) {
             throw new IllegalArgumentException("Variable " + name + " does not exist");
+        }
+        return value;
+    }
+
+    public Object getVariable(String name, AdditionalFunctions functions, HtmlOutput htmlOutput) {
+        Object value = localVariables.get(name);
+        if (value == null) {
+            return functions.withName(name).invoke(Collections.emptyList(), UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, withLocalVariables(Collections.emptyMap()));
         }
         return value;
     }
