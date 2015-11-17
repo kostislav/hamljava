@@ -2,8 +2,9 @@ package cz.judas.jan.hamljava.parsing;
 
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
+import cz.judas.jan.hamljava.runtime.reflect.CachingMethodFinder;
 import cz.judas.jan.hamljava.runtime.reflect.MethodCallCreator;
-import cz.judas.jan.hamljava.runtime.reflect.MethodFinder;
+import cz.judas.jan.hamljava.runtime.reflect.ResolvingMethodFinder;
 import cz.judas.jan.hamljava.template.tree.ruby.*;
 
 import java.util.Collections;
@@ -42,7 +43,14 @@ public class ParsedFunctionOrMethodCall {
         if(target.isPresent()) {
             if(isCall()) {
                 List<? extends RubyExpression> arguments = resolveArguments();
-                return new MethodCallExpression(target.get(), new MethodFinder(methodCallCreator, name, arguments.size()), arguments, resolveBlock());
+                return new MethodCallExpression(
+                        target.get(),
+                        new CachingMethodFinder(
+                            new ResolvingMethodFinder(methodCallCreator, name, arguments.size())
+                        ),
+                        arguments,
+                        resolveBlock()
+                );
             } else {
                 return new PropertyAccessExpression(target.get(), name);
             }
