@@ -2,6 +2,7 @@ package cz.judas.jan.hamljava.parsing;
 
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
+import cz.judas.jan.hamljava.runtime.reflect.MethodCallCreator;
 import cz.judas.jan.hamljava.template.tree.ruby.*;
 
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 public class ParsedFunctionOrMethodCall {
     private final AdditionalFunctions additionalFunctions;
+    private final MethodCallCreator methodCallCreator;
     private final Optional<RubyExpression> target;
     private final String name;
     private Optional<List<? extends RubyExpression>> arguments;
@@ -17,12 +19,14 @@ public class ParsedFunctionOrMethodCall {
 
     public ParsedFunctionOrMethodCall(
             AdditionalFunctions additionalFunctions,
+            MethodCallCreator methodCallCreator,
             Optional<RubyExpression> target,
             String name,
             Optional<List<? extends RubyExpression>> arguments,
             Optional<UnboundRubyMethod> block
     ) {
         this.additionalFunctions = additionalFunctions;
+        this.methodCallCreator = methodCallCreator;
         this.target = target;
         this.name = name;
         this.arguments = arguments;
@@ -30,13 +34,13 @@ public class ParsedFunctionOrMethodCall {
     }
 
     public ParsedFunctionOrMethodCall withBlock(UnboundRubyMethod block) {
-        return new ParsedFunctionOrMethodCall(additionalFunctions, target, name, arguments, Optional.of(block));
+        return new ParsedFunctionOrMethodCall(additionalFunctions, methodCallCreator, target, name, arguments, Optional.of(block));
     }
 
     public RubyExpression materialize() {
         if(target.isPresent()) {
             if(isCall()) {
-                return new MethodCallExpression(target.get(), name, resolveArguments(), resolveBlock());
+                return new MethodCallExpression(methodCallCreator, target.get(), name, resolveArguments(), resolveBlock());
             } else {
                 return new PropertyAccessExpression(target.get(), name);
             }

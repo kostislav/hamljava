@@ -208,9 +208,11 @@ public class HamlTemplateCompilerTest {
 
     @Test
     public void customGlobalFunction() throws Exception {
-        templateCompiler = new HamlTemplateCompiler(new AdditionalFunctions(map(
-                "func", new DoubleYieldFunction()
-        )));
+        templateCompiler = new HamlTemplateCompiler(
+                new AdditionalFunctions(map(
+                        "func", new DoubleYieldFunction()
+                ))
+        );
 
         HamlTemplate template = templateCompiler.compile("%ul\n\t- func do |v|\n\t\t%li= v");
 
