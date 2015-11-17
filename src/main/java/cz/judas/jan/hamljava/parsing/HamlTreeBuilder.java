@@ -288,9 +288,10 @@ public class HamlTreeBuilder {
                 .or(context.singleQuotedString(), string -> new ConstantRubyExpression(singleQuotedString(string)))
                 .or(context.doubleQuotedString(), this::doubleQuotedString)
                 .or(context.fieldReference(), this::fieldReference)
-                .or(context.methodCall(), this::methodWithoutBlock)
+                .or(context.methodCall(), this::methodCallWithoutBlock)
                 .or(context.intValue(), value -> new ConstantRubyExpression(Integer.parseInt(value.getText())))
                 .or(context.localVariable(), this::localVariable)
+                .or(context.functionCall(), this::functionCallWithoutBlock)
                 .orException();
     }
 
@@ -352,7 +353,7 @@ public class HamlTreeBuilder {
         return new FieldReferenceExpression(context.WORD().getText());
     }
 
-    private RubyExpression methodWithoutBlock(JavaHamlParser.MethodCallContext context) {
+    private RubyExpression methodCallWithoutBlock(JavaHamlParser.MethodCallContext context) {
         return methodCall(context).materialize();
     }
 
@@ -364,6 +365,10 @@ public class HamlTreeBuilder {
                 (name) -> functionalNodeBuilder.propertyAccess(target, name),
                 (name, arguments) -> functionalNodeBuilder.methodCall(target, name, arguments)
         );
+    }
+
+    private RubyExpression functionCallWithoutBlock(JavaHamlParser.FunctionCallContext context) {
+        return functionCall(context).materialize();
     }
 
     private ParsedFunctionOrMethodCall functionCall(JavaHamlParser.FunctionCallContext context) {

@@ -217,6 +217,20 @@ public class HamlTreeBuilderTest {
         ));
     }
 
+    @Test
+    public void tagWithFunctionCall() throws Exception {
+        assertParses("#content= render 'blah'", root(
+                node(
+                        "div",
+                        map(symbol("id"), string("content")),
+                        functionCall(
+                                "render",
+                                list(string("blah"))
+                        )
+                )
+        ));
+    }
+
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(new StringReader(input)), is(tree));
     }

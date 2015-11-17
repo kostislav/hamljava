@@ -109,7 +109,7 @@ methodWithBlock: methodCall whitespace block;
 
 functionWithBlock: functionCall whitespace block;
 
-expression: localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | fieldReference | intValue;
+expression: localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | functionCall | fieldReference | intValue;
 
 symbol: COLON (WORD | singleQuotedString);
 
