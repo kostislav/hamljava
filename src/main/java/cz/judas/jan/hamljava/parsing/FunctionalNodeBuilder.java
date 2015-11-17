@@ -1,8 +1,10 @@
 package cz.judas.jan.hamljava.parsing;
 
-import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
+import com.google.common.collect.ImmutableList;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
-import cz.judas.jan.hamljava.template.tree.ruby.*;
+import cz.judas.jan.hamljava.template.tree.ruby.RubyExpression;
+
+import java.util.Optional;
 
 public class FunctionalNodeBuilder {
     private final AdditionalFunctions functions;
@@ -11,19 +13,19 @@ public class FunctionalNodeBuilder {
         this.functions = functions;
     }
 
-    public PossibleFunctionCall methodCall(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments) {
-        return new MethodCallExpression(target, methodName, arguments, UnboundRubyMethod.EMPTY_BLOCK);
+    public ParsedFunctionOrMethodCall methodCall(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments) {
+        return new ParsedFunctionOrMethodCall(functions, Optional.of(target), methodName, Optional.of(ImmutableList.copyOf(arguments)), Optional.empty());
     }
 
-    public PossibleFunctionCall functionCall(String methodName, Iterable<? extends RubyExpression> arguments) {
-        return new FunctionCallExpression(methodName, functions, arguments, UnboundRubyMethod.EMPTY_BLOCK);
+    public ParsedFunctionOrMethodCall functionCall(String methodName, Iterable<? extends RubyExpression> arguments) {
+        return new ParsedFunctionOrMethodCall(functions, Optional.empty(), methodName, Optional.of(ImmutableList.copyOf(arguments)), Optional.empty());
     }
 
-    public PossibleFunctionCall propertyAccess(RubyExpression target, String name) {
-        return new PropertyAccessExpression(target, name);
+    public ParsedFunctionOrMethodCall propertyAccess(RubyExpression target, String name) {
+        return new ParsedFunctionOrMethodCall(functions, Optional.of(target), name, Optional.empty(), Optional.empty());
     }
 
-    public PossibleFunctionCall localVariable(String name) {
-        return new FunctionOrVariableExpression(name, functions);
+    public ParsedFunctionOrMethodCall localVariable(String name) {
+        return new ParsedFunctionOrMethodCall(functions, Optional.empty(), name, Optional.empty(), Optional.empty());
     }
 }

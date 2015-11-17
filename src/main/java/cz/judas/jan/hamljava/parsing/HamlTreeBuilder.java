@@ -274,12 +274,12 @@ public class HamlTreeBuilder {
     }
 
     private RubyExpression functionCallWithBlock(JavaHamlParser.FunctionWithBlockContext context) {
-        return functionCall(context.functionCall()).withBlock(block(context.block()));
+        return functionCall(context.functionCall()).withBlock(block(context.block())).materialize();
     }
 
 
     private RubyExpression methodWithBlock(JavaHamlParser.MethodWithBlockContext context) {
-        return methodCall(context.methodCall()).withBlock(block(context.block()));
+        return methodCall(context.methodCall()).withBlock(block(context.block())).materialize();
     }
 
     private RubyExpression expression(JavaHamlParser.ExpressionContext context) {
@@ -288,14 +288,14 @@ public class HamlTreeBuilder {
                 .or(context.singleQuotedString(), string -> new ConstantRubyExpression(singleQuotedString(string)))
                 .or(context.doubleQuotedString(), this::doubleQuotedString)
                 .or(context.fieldReference(), this::fieldReference)
-                .or(context.methodCall(), this::methodCall)
+                .or(context.methodCall(), this::methodWithoutBlock)
                 .or(context.intValue(), value -> new ConstantRubyExpression(Integer.parseInt(value.getText())))
                 .or(context.localVariable(), this::localVariable)
                 .orException();
     }
 
     private RubyExpression localVariable(JavaHamlParser.LocalVariableContext context) {
-        return functionalNodeBuilder.localVariable(context.getText());
+        return functionalNodeBuilder.localVariable(context.getText()).materialize();
     }
 
     private RubyExpression symbol(JavaHamlParser.SymbolContext context) {
@@ -352,7 +352,11 @@ public class HamlTreeBuilder {
         return new FieldReferenceExpression(context.WORD().getText());
     }
 
-    private PossibleFunctionCall methodCall(JavaHamlParser.MethodCallContext context) {
+    private RubyExpression methodWithoutBlock(JavaHamlParser.MethodCallContext context) {
+        return methodCall(context).materialize();
+    }
+
+    private ParsedFunctionOrMethodCall methodCall(JavaHamlParser.MethodCallContext context) {
         RubyExpression target = methodTarget(context.methodTarget());
         return functionOrMethodCall(
                 context.singleMethodCall(),
@@ -362,7 +366,7 @@ public class HamlTreeBuilder {
         );
     }
 
-    private PossibleFunctionCall functionCall(JavaHamlParser.FunctionCallContext context) {
+    private ParsedFunctionOrMethodCall functionCall(JavaHamlParser.FunctionCallContext context) {
         return functionOrMethodCall(
                 context.singleMethodCall(),
                 context.chainedMethodCalls(),
@@ -371,13 +375,13 @@ public class HamlTreeBuilder {
         );
     }
 
-    private PossibleFunctionCall functionOrMethodCall(
+    private ParsedFunctionOrMethodCall functionOrMethodCall(
             JavaHamlParser.SingleMethodCallContext singleMethodCallContext,
             JavaHamlParser.ChainedMethodCallsContext chainedMethodCallsContext,
-            Function<String, PossibleFunctionCall> nonFunctionCreator,
-            BiFunction<String, Iterable<? extends RubyExpression>, PossibleFunctionCall> functionCreator
+            Function<String, ParsedFunctionOrMethodCall> nonFunctionCreator,
+            BiFunction<String, Iterable<? extends RubyExpression>, ParsedFunctionOrMethodCall> functionCreator
     ) {
-        PossibleFunctionCall result;
+        ParsedFunctionOrMethodCall result;
         Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
         if (arguments == null) {
             result = nonFunctionCreator.apply(singleMethodCallContext.methodName().getText());
@@ -390,15 +394,15 @@ public class HamlTreeBuilder {
         return chainedMethodCalls(result, chainedMethodCallsContext);
     }
 
-    private PossibleFunctionCall chainedMethodCalls(PossibleFunctionCall target, JavaHamlParser.ChainedMethodCallsContext context) {
-        PossibleFunctionCall result = target;
+    private ParsedFunctionOrMethodCall chainedMethodCalls(ParsedFunctionOrMethodCall target, JavaHamlParser.ChainedMethodCallsContext context) {
+        ParsedFunctionOrMethodCall result = target;
         for (JavaHamlParser.SingleMethodCallContext singleMethodCallContext : context.singleMethodCall()) {
             Iterable<? extends RubyExpression> arguments = methodArguments(singleMethodCallContext.methodParameters());
             if (arguments == null) {
-                result = functionalNodeBuilder.propertyAccess(result, singleMethodCallContext.methodName().getText());
+                result = functionalNodeBuilder.propertyAccess(result.materialize(), singleMethodCallContext.methodName().getText());
             } else {
                 result = functionalNodeBuilder.methodCall(
-                        target,
+                        target.materialize(),
                         singleMethodCallContext.methodName().getText(),
                         arguments
                 );

@@ -9,7 +9,7 @@ import cz.judas.jan.hamljava.template.TemplateContext;
 
 import java.util.List;
 
-public class FunctionCallExpression implements PossibleFunctionCall {
+public class FunctionCallExpression implements RubyExpression {
     private final String name;
     private final AdditionalFunctions additionalFunctions;
     private final UnboundRubyMethod block;
@@ -29,10 +29,5 @@ public class FunctionCallExpression implements PossibleFunctionCall {
                 .toList();
 
         return additionalFunctions.withName(name).invoke(evaluatedArgs, block, htmlOutput, templateContext);
-    }
-
-    @Override
-    public RubyExpression withBlock(UnboundRubyMethod block) {
-        return new FunctionCallExpression(name, additionalFunctions, arguments, block);
     }
 }

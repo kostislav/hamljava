@@ -11,7 +11,7 @@ import java.util.Collections;
 
 @EqualsAndHashCode
 @ToString
-public class FunctionOrVariableExpression implements PossibleFunctionCall {
+public class FunctionOrVariableExpression implements RubyExpression {
     private final String name;
     private final AdditionalFunctions additionalFunctions;
 
@@ -27,10 +27,5 @@ public class FunctionOrVariableExpression implements PossibleFunctionCall {
         } else {
             return templateContext.getVariable(name, additionalFunctions, htmlOutput);
         }
-    }
-
-    @Override
-    public RubyExpression withBlock(UnboundRubyMethod block) {
-        return new FunctionCallExpression(name, additionalFunctions, Collections.emptyList(), block);
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 
 @EqualsAndHashCode
 @ToString(exclude = "cache")
-public class MethodCallExpression implements PossibleFunctionCall {
+public class MethodCallExpression implements RubyExpression {
     private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(new AdditionalMethods(ImmutableSet.of(
             AdditionalClassMethods.forGenericClass(Iterable.class, ImmutableMap.of("each", new IterableEach()))
     )));
@@ -52,10 +52,5 @@ public class MethodCallExpression implements PossibleFunctionCall {
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
                 .toList();
         return methodCall.invoke(evaluatedTarget, evaluatedArgs, block, htmlOutput, variables);
-    }
-
-    @Override
-    public MethodCallExpression withBlock(UnboundRubyMethod block) {
-        return new MethodCallExpression(target, methodName, arguments, block);
     }
 }
