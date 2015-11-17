@@ -19,7 +19,7 @@ public class AdditionalClassMethods<T> {
     }
 
     public Optional<AdditionalMethod<T>> withName(String name) {
-        return Optional.of(additionalMethods.get(name));
+        return Optional.ofNullable(additionalMethods.get(name));
     }
 
     public static <T> AdditionalClassMethods<T> forClass(Class<? extends T> clazz, Map<String, ? extends AdditionalMethod<T>> additionalMethods) {
