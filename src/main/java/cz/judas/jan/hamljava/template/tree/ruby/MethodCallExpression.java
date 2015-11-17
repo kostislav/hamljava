@@ -1,8 +1,5 @@
 package cz.judas.jan.hamljava.template.tree.ruby;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -21,7 +18,7 @@ import lombok.ToString;
 import java.util.List;
 
 @EqualsAndHashCode
-@ToString(exclude = "cache")
+@ToString
 public class MethodCallExpression implements RubyExpression {
     private static final MethodCallCreator METHOD_CALL_CREATOR = new MethodCallCreator(new AdditionalMethods(ImmutableSet.of(
             AdditionalClassMethods.forGenericClass(Iterable.class, ImmutableMap.of("each", new IterableEach()))
@@ -31,22 +28,19 @@ public class MethodCallExpression implements RubyExpression {
     private final UnboundRubyMethod block;
     private final RubyExpression target;
     private final List<RubyExpression> arguments;
-    private final LoadingCache<Class<?>, MethodCall> cache;
 
     public MethodCallExpression(RubyExpression target, String methodName, Iterable<? extends RubyExpression> arguments, UnboundRubyMethod block) {
         this.target = target;
         this.methodName = methodName;
         this.block = block;
         this.arguments = ImmutableList.copyOf(arguments);
-        cache = CacheBuilder.newBuilder()
-                .build(CacheLoader.from(key -> METHOD_CALL_CREATOR.createFor(key, methodName, this.arguments.size())));
     }
 
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext variables) {
         Object evaluatedTarget = target.evaluate(htmlOutput, variables);
 
-        MethodCall methodCall = cache.getUnchecked(evaluatedTarget.getClass());
+        MethodCall methodCall = METHOD_CALL_CREATOR.createFor(evaluatedTarget.getClass(), methodName, arguments.size());
 
         List<Object> evaluatedArgs = FluentIterable.from(arguments)
                 .transform(arg -> arg.evaluate(htmlOutput, variables))
