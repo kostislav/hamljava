@@ -2,6 +2,8 @@ package cz.judas.jan.hamljava.template;
 
 import cz.judas.jan.hamljava.runtime.RubyConstants;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
+import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
+import cz.judas.jan.hamljava.testutil.MockHtmlOutput;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -51,7 +53,7 @@ public class TemplateContextTest {
                 UnboundRubyMethod.EMPTY_BLOCK
         );
 
-        templateContext.getVariable("abc");
+        templateContext.getVariable("abc", AdditionalFunctions.EMPTY, MockHtmlOutput.create());
     }
 
     @Test

@@ -30,14 +30,6 @@ public class TemplateContext {
         return MoreObjects.firstNonNull(fieldValues.get(name), RubyConstants.NIL);
     }
 
-    public Object getVariable(String name) {
-        Object value = localVariables.get(name);
-        if (value == null) {
-            throw new IllegalArgumentException("Variable " + name + " does not exist");
-        }
-        return value;
-    }
-
     public Object getVariable(String name, AdditionalFunctions functions, HtmlOutput htmlOutput) {
         Object value = localVariables.get(name);
         if (value == null) {
