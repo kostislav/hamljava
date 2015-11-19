@@ -1,13 +1,10 @@
 package cz.judas.jan.hamljava.template.tree.ruby;
 
-import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.runtime.methods.AdditionalFunctions;
 import cz.judas.jan.hamljava.template.TemplateContext;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.util.Collections;
 
 @EqualsAndHashCode
 @ToString
@@ -23,7 +20,7 @@ public class FunctionOrVariableExpression implements RubyExpression {
     @Override
     public Object evaluate(HtmlOutput htmlOutput, TemplateContext templateContext) {
         if(name.equals("yield")) {
-            return templateContext.getBlock().invoke(Collections.emptyList(), UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, templateContext.withLocalVariables(Collections.emptyMap()));
+            return templateContext.invokeBlock(htmlOutput);
         } else {
             return templateContext.getVariable(name, additionalFunctions, htmlOutput);
         }

@@ -33,7 +33,7 @@ public class TemplateContext {
     public Object getVariable(String name, AdditionalFunctions functions, HtmlOutput htmlOutput) {
         Object value = localVariables.get(name);
         if (value == null) {
-            return functions.withName(name).invoke(Collections.emptyList(), UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, withLocalVariables(Collections.emptyMap()));
+            return callNoArgFunction(functions.withName(name), htmlOutput);
         }
         return value;
     }
@@ -42,8 +42,8 @@ public class TemplateContext {
         return localVariables.containsKey(name);
     }
 
-    public UnboundRubyMethod getBlock() {
-        return block;
+    public Object invokeBlock(HtmlOutput htmlOutput) {
+        return callNoArgFunction(block, htmlOutput);
     }
 
     public TemplateContext withLocalVariables(Map<String, ?> localVariables) {
@@ -60,5 +60,9 @@ public class TemplateContext {
             }
         });
         return builder.build();
+    }
+
+    private Object callNoArgFunction(UnboundRubyMethod function, HtmlOutput htmlOutput) {
+        return function.invoke(Collections.emptyList(), UnboundRubyMethod.EMPTY_BLOCK, htmlOutput, withLocalVariables(Collections.emptyMap()));
     }
 }
