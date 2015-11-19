@@ -1,5 +1,6 @@
 package cz.judas.jan.hamljava.template;
 
+import cz.judas.jan.hamljava.output.HtmlOutput;
 import cz.judas.jan.hamljava.output.StreamHtmlOutput;
 import cz.judas.jan.hamljava.runtime.UnboundRubyMethod;
 import cz.judas.jan.hamljava.template.tree.HamlNode;
@@ -29,6 +30,10 @@ public class HamlTemplate {
 
     public String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, HamlTemplate innerTemplate) {
         return evaluate(escapeByDefault, fieldValues, new HamlNodeBlock(innerTemplate.rootNode));
+    }
+
+    public void writeTo(HtmlOutput htmlOutput, TemplateContext context) {
+        rootNode.evaluate(htmlOutput, context);
     }
 
     private String evaluate(boolean escapeByDefault, Map<String, ?> fieldValues, UnboundRubyMethod block) {
