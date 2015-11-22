@@ -6,7 +6,7 @@ import cz.judas.jan.hamljava.template.TemplateContext;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "additionalFunctions")
 @ToString
 public class FunctionOrVariableExpression implements RubyExpression {
     private final String name;

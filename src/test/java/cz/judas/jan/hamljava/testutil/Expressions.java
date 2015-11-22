@@ -31,4 +31,12 @@ public class Expressions {
     public static RubyExpression fieldReference(String name) {
         return new FieldReferenceExpression(name);
     }
+
+    public static RubyExpression negation(RubyExpression original) {
+        return new NegationExpression(original);
+    }
+
+    public static RubyExpression localVariable(String name) {
+        return new FunctionOrVariableExpression(name, AdditionalFunctions.EMPTY);
+    }
 }

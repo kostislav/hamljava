@@ -231,6 +231,13 @@ public class HamlTreeBuilderTest {
         ));
     }
 
+    @Test
+    public void negatedValue() throws Exception {
+        assertParses("= !blah", root(
+                textNode(negation(localVariable("blah")))
+        ));
+    }
+
     private void assertParses(String input, RootNode tree) throws Exception {
         assertThat(treeBuilder.buildTreeFrom(new StringReader(input)), is(tree));
     }

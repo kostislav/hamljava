@@ -109,7 +109,9 @@ methodWithBlock: methodCall whitespace block;
 
 functionWithBlock: functionCall whitespace block;
 
-expression: localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | functionCall | fieldReference | intValue;
+expression: negatedExpression | localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | functionCall | fieldReference | intValue;
+
+negatedExpression: EXCLAMATION whitespace? expression;
 
 ifStatement: IF whitespace expression whitespace? childTags;
 

@@ -293,7 +293,12 @@ public class HamlTreeBuilder {
                 .or(context.intValue(), value -> new ConstantRubyExpression(Integer.parseInt(value.getText())))
                 .or(context.localVariable(), this::localVariable)
                 .or(context.functionCall(), this::functionCallWithoutBlock)
+                .or(context.negatedExpression(), this::negatedExpression)
                 .orException();
+    }
+
+    private RubyExpression negatedExpression(JavaHamlParser.NegatedExpressionContext context) {
+        return new NegationExpression(expression(context.expression()));
     }
 
     private RubyExpression ifStatement(JavaHamlParser.IfStatementContext context) {
