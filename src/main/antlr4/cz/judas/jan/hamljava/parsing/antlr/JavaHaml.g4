@@ -103,13 +103,15 @@ valueExpression: expression;
 
 attributeKey: WORD COLON;
 
-statement: methodWithBlock | functionWithBlock | (expression NL);
+statement: methodWithBlock | functionWithBlock | ifStatement | (expression NL);
 
 methodWithBlock: methodCall whitespace block;
 
 functionWithBlock: functionCall whitespace block;
 
 expression: localVariable | symbol | singleQuotedString | doubleQuotedString | methodCall | functionCall | fieldReference | intValue;
+
+ifStatement: IF whitespace expression whitespace? childTags;
 
 symbol: COLON (WORD | singleQuotedString);
 
@@ -183,6 +185,7 @@ PIPE: '|';
 BACKSLASH: '\\';
 NUMBER: (DIGIT)+;
 DO: 'do';
+IF: 'if';
 WORD : (ASCII_LETTER | DIGIT | '-')+;
 HTML_ELEMENT: (ASCII_LETTER | DIGIT ':' | '_' | '-')+;
 SPACE: ' ';

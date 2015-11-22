@@ -224,6 +224,17 @@ public class HamlTemplateCompilerTest {
         );
     }
 
+    @Test
+    public void ifCondition() throws Exception {
+        assertParses(
+                "#content\n\t- if @value\n\t\t%p Value is set.\n\tSome text",
+                map(
+                        "value", true
+                ),
+                "<div id=\"content\"><p>Value is set.</p>Some text</div>"
+        );
+    }
+
     private void assertParses(String input, String expected) {
         assertParses(input, Collections.emptyMap(), expected);
     }

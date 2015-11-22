@@ -270,6 +270,7 @@ public class HamlTreeBuilder {
                 .either(context.expression(), this::expression)
                 .or(context.methodWithBlock(), this::methodWithBlock)
                 .or(context.functionWithBlock(), this::functionCallWithBlock)
+                .or(context.ifStatement(), this::ifStatement)
                 .orException();
     }
 
@@ -293,6 +294,13 @@ public class HamlTreeBuilder {
                 .or(context.localVariable(), this::localVariable)
                 .or(context.functionCall(), this::functionCallWithoutBlock)
                 .orException();
+    }
+
+    private RubyExpression ifStatement(JavaHamlParser.IfStatementContext context) {
+        return new ConditionalExpression(
+                expression(context.expression()),
+                children(context.childTags())
+        );
     }
 
     private RubyExpression localVariable(JavaHamlParser.LocalVariableContext context) {
